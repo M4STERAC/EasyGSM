@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "tsc src/CrashEventFilter.ts --outDir ./out"
+    "build": "tsc src/CrashEventFilter.ts --outDir ./out",
+    "release:minor": "npm version minor && git push && git push --tags",
+    "release:patch": "npm version patch && git push && git push --tags"
   },
   "author": "Matthew Manka",
   "license": "ISC",
