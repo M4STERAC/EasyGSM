@@ -1,6 +1,6 @@
 {
   "name": "palserver-manager",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Palworld server manager to auto manage your server",
   "main": "./src/PalServerManager.bat",
   "scripts": {
