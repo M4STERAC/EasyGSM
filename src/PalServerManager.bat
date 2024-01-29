@@ -19,7 +19,6 @@ set query=*[System[(EventID=1000 or EventID=1001)]]
     wevtutil qe %logName% /q:"%query%" /f:text > "%errorLogFile%"
     
     echo Crash Number: !crashCount!
-    echo Logs of the most recent crash has been output to %errorLogFile%
 
     "../Filterlogs.exe"
     echo Filtered Eventlogs to PalServerErrorLogs.json in your documents folder
