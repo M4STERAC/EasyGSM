@@ -2,10 +2,10 @@
   "name": "palserver-manager",
   "version": "1.0.3",
   "description": "A Palworld server manager to auto manage your server",
-  "main": "./src/PalServerManager.bat",
+  "main": "./out/src/index.bat",
   "scripts": {
     "test": "jest",
-    "build": "tsc src/CrashEventFilter.ts --outDir ./out",
+    "build": "tsc --outDir ./out && pkg -t node14-win-x64 ./out/src/index.js",
     "release:minor": "npm version minor && git push && git push --tags",
     "release:patch": "npm version patch && git push && git push --tags"
   },
@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "fs": "^0.0.1-security",
-    "os": "^0.1.2"
+    "os": "^0.1.2",
+    "path": "^0.12.7"
   },
   "pkg": "./pkg-config.json"
 }

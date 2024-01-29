@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import { getData, parseLogToJSON } from "../utils/functions";
 import * as os from "os";
+import * as path from "path";
 
 export async function FilterEvents() {
   let path: string = "C:\\temp";
