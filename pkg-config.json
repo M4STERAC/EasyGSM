@@ -1,0 +1,10 @@
+{
+  "targets": ["node18-win-x64"],
+  "outputName": "out/PalServerManager.exe",
+  "publish": {
+    "publisherName": "Matthew Manka",
+    "productName": "PalServer Manager"
+  },
+  "entry": "out/src/CrashEventFilter.js",
+  "dependencies": ["fs", "os", "./out/utils/getData", "./out/utils/parsing.js"]
+}

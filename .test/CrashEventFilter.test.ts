@@ -6,5 +6,5 @@ describe('Happy Path', () => {
         expect(response).toBeDefined;
         expect(response.statusCode).toBe(200);
         expect(response.PalServerErrorLogs.length).toBeGreaterThan(0);
-    }, 10);
+    }, 100);
 });
