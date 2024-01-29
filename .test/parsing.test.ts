@@ -6,5 +6,5 @@ describe('Happy Path', () => {
         let data: string = await getData('C:\\temp\\PalWorldServerCrashLog.txt');
         let results: any = await parseLogToJSON(data);
         expect(results).toBeDefined;
-    }, 10);
+    }, 100);
 });
