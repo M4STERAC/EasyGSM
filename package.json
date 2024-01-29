@@ -7,7 +7,8 @@
     "test": "jest",
     "build": "tsc --outDir ./out && pkg -t node18-win-x64 ./out/src/index.js -o ./FilterLogs.exe",
     "release:minor": "npm version minor && git push && git push --tags",
-    "release:patch": "npm version patch && git push && git push --tags"
+    "release:patch": "npm version patch && git push && git push --tags",
+    "catchup": "git pull origin v1.x.x"
   },
   "author": "Matthew Manka",
   "license": "ISC",
