@@ -21,7 +21,7 @@ set query=*[System[(EventID=1000 or EventID=1001)]]
     echo Crash Number: !crashCount!
     echo Logs of the most recent crash has been output to %errorLogFile%
 
-    node ../Filterlogs.exe
+    "../Filterlogs.exe"
     echo Filtered Eventlogs to PalServerErrorLogs.json in your documents folder
 
     TIMEOUT /T 30
