@@ -1,17 +1,17 @@
 import * as fs from "fs";
 import { getData, parseLogToJSON } from "../utils/functions";
 import * as os from "os";
-import * as path from "path";
 
 export async function FilterEvents() {
-  let path: string = "C:\\temp";
+  let path: string = "C:\\temp\\PalWorldServerCrashLog.txt";
   let logs: any = void 0;
   let logJSON: any = void 0;
   let attempt: number = 0;
 
   while (true) {
     try {
-      logs = await getData(`${path}\\PalWorldServerCrashLog.txt`);
+      let logsBuffer: Buffer = fs.readFileSync(path);
+      logs = logsBuffer.toString("utf-8");
       logJSON = await parseLogToJSON(logs);
       break;
     } catch (err) {
