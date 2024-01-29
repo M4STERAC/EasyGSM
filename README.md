@@ -10,10 +10,10 @@ Auto manager for PalServer
 
 
 ## Directories
-src         ~   All files that execute
-.vscode     ~   Launch configuration
-.test       ~   Holds tests for functions
-.data       ~   Holds test data
+src         ~   All files that execute      <br>
+.vscode     ~   Launch configuration        <br>
+.test       ~   Holds tests for functions   <br>
+.data       ~   Holds test data             <br>
 
 ## Relavent Commands
 Found in package.json
