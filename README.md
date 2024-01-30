@@ -23,4 +23,7 @@ Found in package.json
 -BackupManager          - Creates a backup of all PalWorld saves and puts the backups in $home/Documents/{partition by date}/
 -CrashEventFilter       - Reads the error logs in C:/temp/ and filters the ones for PalServer and outputs them to $home\Documents as a JSON file
 -index                  - Used to execute the TS files
--CreateBackupSchedule   - Creates a task schedule to create backups for for all worlds in the server
+-CreateBackupSchedule   - Creates a task schedule to create backups for for all worlds in the server. Backups are created daily at 6AM
+
+### Additional Notes
+User hosting the server must be logged on for backups to be created
