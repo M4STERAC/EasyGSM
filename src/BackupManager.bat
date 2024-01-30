@@ -4,7 +4,7 @@ set currentDate=%datetime:~0,4%\\%datetime:~4,2%\\%datetime:~6,2%
 
 set targetPath=%USERPROFILE%\AppData\Local\Pal\Saved\SaveGames\
 set secondTargetPath=C:\Program Files (x86)\Steam\steamapps\common\PalServer\Pal\Saved\SaveGames\
-set destinationPath=%USERPROFILE%\Documents\PalServerBackups
+set destinationPath=%USERPROFILE%\Documents\PalServer\backups
 
 if not exist "%destinationPath%\%currentDate%" mkdir "%destinationPath%\%currentDate%"
 if not exist "%destinationPath%\" mkdir "%destinationPath%"

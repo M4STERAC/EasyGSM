@@ -21,7 +21,7 @@ set query=*[System[(EventID=1000 or EventID=1001)]]
     echo Crash Number: !crashCount!
 
     "../Filterlogs.exe"
-    echo Filtered Eventlogs to PalServerErrorLogs.json in your documents folder
+    echo Filtered Eventlogs to %USERPROFILE%\PalServer\logs\error\PalServerErrorLogs.json in your documents folder
 
     TIMEOUT /T 30
 
