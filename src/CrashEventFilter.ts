@@ -24,7 +24,7 @@ export async function FilterEvents() {
     return /PalSer\w{0,3}.{0,19}/gi.test(log.P1);
   });
   fs.writeFileSync(
-    `${os.homedir()}\\Documents\\PalServerErrorLogs.json`,
+    `${os.homedir()}\\Documents\\PalServer\\logs\\error\\PalServerErrorLogs.json`,
     JSON.stringify(PalServerErrorLogs)
   );
   return { statusCode: 200, PalServerErrorLogs };
