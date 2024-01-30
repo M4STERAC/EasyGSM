@@ -12,6 +12,7 @@ set query=*[System[(EventID=1000 or EventID=1001)]]
 :Start
     "C:\Program Files (x86)\Steam\steamapps\common\PalServer\PalServer.exe"
     cls
+    call GetHardwareResourceLevels.bat
     set /a crashCount+=1
 
     if not exist "%errorLogPath%" mkdir "%errorLogPath%"
