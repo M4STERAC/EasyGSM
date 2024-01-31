@@ -5,6 +5,6 @@
     "publisherName": "Matthew Manka",
     "productName": "PalServer Manager"
   },
-  "entry": "out/src/CrashEventFilter.js",
+  "entry": "out/src/data/CrashEventFilter.js",
   "dependencies": ["fs", "os", "./out/utils/getData", "./out/utils/parsing.js"]
 }
