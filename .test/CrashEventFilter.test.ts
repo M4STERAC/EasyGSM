@@ -1,4 +1,4 @@
-import { FilterEvents } from '../src/CrashEventFilter';
+import { FilterEvents } from '../src/data/CrashEventFilter';
 
 describe('Happy Path', () => {
     test('FilterEvents', async () => {
