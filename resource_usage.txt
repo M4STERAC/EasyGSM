@@ -1,4 +1,0 @@
-CPU Usage: %cpu_usage%%%
-Memory Usage: %mem_usage% KB
-Disk Usage: %used_space% bytes
-Network Usage: %net_usage% bytes
