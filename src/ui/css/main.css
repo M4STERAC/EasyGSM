@@ -1,0 +1,28 @@
+#server-list {
+    float: left;
+    width: 50%;
+}
+
+#server-info {
+    float: right;
+    width: 50%;
+}
+
+#footer {
+    clear: both;
+}
+
+#clickable-list {
+    list-style: none;
+    text-decoration: none;
+    color: inherit;
+}
+
+#clickable-list li a {
+    text-decoration: none;
+    color: inherit;
+}
+
+#add-server {
+    border-radius: 50%;
+}
