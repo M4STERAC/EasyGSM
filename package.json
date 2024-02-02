@@ -5,8 +5,10 @@
   "main": "./out/src/ui/main.js",
   "scripts": {
     "test": "jest",
-    "build": "tsc --outDir ./out && pkg -t node18-win-x64 ./out/src/data/index.js -o ./FilterLogs.exe && copyfiles -u 0 src/ui/html/* out/ && copyfiles -u 0 src/ui/css/* out/ && copyfiles -u 0 src/ui/images/* out/",
+    "build": "npm run build:react && npm run build:electron",
+    "build:electron": "tsc --outDir ./out && pkg -t node18-win-x64 ./out/src/data/index.js -o ./FilterLogs.exe && copyfiles -u 0 src/ui/html/* out/ && copyfiles -u 0 src/ui/css/* out/ && copyfiles -u 0 src/ui/images/* out/",
     "build:react": "webpack --mode production",
+    "start:react": "serve -s out/src/ui -l 3000",
     "start:poc": "npm run build && electron ./out/src/ui/main.js",
     "release:minor": "npm version minor && git push && git push --tags",
     "release:patch": "npm version patch && git push && git push --tags"
@@ -26,6 +28,7 @@
     "electron-builder": "^24.9.1",
     "html-webpack-plugin": "^5.6.0",
     "jest": "^29.7.0",
+    "serve": "^14.2.1",
     "style-loader": "^3.3.4",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
