@@ -1,0 +1,12 @@
+.footer {
+  clear: both;
+  padding: 3em;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.footer img {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+}
