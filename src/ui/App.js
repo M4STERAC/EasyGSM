@@ -1,5 +1,7 @@
 import React from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import Main from './pages/Main';
+
 // import WelcomeBack from './pages/WelcomeBack';
 // import CreateFlashCard from './pages/CreateFlashCard';
 // import RootLayout from './pages/RootLayout';
@@ -11,15 +13,14 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 const router = createBrowserRouter([
   {
     path: '/',
-    // element: <RootLayout />,
-    // children: [
-      // { path: '/', element: <WelcomeBack /> },
+    element: <Main />,
+    children: [
       // { path: '/flashcards', element: <FlashCardSetList /> },
       // { path: '/flashcards/:viewFlashcardSet', element: <ViewFlashCardSet /> },
       // { path: '/flashcards/:viewFlashcardSet/create', element: <CreateFlashCard /> },
       // { path: '/notes', element: <NoteTopicList /> },
       // { path: '/notes/:viewNoteTopic', element: <ViewNoteTopic /> }
-    // ]
+    ]
   }
 ]);
 
