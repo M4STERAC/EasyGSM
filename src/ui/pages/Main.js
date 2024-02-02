@@ -44,6 +44,7 @@ const Main = () => (
           <span id="ready"> Ready </span>
         </li>
       </ul>
+      <button id="add-server">+</button>
     </Card>
     <Card>
       <h2>SERVER INFO</h2>
