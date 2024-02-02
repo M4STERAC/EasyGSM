@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const MyForm = () => {
+const CreateServer = () => {
     const [name, setName] = useState('');
     const [saveDirectory, setSaveDirectory] = useState('');
     const [banlist, setBanlist] = useState('');
@@ -56,9 +56,9 @@ const MyForm = () => {
                 />
             </label>
             <br />
-            <button type="submit">Submit</button>
+            <button type="submit">Create</button>
         </form>
     );
 };
 
-export default MyForm;
+export default CreateServer;
