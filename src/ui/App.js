@@ -1,31 +1,17 @@
 import React from 'react';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Main from './pages/Main';
-
-// import WelcomeBack from './pages/WelcomeBack';
-// import CreateFlashCard from './pages/CreateFlashCard';
-// import RootLayout from './pages/RootLayout';
-// import ViewFlashCardSet from './pages/ViewFlashCardSet';
-// import FlashCardSetList from './pages/FlashCardSetList';
-// import NoteTopicList from './pages/NoteTopicList';
-// import ViewNoteTopic from './pages/ViewNoteTopic';
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Main />,
-    children: [
-      // { path: '/flashcards', element: <FlashCardSetList /> },
-      // { path: '/flashcards/:viewFlashcardSet', element: <ViewFlashCardSet /> },
-      // { path: '/flashcards/:viewFlashcardSet/create', element: <CreateFlashCard /> },
-      // { path: '/notes', element: <NoteTopicList /> },
-      // { path: '/notes/:viewNoteTopic', element: <ViewNoteTopic /> }
-    ]
-  }
-]);
+import NotFound from './pages/NotFound';
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
