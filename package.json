@@ -5,7 +5,7 @@
   "main": "./out/src/ui/main.js",
   "scripts": {
     "test": "jest",
-    "build": "npm run build:react && npm run build:pkg && electron .",
+    "build": "npm run build:react && npm run build:pkg && electron . --trace-warnings",
     "build:react": "webpack --mode production",
     "build:pkg": "tsc --outDir ./out && pkg -t node18-win-x64 ./out/src/data/index.js -o ./FilterLogs.exe && copyfiles -u 0 src/ui/html/* out/ && copyfiles -u 0 src/ui/css/* out/ && copyfiles -u 0 src/ui/images/* out/",
     "serve": "npm run build:react && serve -s out/src/ui -l 3000",
