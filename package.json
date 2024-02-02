@@ -7,7 +7,7 @@
     "test": "jest",
     "build": "npm run build:react && npm run build:pkg && electron . --trace-warnings",
     "build:react": "webpack --mode production",
-    "build:pkg": "tsc --outDir ./out && pkg -t node18-win-x64 ./out/src/data/index.js -o ./FilterLogs.exe && copyfiles -u 0 src/ui/html/* out/ && copyfiles -u 0 src/ui/css/* out/ && copyfiles -u 0 src/ui/images/* out/",
+    "build:pkg": "tsc --outDir ./out/src && pkg -t node18-win-x64 ./out/src/data/index.js -o ./FilterLogs.exe && copyfiles -u 0 src/ui/html/* out/ && copyfiles -u 0 src/ui/css/* out/ && copyfiles -u 0 src/ui/images/* out/",
     "serve": "npm run build:react && serve -s out/src/ui -l 3000",
     "release:minor": "npm version minor && git push && git push --tags",
     "release:patch": "npm version patch && git push && git push --tags",
@@ -37,6 +37,9 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@sentry/browser": "^7.99.0",
+    "@sentry/react": "^7.99.0",
+    "@sentry/tracing": "^7.99.0",
     "@types/react": "^18.2.51",
     "@types/react-dom": "^18.2.18",
     "electron": "^28.2.0",
