@@ -5,12 +5,13 @@
   "main": "./out/src/ui/main.js",
   "scripts": {
     "test": "jest",
-    "build": "npm run build:react && npm run build:pkg && electron .",
+    "build": "npm run build:react && start:json-server && npm run build:pkg && electron .",
     "build:react": "webpack --mode production",
     "build:pkg": "tsc --outDir ./out && pkg -t node18-win-x64 ./out/src/data/index.js -o ./FilterLogs.exe && copyfiles -u 0 src/ui/html/* out/ && copyfiles -u 0 src/ui/css/* out/ && copyfiles -u 0 src/ui/images/* out/",
-    "serve": "serve -s out/src/ui -l 3000",
+    "serve": "npm run build:react && start:json-server && serve -s out/src/ui -l 3000",
     "release:minor": "npm version minor && git push && git push --tags",
-    "release:patch": "npm version patch && git push && git push --tags"
+    "release:patch": "npm version patch && git push && git push --tags",
+    "start:json-server": "json-server --watch ./.data/Servers.json --port 3001"
   },
   "author": "Matthew Manka",
   "license": "ISC",
@@ -40,6 +41,7 @@
     "@types/react-dom": "^18.2.18",
     "electron": "^28.2.0",
     "fs": "^0.0.1-security",
+    "json-server": "^1.0.0-alpha.23",
     "os": "^0.1.2",
     "react-dom": "^18.2.0",
     "react-router": "^6.22.0",

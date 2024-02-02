@@ -1,0 +1,13 @@
+{
+  "Server": [
+    {
+      "name": "PalWorld",
+      "uptime": 24,
+      "status": "Running",
+      "players": 3,
+      "banlist": ["29.113.64.2", "10.24.45.44", "10.79.88.244"],
+      "lastrestart": "2021-07-12 12:00:00",
+      "lastupdate": "2021-07-12 12:00:00"
+    }
+  ]
+}
