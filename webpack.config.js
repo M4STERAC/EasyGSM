@@ -1,7 +1,11 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { sentryWebpackPlugin } = require("@sentry/webpack-plugin");
+const webpack = require('webpack');
+require('dotenv').config();
 
 module.exports = {
+  devtool: "source-map", // Sentry SourceMap upload
   entry: "./src/ui/index.js",
   module: {
     rules: [
@@ -26,6 +30,16 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src", "ui", "index.html"),
+    }),
+    sentryWebpackPlugin({
+      org: "easygsm",
+      project: "easygsm",
+      // authToken: process.env.SENTRY_AUTH_TOKEN,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    }),
+    new webpack.DefinePlugin({
+      'process.env.REACT_APP_SENTRY_DSN': JSON.stringify(process.env.REACT_APP_SENTRY_DSN),
+      'process.env.SENTRY_AUTH_TOKEN': JSON.stringify(process.env.SENTRY_AUTH_TOKEN),
     }),
   ],
 };
