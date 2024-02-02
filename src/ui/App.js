@@ -1,18 +1,15 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Main from './pages/Main';
-import NotFound from './pages/NotFound';
-import "./css/general.css";
+import React from "react";
+// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter, Route } from 'react-router-dom';
+import MainPage from "./pages/MainPage";
+// import NotFound from "./pages/NotFound";
+import "./css/General.css";
 
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Main className="general-style"/>} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
-  );
-}
+const App = () => (
+  <HashRouter>
+    <Route exact path="/" component={MainPage} />
+    {/* <Route component={NotFound} /> */}
+  </HashRouter>
+);
 
 export default App;
