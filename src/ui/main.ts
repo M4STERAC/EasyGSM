@@ -1,21 +1,16 @@
-import { app, BrowserWindow } from 'electron';
-
-let mainWindow: Electron.BrowserWindow | null;
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
 
 function createWindow () {
-  mainWindow = new BrowserWindow({
-    width: 1000,
+  const win = new BrowserWindow({
+    width: 800,
     height: 650,
     webPreferences: {
       nodeIntegration: true,
     }
   });
 
-  mainWindow.loadFile('./html/poc.html');
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+  win.loadFile(path.join(__dirname, 'out', 'src', 'ui', 'html', 'index.html'));
 }
 
-app.on('ready', createWindow);
+app.whenReady().then(createWindow);
