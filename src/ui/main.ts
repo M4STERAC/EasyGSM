@@ -10,7 +10,7 @@ function createWindow () {
     }
   });
 
-  win.loadFile(path.join(__dirname, 'out', 'src', 'ui', 'html', 'index.html'));
+  win.loadFile(path.join(__dirname, 'index.html'));
 }
 
 app.whenReady().then(createWindow);
