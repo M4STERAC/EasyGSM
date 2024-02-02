@@ -1,0 +1,62 @@
+body {
+  margin: 1em;
+  display: flex;
+  flex-direction: column;
+}
+
+body h2 {
+  background-color: #21262d;
+  border-bottom: 1px solid #30363d;
+  padding: 5px;
+  text-align: left;
+}
+
+#content {
+  display: flex;
+  flex-grow: 1;
+}
+
+#server-list,
+#server-info {
+  border: 1px solid #30363d;
+  padding: 0.5em 1.5em;
+  flex: 1;
+  border-radius: 10px;
+  font-size: large;
+}
+
+#server-list {
+  float: left;
+  margin: 0 1em;
+}
+
+#server-info {
+  float: right;
+  margin: 0 1em;
+}
+
+#running {
+  color: #32cd32;
+}
+
+#ready {
+  color: #ebc75b;
+}
+
+#down {
+  color: #ff6b6b;
+}
+
+#add-server {
+  font-size: 30px;
+  padding: 5px 15px;
+  border-radius: 50%;
+  background-color: transparent;
+  color: #2fbf10;
+  margin: 0.25em;
+}
+
+#add-server:hover {
+  background-color: #21262d;
+  color: #39ff14;
+}
