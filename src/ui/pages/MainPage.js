@@ -9,7 +9,7 @@ const MainPage = () => (
   <div className="general-style">
     <div className="content">
       <Card>
-        <h2>SERVER LIST</h2>
+        <h2 className="card-title">SERVER LIST</h2>
         <ul className="clickable-list">
           <li>
             <a href="#">PalServer - Public World </a>{" "}
