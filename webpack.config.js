@@ -6,6 +6,7 @@ require('dotenv').config();
 
 module.exports = {
   devtool: "source-map", // Sentry SourceMap upload
+  target: 'electron-renderer',
   entry: "./src/ui/index.js",
   module: {
     rules: [
