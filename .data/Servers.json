@@ -1,7 +1,8 @@
 {
   "Server": [
     {
-      "name": "PalWorld",
+      "game": "PalWorld",
+      "name": "Friend Server",
       "uptime": 24,
       "status": "Running",
       "players": 3,
