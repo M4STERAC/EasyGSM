@@ -1,0 +1,12 @@
+.running {
+    color: .32cd32;
+  }
+  
+  .ready {
+    color: #ebc75b;
+  }
+  
+  .down {
+    color: #ff6b6b;
+  }
+  
