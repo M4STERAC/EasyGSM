@@ -1,12 +1,16 @@
 .running {
-    color: .32cd32;
-  }
-  
-  .ready {
-    color: #ebc75b;
-  }
-  
-  .down {
-    color: #ff6b6b;
-  }
-  
+  color: #32cd32;
+}
+
+.ready {
+  color: #ebc75b;
+}
+
+.down {
+  color: #ff6b6b;
+}
+
+li a {
+  text-decoration: none;
+  color: inherit;
+}
