@@ -4,16 +4,16 @@ body {
   flex-direction: column;
 }
 
-body h2 {
+.content {
+  display: flex;
+  flex-grow: 1;
+}
+
+.card-title {
   background-color: .21262d;
   border-bottom: 1px solid .30363d;
   padding: 5px;
   text-align: left;
-}
-
-.content {
-  display: flex;
-  flex-grow: 1;
 }
 
 .clickable-list {
@@ -46,11 +46,11 @@ body h2 {
   padding: 5px 15px;
   border-radius: 50%;
   background-color: transparent;
-  color: .2fbf10;
+  color: #2fbf10;
   margin: 0.25em;
 }
 
 .add-server:hover {
-  background-color: .21262d;
-  color: .39ff14;
+  background-color: #21262d;
+  color: #39ff14;
 }
