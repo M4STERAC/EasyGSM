@@ -1,0 +1,9 @@
+.server-form {
+    color: #c9d1d9;
+}
+.server-form input {
+    color: inherit;
+    background-color: #0d1117;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
