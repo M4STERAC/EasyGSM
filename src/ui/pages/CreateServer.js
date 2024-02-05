@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import "../css/CreateServer.css";
 
-const CreateServer = () => {
+const CreateServer = ({ serverList }) => {
   const navigate = useNavigate();
   const [game, setGame] = useState("");
   const [name, setName] = useState("");
@@ -12,6 +12,9 @@ const CreateServer = () => {
   const [saveDirectory, setSaveDirectory] = useState("");
   const [banlist, setBanlist] = useState("");
   const [postFail, setPostFail] = useState(false);
+
+  console.log("serverList")
+  console.log(serverList);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
