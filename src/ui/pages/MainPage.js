@@ -22,8 +22,7 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    console.debug("selectedServer changed");
-    console.debug(selectedServer);
+    console.log(selectedServer);
   }, [selectedServer]);
 
   return (
@@ -33,11 +32,15 @@ const MainPage = () => {
           <h2 className="card-title">SERVER LIST</h2>
           <ul className="clickable-list">
             {serverList.map((server, index) => (
-              <ServerListItem onClick={() => {
-                console.log('CLICKED')
-                setSelectedServer(server);
-                console.log(selectedServer);
-              }} key={index} server={server} />
+              <ServerListItem
+                onClick={() => {
+                  console.log("CLICKED");
+                  setSelectedServer(server);
+                }}
+                key={index}
+                server={server}
+                selectedServer={selectedServer}
+              />
             ))}
           </ul>
           <button className="add-server">+</button>
@@ -45,7 +48,11 @@ const MainPage = () => {
         <Card>
           <h2 className="card-title">SERVER INFO</h2>
           <ul className="clickable-list">
-            {selectedServer ? <ServerInfoItem selectedServer={selectedServer} /> : <li>Select a server</li>}
+            {selectedServer ? (
+              <ServerInfoItem selectedServer={selectedServer} />
+            ) : (
+              <li>Select a server</li>
+            )}
           </ul>
         </Card>
       </div>
