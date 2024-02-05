@@ -2,22 +2,32 @@ import React, { useState } from "react";
 import { createUTCDate } from "../utils/generalFunctions";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
+import { validateIpAddress } from "../utils/dataValidation";
 import "../css/CreateServer.css";
 
 const CreateServer = ({ serverList }) => {
   const navigate = useNavigate();
   const [game, setGame] = useState("");
+  const [gameError, setGameError] = useState("");
   const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("");
   const [executable, setExecutable] = useState("");
   const [saveDirectory, setSaveDirectory] = useState("");
   const [banlist, setBanlist] = useState("");
+  const [banlistError, setBanlistError] = useState("");
   const [postFail, setPostFail] = useState(false);
 
-  console.log("serverList")
+  console.log("serverList");
   console.log(serverList);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const ips = banlist.split(",");
+    for (let ip of ips) {
+      ip = ip.replaceAll(/[^\d\.]/gm, "").trim();
+      if (!validateIpAddress(ip)) setBanlistError("Invalid IP address: " + ip);
+    }
 
     fetch("http://localhost:3001/Server", {
       method: "POST",
@@ -102,6 +112,7 @@ const CreateServer = ({ serverList }) => {
         />
         <br />
         <label>Banlist:</label>
+        {banlistError ? <p className="error">{banlistError}</p> : null}
         <input
           type="text"
           value={banlist}
