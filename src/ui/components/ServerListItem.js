@@ -8,7 +8,7 @@ const ServerListItem = ({ server, onClick }) => {
         {server.game} - {server.name}{" "}
         <span
           className={
-            server.status === "Running" ? "running" : server.status === "Ready" ? "ready" : "down"
+            server.status === "Running" ? "running" : "down"
           }>
           {server.status}
         </span>
