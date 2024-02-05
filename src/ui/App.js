@@ -34,14 +34,6 @@ const router = createHashRouter([
 ]);
 
 console.log("loaded app.js");
-// const App = () => (
-//   <Sentry.ErrorBoundary fallback={"An error has occurred"}>
-//     <HashRouter basename="/">
-//       <Route exact path="/" component={MainPage} />
-//       {/* <Route component={NotFound} /> */}
-//     </HashRouter>
-//   </Sentry.ErrorBoundary>
-// );
 
 function App() {
   return <RouterProvider router={router} />;
