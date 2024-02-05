@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { createUTCDate } from "../utils/generalFunctions";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const CreateServer = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [saveDirectory, setSaveDirectory] = useState("");
   const [banlist, setBanlist] = useState("");
@@ -31,7 +31,7 @@ const CreateServer = () => {
         if (i >= 3) console.errer('Failed to create server withing 3 attempts. Please try again later.');
       }
     }
-    history.push('/');
+    navigate.push('/');
   };
 
   return (
