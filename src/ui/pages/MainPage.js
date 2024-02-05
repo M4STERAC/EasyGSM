@@ -38,7 +38,7 @@ const MainPage = () => {
               />
             ))}
           </ul>
-          <button className="add-server" onClick={() => navigate('#/add-server')}>+</button>
+          <button className="add-server" onClick={() => navigate('/add-server')}>+</button>
         </Card>
         <Card>
           <h2 className="card-title">SERVER INFO</h2>
