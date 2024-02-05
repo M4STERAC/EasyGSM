@@ -58,6 +58,7 @@ const CreateServer = ({ serverList }) => {
 
   return (
     <Card>
+      <h2 className="card-title">Create Server</h2>
       <form onSubmit={handleSubmit} className="server-form">
         <label>Game:</label>
         <input
@@ -125,12 +126,14 @@ const CreateServer = ({ serverList }) => {
             Failed to create server. Please validate input data.
           </p>
         ) : null}
-        <button type="submit" className="submit-button">
-          Create
-        </button>
-        <button className="cancel-button" onClick={() => navigate("/")}>
-          Cancel
-        </button>
+        <div className="button-container">
+          <button type="submit" className="submit-button">
+            Create
+          </button>
+          <button className="cancel-button" onClick={() => navigate("/")}>
+            Cancel
+          </button>
+        </div>
       </form>
     </Card>
   );
