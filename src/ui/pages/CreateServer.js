@@ -11,41 +11,36 @@ const CreateServer = () => {
   const [executable, setExecutable] = useState("");
   const [saveDirectory, setSaveDirectory] = useState("");
   const [banlist, setBanlist] = useState("");
+  const [postFail, setPostFail] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    for (let i = 0; i < 3; i++) {
-      try {
-        fetch("http://localhost:3001/Servers", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            saveDirectory,
-            banlist,
-            uptime: 0,
-            status: "Down",
-            players: 0,
-            lastrestart: await createUTCDate(),
-            lastupdate: await createUTCDate(),
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => console.log(data))
-          .catch((error) => console.error("Error:", error));
-        break;
-      } catch (error) {
-        console.error(error);
-        if (i >= 3)
-          console.errer(
-            "Failed to create server withing 3 attempts. Please try again later."
-          );
-      }
-    }
-    navigate.push("/#");
+    fetch("http://localhost:3001/Server", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        game,
+        name,
+        executable,
+        uptime: 0,
+        status: "Down",
+        saveDirectory,
+        banlist,
+        players: 0,
+        lastrestart: await createUTCDate(),
+        lastupdate: await createUTCDate(),
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .then(() => navigate("/"))
+      .catch((error) => {
+        console.error("Error:", error);
+        setPostFail(true);
+      });
   };
 
   return (
@@ -97,7 +92,7 @@ const CreateServer = () => {
                 .split("/")
                 .slice(0, -1)
                 .join("/");
-              setExecutable(path);
+              setSaveDirectory(path);
             }
           }}
           placeholder="C:\Users\mrman\AppData\Roaming\EldenRing\76561198108742533"
@@ -111,8 +106,17 @@ const CreateServer = () => {
           placeholder="255.255.255.255, 255.255.255.254"
         />
         <br />
-        <button type="submit" className="submit-button">Create</button>
-        <button className="cancel-button" onClick={() => navigate('/')}>Cancel</button>
+        {postFail ? (
+          <p className="error">
+            Failed to create server. Please validate input data.
+          </p>
+        ) : null}
+        <button type="submit" className="submit-button">
+          Create
+        </button>
+        <button className="cancel-button" onClick={() => navigate("/")}>
+          Cancel
+        </button>
       </form>
     </Card>
   );
