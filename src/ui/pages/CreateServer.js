@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { createUTCDate } from "../utils/generalFunctions";
 import { useNavigate } from "react-router-dom";
+import Card from "../components/Card";
+import "../css/CreateServer.css";
 
 const CreateServer = () => {
   const navigate = useNavigate();
+  const [game, setGame] = useState("");
   const [name, setName] = useState("");
+  const [executable, setExecutable] = useState("");
   const [saveDirectory, setSaveDirectory] = useState("");
   const [banlist, setBanlist] = useState("");
 
@@ -35,66 +39,81 @@ const CreateServer = () => {
         break;
       } catch (error) {
         console.error(error);
-        if (i >= 3) console.errer("Failed to create server withing 3 attempts. Please try again later.");
+        if (i >= 3)
+          console.errer(
+            "Failed to create server withing 3 attempts. Please try again later."
+          );
       }
     }
     navigate.push("/#");
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Game:
+    <Card>
+      <form onSubmit={handleSubmit} className="server-form">
+        <label>Game:</label>
         <input
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={game}
+          onChange={(e) => setGame(e.target.value)}
           placeholder="Elden Ring"
         />
-      </label>
-      <br />
-      <label>
-        Name:
+        <br />
+        <label>Name:</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Elden Ring Server 1"
         />
-      </label>
-      <br />
-      <label>
-        Path to Game Executable:
+        <br />
+        <label>Path to Game Executable:</label>
         <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          type="file"
+          webkitdirectory=""
+          directory=""
+          multiple
+          onChange={(e) => {
+            if (e.target.files.length > 0) {
+              const path = e.target.files[0].webkitRelativePath
+                .split("/")
+                .slice(0, -1)
+                .join("/");
+              setExecutable(path);
+            }
+          }}
           placeholder="C:\Program Files (x86)\Steam\steamapps\common\EldenRing\EldenRing.exe"
         />
-      </label>
-      <br />
-      <label>
-        Save Directory:
+        <br />
+        <label>Save Directory:</label>
         <input
-          type="text"
-          value={saveDirectory}
-          onChange={(e) => setSaveDirectory(e.target.value)}
+          type="file"
+          webkitdirectory=""
+          directory=""
+          multiple
+          onChange={(e) => {
+            if (e.target.files.length > 0) {
+              const path = e.target.files[0].webkitRelativePath
+                .split("/")
+                .slice(0, -1)
+                .join("/");
+              setExecutable(path);
+            }
+          }}
           placeholder="C:\Users\mrman\AppData\Roaming\EldenRing\76561198108742533"
         />
-      </label>
-      <br />
-      <label>
-        Banlist:
+        <br />
+        <label>Banlist:</label>
         <input
           type="text"
           value={banlist}
           onChange={(e) => setBanlist(e.target.value)}
           placeholder="255.255.255.255, 255.255.255.254"
         />
-      </label>
-      <br />
-      <button type="submit">Create</button>
-    </form>
+        <br />
+        <button type="submit">Create</button>
+      </form>
+    </Card>
   );
 };
 
