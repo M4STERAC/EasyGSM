@@ -1,9 +1,9 @@
 import React from "react";
 import "../css/ServerListItem.css";
 
-const ServerListItem = ({ server }) => {
+const ServerListItem = ({ server, onClick }) => {
   return (
-    <li>
+    <li onClick={onClick}>
       <a href="javascript:void(0)">
         {server.game} - {server.name}{" "}
         <span
