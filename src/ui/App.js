@@ -1,5 +1,5 @@
 import React from "react";
-import { createHashRouter, RouterProvider } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from "./pages/MainPage";
 import NotFound from "./pages/NotFound";
 import CreateServer from "./pages/CreateServer";
@@ -15,14 +15,16 @@ Sentry.init({
 
 console.log("loaded app.js");
 
-const router = createHashRouter([
-  { path: "/", element: <MainPage /> },
-  { path: "/add-server", element: <CreateServer /> },
-  { path: "*", element: <NotFound /> },
-]);
-
-function App() {
-  return <RouterProvider router={router} />;
-}
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/add-server" element={<CreateServer />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
+  );
+};
 
 export default App;
