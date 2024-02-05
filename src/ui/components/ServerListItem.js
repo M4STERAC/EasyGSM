@@ -1,7 +1,7 @@
 import React from "react";
 import "../css/ServerListItem.css";
 
-const ServerListItem = (server) => {
+const ServerListItem = ({ server }) => {
   return (
     <li>
       <a href="javascript:void(0)">
