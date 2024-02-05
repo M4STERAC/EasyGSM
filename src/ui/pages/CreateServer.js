@@ -111,7 +111,8 @@ const CreateServer = () => {
           placeholder="255.255.255.255, 255.255.255.254"
         />
         <br />
-        <button type="submit">Create</button>
+        <button type="submit" className="submit-button">Create</button>
+        <button className="cancel-button" onClick={() => navigate('/')}>Cancel</button>
       </form>
     </Card>
   );

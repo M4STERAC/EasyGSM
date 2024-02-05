@@ -7,3 +7,59 @@
     margin-bottom: 10px;
     margin-left: 10px;
 }
+
+.cancel-button {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-top: 20px;
+    margin-left: 20px;
+    color: #fff;
+    background-color: transparent;
+    border: 1px solid #0366d6;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    transition: .2s cubic-bezier(.3,0,.5,1);
+  }
+  
+  .cancel-button:hover {
+    background-color: #0366d6;
+    color: #ffffff;
+  }
+  
+  .cancel-button:active {
+    background-color: #0356a6;
+    border-color: #0356a6;
+  }
+
+.submit-button {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-top: 20px;
+    color: #fff;
+    background-color: #2ea44f;
+    border: 1px solid rgba(27,31,35,0.15);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    transition: .2s cubic-bezier(.3,0,.5,1);
+  }
+  
+  .submit-button:hover {
+    background-color: #2c974b;
+  }
+  
+  .submit-button:active {
+    background-color: #2a8f47;
+    border-color: rgba(27,31,35,0.35);
+  }
