@@ -4,6 +4,7 @@ import Card from "../components/Card";
 import Footer from "../components/Footer";
 import ServerListItem from "../components/ServerListItem";
 import ServerInfoItem from "../components/ServerInfoItem";
+import logo from "../images/EasyGSMLogo.png";
 import "../css/General.css";
 import "../css/MainPage.css";
 
@@ -54,7 +55,7 @@ const MainPage = () => {
       <Footer>
         <div>
           <div className="footer-logo">
-            <img src="../images/EasyGSMLogo.png" alt="EasyGSM Logo" />
+            <img src={logo} alt="EasyGSM Logo" />
           </div>
           <div className="footer-text">
             EasyGSM is an open source software. Please credit
