@@ -1,12 +1,8 @@
 import React from "react";
-// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { HashRouter, Route } from "react-router-dom";
-import {
-  createHashRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import MainPage from "./pages/MainPage";
-// import NotFound from "./pages/NotFound";
+import NotFound from "./pages/NotFound";
+import CreateServer from "./pages/CreateServer";
 import "./css/General.css";
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/browser";
@@ -14,7 +10,7 @@ import { BrowserTracing } from "@sentry/browser";
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
   integrations: [new BrowserTracing()],
-  tracesSampleRate: 1.0, // Adjust this value to control the percentage of transactions sent
+  tracesSampleRate: 1.0
 });
 
 const router = createHashRouter([
@@ -22,13 +18,18 @@ const router = createHashRouter([
     path: "/",
     element: <MainPage />,
     // loader: rootLoader,
-    // children: [
-    //   {
-    //     path: "*",
-    //     element: <NotFound />,
-    //     // loader: teamLoader,
-    //   },
-    // ],
+    children: [
+      {
+        path: "*",
+        element: <NotFound />,
+        // loader: teamLoader,
+      },
+      {
+        path: "/add-server",
+        element: <CreateServer />,
+        // loader: teamLoader,
+      },
+    ],
   },
 ]);
 
@@ -42,12 +43,8 @@ console.log("loaded app.js");
 //   </Sentry.ErrorBoundary>
 // );
 
-
 function App() {
   return <RouterProvider router={router} />;
 }
-  
-
-
 
 export default App;
