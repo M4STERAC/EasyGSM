@@ -2,8 +2,6 @@ import React from "react";
 import "../css/ServerInfoItem.css";
 
 const ServerInfoItem = ({ selectedServer }) => {
-  console.log("loaded ServerInfoItem.js");
-  console.log(selectedServer);
   return (
     <div>
       <li>

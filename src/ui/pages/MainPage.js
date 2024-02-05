@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 import ServerListItem from "../components/ServerListItem";
@@ -8,6 +9,7 @@ import "../css/MainPage.css";
 
 console.debug("loaded MainPage.js");
 const MainPage = () => {
+  const navigate = useNavigate();
   const [serverList, setServerList] = useState([]);
   const [selectedServer, setSelectedServer] = useState(null);
 
@@ -21,10 +23,6 @@ const MainPage = () => {
       .catch((error) => console.error("Error:", error));
   }, []);
 
-  useEffect(() => {
-    console.log(selectedServer);
-  }, [selectedServer]);
-
   return (
     <div className="general-style">
       <div className="content">
@@ -33,17 +31,14 @@ const MainPage = () => {
           <ul className="clickable-list">
             {serverList.map((server, index) => (
               <ServerListItem
-                onClick={() => {
-                  console.log("CLICKED");
-                  setSelectedServer(server);
-                }}
+                onClick={() => setSelectedServer(server)}
                 key={index}
                 server={server}
                 selectedServer={selectedServer}
               />
             ))}
           </ul>
-          <button className="add-server">+</button>
+          <button className="add-server" onClick={() => navigate('/add-server')}>+</button>
         </Card>
         <Card>
           <h2 className="card-title">SERVER INFO</h2>
