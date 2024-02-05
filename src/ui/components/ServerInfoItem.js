@@ -14,7 +14,7 @@ const ServerInfoItem = ({ selectedServer }) => {
         <p>Uptime: {selectedServer.uptime}</p>
       </li>
       <li>
-        <Link to={{ pathname: "/update-server", state: { yourState: selectedServer }}}>
+        <Link to={{ pathname: "/update-server", state: { yourState: selectedServer }}} j>
           Edit Configuration
         </Link>
       </li>

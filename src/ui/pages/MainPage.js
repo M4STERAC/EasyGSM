@@ -54,7 +54,7 @@ const MainPage = () => {
       <Footer>
         <div>
           <div className="footer-logo">
-            <img src="./images/EasyGSMLogo.png" alt="EasyGSM Logo" />
+            <img src="../images/EasyGSMLogo.png" alt="EasyGSM Logo" />
           </div>
           <div className="footer-text">
             EasyGSM is an open source software. Please credit
