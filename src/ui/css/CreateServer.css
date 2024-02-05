@@ -8,6 +8,12 @@
     margin-left: 10px;
 }
 
+.error {
+    margin-top: 10px;
+    margin-left: 10px;
+    color: #cb2431;
+}
+
 .cancel-button {
     display: inline-block;
     padding: 6px 12px;
