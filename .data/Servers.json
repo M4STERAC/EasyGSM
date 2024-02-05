@@ -9,6 +9,16 @@
       "banlist": ["29.113.64.2", "10.24.45.44", "10.79.88.244"],
       "lastrestart": "2021-07-12 12:00:00",
       "lastupdate": "2021-07-12 12:00:00"
+    },
+    {
+      "game": "Enshrouded",
+      "name": "YouTube Server",
+      "uptime": 156,
+      "status": "Running",
+      "players": 52,
+      "banlist": ["20.113.64.5", "10.222.45.44", "19.35.88.30"],
+      "lastrestart": "2021-09-17 12:01:32",
+      "lastupdate": "2022-12-29 12:56:00"
     }
   ]
 }
