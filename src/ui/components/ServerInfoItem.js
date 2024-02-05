@@ -1,20 +1,22 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../css/ServerInfoItem.css";
 
 const ServerInfoItem = ({ selectedServer }) => {
   return (
     <div>
       <li>
-        <p>{selectedServer.game} - {selectedServer.name}</p>
+        <p>
+          {selectedServer.game} - {selectedServer.name}
+        </p>
       </li>
       <li>
         <p>Uptime: {selectedServer.uptime}</p>
       </li>
       <li>
-        <a href="#">Edit Ban List</a>
-      </li>
-      <li>
-        <a href="#">Edit Configuration</a>
+        <Link to={{ pathname: "/update-server", state: { yourState: selectedServer }}}>
+          Edit Configuration
+        </Link>
       </li>
     </div>
   );
