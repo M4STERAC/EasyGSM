@@ -10,30 +10,16 @@ import { BrowserTracing } from "@sentry/browser";
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
   integrations: [new BrowserTracing()],
-  tracesSampleRate: 1.0
+  tracesSampleRate: 1.0,
 });
 
-const router = createHashRouter([
-  {
-    path: "/",
-    element: <MainPage />,
-    // loader: rootLoader,
-    children: [
-      {
-        path: "*",
-        element: <NotFound />,
-        // loader: teamLoader,
-      },
-      {
-        path: "/add-server",
-        element: <CreateServer />,
-        // loader: teamLoader,
-      },
-    ],
-  },
-]);
-
 console.log("loaded app.js");
+
+const router = createHashRouter([
+  { path: "/", element: <MainPage /> },
+  { path: "/add-server", element: <CreateServer /> },
+  { path: "*", element: <NotFound /> },
+]);
 
 function App() {
   return <RouterProvider router={router} />;
