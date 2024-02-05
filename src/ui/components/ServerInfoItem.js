@@ -7,7 +7,7 @@ const ServerInfoItem = ({ selectedServer }) => {
   return (
     <div>
       <li>
-        <p>Name: {selectedServer.name}</p>
+        <p>Name: {selectedServer.game} - {selectedServer.name}</p>
       </li>
       <li>
         <p>Uptime: {selectedServer.uptime}</p>
