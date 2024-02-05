@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createUTCDate } from "../utils/generalFunctions";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import "../css/CreateServer.css";
 
@@ -122,6 +122,7 @@ const UpdateServer = () => {
             <button className="cancel-button" onClick={() => navigate("/")}>
               Cancel
             </button>
+            <button className="delete-button" onClick={() => navigate("/")}>Delete</button>
           </form>
         </div>
       {/* } */}
