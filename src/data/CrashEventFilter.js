@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { parseLogToJSON } from "./utils/functions";
+import { parseLogToJSON } from "./utils/parsing";
 import * as os from "os";
 
 export async function FilterEvents() {
