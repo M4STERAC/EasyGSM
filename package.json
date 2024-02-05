@@ -5,9 +5,10 @@
   "main": "./out/src/ui/main.js",
   "scripts": {
     "test": "jest",
-    "build": "npm run build:react && electron . --trace-warnings",
-    "build:react": "webpack --mode production",
-    "build:pkg": "tsc --outDir ./out/src && pkg -t node18-win-x64 ./out/src/data/index.js -o ./FilterLogs.exe",
+    "build": "npm run webpack && npm run pkg && electron . --trace-warnings",
+    "build:pkg": "npm run webpack && npm run pkg",
+    "webpack": "webpack --mode production",
+    "pkg": "pkg -t node18-win-x64 ./out/src/data/index.js -o ./out/src/data/FilterLogs.exe",
     "release:minor": "npm version minor && git push && git push --tags",
     "release:patch": "npm version patch && git push && git push --tags",
     "start:json-server": "json-server --watch ./.data/Servers.json --port 3001"
