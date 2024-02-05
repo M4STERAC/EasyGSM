@@ -38,7 +38,7 @@ const CreateServer = () => {
         if (i >= 3) console.errer("Failed to create server withing 3 attempts. Please try again later.");
       }
     }
-    navigate.push("/");
+    navigate.push("/#");
   };
 
   return (
