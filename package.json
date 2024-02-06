@@ -5,7 +5,7 @@
   "main": "./out/src/ui/main.js",
   "scripts": {
     "test": "jest",
-    "build": "npm run webpack && npm run pkg && electron . --trace-warnings",
+    "build": "npm run webpack && electron . --trace-warnings",
     "build:pkg": "npm run webpack && npm run pkg",
     "webpack": "webpack --mode production",
     "pkg": "pkg -t node18-win-x64 ./out/src/data/index.js -o ./out/src/data/FilterLogs.exe",
