@@ -8,10 +8,12 @@ function createWindow () {
     minWidth: 800,
     minHeight: 550,
     webPreferences: {
-      nodeIntegration: true,
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false
     }
   });
-
+  
   win.loadFile(path.join(__dirname, 'index.html'));
 }
 
