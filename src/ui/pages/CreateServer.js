@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { createUTCDate } from "../utils/generalFunctions";
+import { StoreContext } from "../Store";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import { validateIpAddress } from "../utils/dataValidation";
 import "../css/CreateServer.css";
 
-const CreateServer = ({ serverList }) => {
+const CreateServer = () => {
   const navigate = useNavigate();
+  const [state, setState] = useContext(StoreContext);
   const [game, setGame] = useState("");
-  const [gameError, setGameError] = useState("");
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [executable, setExecutable] = useState("");
@@ -16,9 +17,6 @@ const CreateServer = ({ serverList }) => {
   const [banlist, setBanlist] = useState("");
   const [banlistError, setBanlistError] = useState("");
   const [postFail, setPostFail] = useState(false);
-
-  console.log("serverList");
-  console.log(serverList);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

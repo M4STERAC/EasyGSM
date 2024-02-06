@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { StoreContext } from "../Store";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 import ServerListItem from "../components/ServerListItem";
@@ -11,16 +12,20 @@ import "../css/MainPage.css";
 console.debug("loaded MainPage.js");
 const MainPage = () => {
   const navigate = useNavigate();
-  const [serverList, setServerList] = useState([]);
-  const [selectedServer, setSelectedServer] = useState(null);
+  const [state, setState] = useContext(StoreContext);
+  console.log(state);
+
+  const handleServerClick = (server) => {
+    setState((prevState) => ({
+      ...prevState,
+      selectedServer: server,
+    }));
+  };
 
   useEffect(() => {
     fetch("http://localhost:3001/Server")
       .then((response) => response.json())
-      .then((data) => {
-        console.debug(data);
-        setServerList(data);
-      })
+      .then((data) => setState((prevState) => ({ ...prevState, serverList: data })))
       .catch((error) => console.error("Error:", error));
   }, []);
 
@@ -30,22 +35,28 @@ const MainPage = () => {
         <Card>
           <h2 className="card-title">SERVER LIST</h2>
           <ul className="clickable-list">
-            {serverList.map((server, index) => (
-              <ServerListItem
-                onClick={() => setSelectedServer(server)}
-                key={index}
-                server={server}
-                selectedServer={selectedServer}
-              />
-            ))}
+            {state.serverList &&
+              state.serverList.map((server, index) => (
+                <ServerListItem
+                  onClick={() => handleServerClick(server)}
+                  key={index}
+                  server={server}
+                  selectedServer={state.selectedServer}
+                />
+              ))}
           </ul>
-          <button className="add-server" onClick={() => navigate('/add-server')}>+</button>
+          <button
+            className="add-server"
+            onClick={() => navigate("/add-server")}
+          >
+            +
+          </button>
         </Card>
         <Card>
           <h2 className="card-title">SERVER INFO</h2>
           <ul className="clickable-list">
-            {selectedServer ? (
-              <ServerInfoItem selectedServer={selectedServer} />
+            {state.selectedServer ? (
+              <ServerInfoItem selectedServer={state.selectedServer} />
             ) : (
               <li>Select a server</li>
             )}
