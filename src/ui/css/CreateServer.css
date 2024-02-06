@@ -16,13 +16,14 @@
 
 .button-container {
   display: flex;
+  justify-content: space-between;
 }
 
 .delete-button {
   display: inline-block;
   padding: 6px 12px;
   margin-top: 20px;
-  margin-left: 20px;
+  margin-left: auto;
   color: #fff;
   background-color: transparent;
   border: 1px solid #d73a49;
