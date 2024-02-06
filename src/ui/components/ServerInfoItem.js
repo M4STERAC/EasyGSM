@@ -20,15 +20,7 @@ const ServerInfoItem = ({ selectedServer }) => {
         <p>Uptime: {selectedServer.uptime}</p>
       </li>
       <li>
-        <Link
-          to={{
-            pathname: "/update-server",
-            state: { yourState: selectedServer },
-          }}
-          j
-        >
-          Edit
-        </Link>
+        <Link to={"/update-server"}>Edit</Link>
       </li>
       <div className="button-container">
         <CSSTransition
