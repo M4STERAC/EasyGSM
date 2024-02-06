@@ -2,10 +2,12 @@ import React, { useEffect, useState, useContext } from "react";
 import { StoreContext } from "../Store";
 import { CSSTransition } from "react-transition-group";
 import { Link } from "react-router-dom";
-import { executeBatchScript } from "../utils/executeScripts";
 import "../css/ServerInfoItem.css";
 
 const ServerInfoItem = ({ selectedServer }) => {
+  const executeScript = (scriptPath) => {
+    window.electron.invoke("execute-script", scriptPath);
+  };
   const [state, setState] = useContext(StoreContext);
   const [buttonState, setButtonState] = useState(selectedServer.status);
   const [isButtonDisabled, setButtonDisabled] = useState(false);
@@ -13,36 +15,38 @@ const ServerInfoItem = ({ selectedServer }) => {
     setButtonState(selectedServer.status);
   }, [selectedServer.status]);
 
-  const handleButtonClick = () => {
+  const handleStartButtonClick = () => {
     setTimeout(() => setButtonDisabled(false), 3000);
-    executeBatchScript('../../data/CrashManager.bat');
-    if (buttonState === "Down") {
-      setButtonState("Running");
-      setState((prevState) => {
-        const serverIndex = prevState.serverList.findIndex(
-          (server) => server.id === selectedServer.id
-        );
-        const newServerList = [...prevState.serverList];
-        newServerList[serverIndex] = {
-          ...newServerList[serverIndex],
-          status: "Running",
-        };
-        return { ...prevState, serverList: newServerList };
-      });
-    } else {
-      setButtonState("Down");
-      setState((prevState) => {
-        const serverIndex = prevState.serverList.findIndex(
-          (server) => server.id === selectedServer.id
-        );
-        const newServerList = [...prevState.serverList];
-        newServerList[serverIndex] = {
-          ...newServerList[serverIndex],
-          status: "Down",
-        };
-        return { ...prevState, serverList: newServerList };
-      });
-    }
+    executeScript("../../data/CrashManager.bat");
+    setButtonState("Running");
+    setState((prevState) => {
+      const serverIndex = prevState.serverList.findIndex(
+        (server) => server.id === selectedServer.id
+      );
+      const newServerList = [...prevState.serverList];
+      newServerList[serverIndex] = {
+        ...newServerList[serverIndex],
+        status: "Running",
+      };
+      return { ...prevState, serverList: newServerList };
+    });
+  };
+
+  const handleStopButtonClick = () => {
+    setTimeout(() => setButtonDisabled(false), 3000);
+    executeScript("execute-batch", "../../data/CrashManager.bat");
+    setButtonState("Down");
+    setState((prevState) => {
+      const serverIndex = prevState.serverList.findIndex(
+        (server) => server.id === selectedServer.id
+      );
+      const newServerList = [...prevState.serverList];
+      newServerList[serverIndex] = {
+        ...newServerList[serverIndex],
+        status: "Down",
+      };
+      return { ...prevState, serverList: newServerList };
+    });
   };
 
   return (
@@ -76,7 +80,7 @@ const ServerInfoItem = ({ selectedServer }) => {
         >
           <button
             className="start-button"
-            onClick={() => handleButtonClick()}
+            onClick={() => handleStartButtonClick()}
             disabled={isButtonDisabled}
           >
             Start
@@ -90,7 +94,7 @@ const ServerInfoItem = ({ selectedServer }) => {
         >
           <button
             className="stop-button"
-            onClick={() => handleButtonClick()}
+            onClick={() => handleStopButtonClick()}
             disabled={isButtonDisabled}
           >
             Stop
