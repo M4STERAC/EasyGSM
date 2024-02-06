@@ -7,7 +7,7 @@ require("dotenv").config();
 
 module.exports = {
   devtool: "source-map",
-  target: "electron-renderer",
+  target: "electron-main",
   entry: "./src/ui/index.js",
   module: {
     rules: [
@@ -56,8 +56,9 @@ module.exports = {
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: "src/data", to: "../data" },
-        { from: "src/ui/main.js", to: "./"}
+        { from: "src/data", to: "../data/" },
+        { from: "src/ui/main.js", to: "./"},
+        { from: "src/ui/preload.js", to: "./"}
       ],
     }),
   ],
