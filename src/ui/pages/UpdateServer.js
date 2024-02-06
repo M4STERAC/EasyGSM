@@ -8,23 +8,29 @@ import "../css/CreateServer.css";
 const UpdateServer = () => {
   const navigate = useNavigate();
   const [state, setState] = useContext(StoreContext);
+  const [id, setId] = useState(state.selectedServer.id);
   const [game, setGame] = useState(state.selectedServer.game);
   const [name, setName] = useState(state.selectedServer.name);
   const [executable, setExecutable] = useState(state.selectedServer.executable);
   const [saveDirectory, setSaveDirectory] = useState(state.selectedServer.saveDirectory);
   const [banlist, setBanlist] = useState(state.selectedServer.banlist);
   const [updateFail, setUpdateFail] = useState(false);
+  
+  console.log('loaded updateserver')
+  console.log(id)
+  console.log(state.selectedServer);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    fetch("http://localhost:3001/Server", {
-      method: "PUT",
+
+    fetch(`http://localhost:3001/Server/${id}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: state.selectedServer.id,
+        id,
         game,
         name,
         executable,
@@ -34,7 +40,7 @@ const UpdateServer = () => {
         banlist,
         players: 0,
         lastrestart: await createUTCDate(),
-        lastupdate: await createUTCDate(),
+        lastbackup: await createUTCDate(),
       }),
     })
       .then((response) => response.json())
@@ -137,7 +143,7 @@ const UpdateServer = () => {
             ) : null}
             <div className="button-container">
               <button type="submit" className="submit-button">
-                Create
+                Update
               </button>
               <button className="cancel-button" onClick={() => navigate("/")}>
                 Cancel

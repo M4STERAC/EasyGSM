@@ -15,7 +15,7 @@ const MainPage = () => {
   const [state, setState] = useContext(StoreContext);
   console.log(state);
 
-  const handleServerClick = (server) => {
+  const handleServerClick = (server) => { 
     setState((prevState) => ({
       ...prevState,
       selectedServer: server,
@@ -25,10 +25,12 @@ const MainPage = () => {
   useEffect(() => {
     fetch("http://localhost:3001/Server")
       .then((response) => response.json())
-      .then((data) => setState((prevState) => ({ ...prevState, serverList: data })))
+      .then((data) =>
+        setState((prevState) => ({ ...prevState, serverList: data }))
+      )
       .catch((error) => console.error("Error:", error));
   }, []);
-
+  
   return (
     <div className="general-style">
       <div className="content">
