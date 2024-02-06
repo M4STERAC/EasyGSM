@@ -27,7 +27,7 @@ const ServerInfoItem = ({ selectedServer }) => {
           }}
           j
         >
-          Edit Configuration
+          Edit
         </Link>
       </li>
       <div className="button-container">
