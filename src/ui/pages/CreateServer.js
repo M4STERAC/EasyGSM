@@ -16,6 +16,7 @@ const CreateServer = () => {
   const [saveDirectory, setSaveDirectory] = useState("");
   const [banlist, setBanlist] = useState("");
   const [banlistError, setBanlistError] = useState("");
+  const [ports, setPorts] = useState("");
   const [postFail, setPostFail] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -41,6 +42,7 @@ const CreateServer = () => {
         saveDirectory,
         banlist,
         players: 0,
+        ports,
         lastrestart: await createUTCDate(),
         lastupdate: await createUTCDate(),
       }),
@@ -116,6 +118,14 @@ const CreateServer = () => {
           type="text"
           value={banlist}
           onChange={(e) => setBanlist(e.target.value)}
+          placeholder="255.255.255.255, 255.255.255.254"
+        />
+        <br />
+        <label>Ports Required:</label>
+        <input
+          type="text"
+          value={banlist}
+          onChange={(e) => setPorts(e.target.value)}
           placeholder="255.255.255.255, 255.255.255.254"
         />
         <br />
