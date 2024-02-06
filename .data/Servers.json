@@ -33,19 +33,6 @@
       "players": 52,
       "lastrestart": "2021-09-17 12:01:32",
       "lastupdate": "2022-12-29 12:56:00"
-    },
-    {
-      "id": "1774",
-      "game": "xvbnc",
-      "name": "cfngh",
-      "executable": "",
-      "uptime": 0,
-      "status": "Down",
-      "saveDirectory": "",
-      "banlist": "255.256.1.5",
-      "players": 0,
-      "lastrestart": "2024-02-05 20:50:20",
-      "lastupdate": "2024-02-05 20:50:20"
     }
   ]
 }
