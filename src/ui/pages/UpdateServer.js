@@ -8,11 +8,11 @@ import "../css/CreateServer.css";
 const UpdateServer = () => {
   const navigate = useNavigate();
   const [state, setState] = useContext(StoreContext);
-  const [game, setGame] = useState("");
-  const [name, setName] = useState("");
-  const [executable, setExecutable] = useState("");
-  const [saveDirectory, setSaveDirectory] = useState("");
-  const [banlist, setBanlist] = useState("");
+  const [game, setGame] = useState(state.selectedServer.game);
+  const [name, setName] = useState(state.selectedServer.name);
+  const [executable, setExecutable] = useState(state.selectedServer.executable);
+  const [saveDirectory, setSaveDirectory] = useState(state.selectedServer.saveDirectory);
+  const [banlist, setBanlist] = useState(state.selectedServer.banlist);
   const [updateFail, setUpdateFail] = useState(false);
 
   const handleSubmit = async (e) => {
