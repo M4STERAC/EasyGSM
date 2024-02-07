@@ -35,6 +35,36 @@
       "ports": "8221, 68573",
       "lastrestart": "2024-02-06 01:26:26",
       "lastbackup": "2024-02-06 01:26:26"
+    },
+    {
+      "id": "baea",
+      "game": "Elden Ring",
+      "name": "Solo Server",
+      "executable": "D:\\SteamLibrary\\steamapps\\common\\ELDEN RING\\Game\\eldenring.exe",
+      "uptime": 0,
+      "status": "Down",
+      "saveDirectory": "C:\\Users\\mrman\\AppData\\Roaming\\EldenRing\\76561198108742533",
+      "banlist": "",
+      "players": 0,
+      "ports": "8221",
+      "lastrestart": "2024-02-06 16:44:35",
+      "lastupdate": "2024-02-06 16:29:38",
+      "lastbackup": "2024-02-06 16:44:35"
+    },
+    {
+      "id": "ec23",
+      "game": "Palworld",
+      "name": "YouTube World",
+      "executable": "C:/Users/JohnDoe/Documents/PalWorld/PalWorld.exe",
+      "uptime": 0,
+      "status": "Down",
+      "saveDirectory": "C:/Users/JohnDoe/Documents/PalWorld/SaveFiles/",
+      "banlist": "",
+      "players": 0,
+      "ports": "",
+      "lastrestart": "2024-02-07 03:18:17",
+      "lastupdate": "2024-02-07 03:10:04",
+      "lastbackup": "2024-02-07 03:18:17"
     }
   ]
 }
