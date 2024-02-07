@@ -36,7 +36,7 @@ const ServerInfoItem = ({ selectedServer }) => {
 
   const handleStopButtonClick = () => {
     setTimeout(() => setButtonDisabled(false), 3000);
-    executeScript("execute-batch", "../../data/CrashManager.bat");
+    runScript(`KillScript.bat "${selectedServer.game}" "${selectedServer.executable}"`);
     setButtonState("Down");
     setState((prevState) => {
       const serverIndex = prevState.serverList.findIndex(
