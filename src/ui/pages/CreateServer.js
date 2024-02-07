@@ -78,36 +78,18 @@ const CreateServer = () => {
         <br />
         <label>Path to Game Executable:</label>
         <input
-          type="file"
-          webkitdirectory=""
-          directory=""
-          multiple
+          type="text"
           onChange={(e) => {
-            if (e.target.files.length > 0) {
-              const path = e.target.files[0].webkitRelativePath
-                .split("/")
-                .slice(0, -1)
-                .join("/");
-              setExecutable(path);
-            }
+            setExecutable(e.target.value);
           }}
           placeholder="C:\Program Files (x86)\Steam\steamapps\common\EldenRing\EldenRing.exe"
         />
         <br />
         <label>Save Directory:</label>
         <input
-          type="file"
-          webkitdirectory=""
-          directory=""
-          multiple
+          type="text"
           onChange={(e) => {
-            if (e.target.files.length > 0) {
-              const path = e.target.files[0].webkitRelativePath
-                .split("/")
-                .slice(0, -1)
-                .join("/");
-              setSaveDirectory(path);
-            }
+            setSaveDirectory(e.target.value);
           }}
           placeholder="C:\Users\mrman\AppData\Roaming\EldenRing\76561198108742533"
         />
@@ -124,9 +106,9 @@ const CreateServer = () => {
         <label>Ports Required:</label>
         <input
           type="text"
-          value={banlist}
+          value={ports}
           onChange={(e) => setPorts(e.target.value)}
-          placeholder="255.255.255.255, 255.255.255.254"
+          placeholder="8221, 27115"
         />
         <br />
         {postFail ? (
