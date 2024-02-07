@@ -3,6 +3,10 @@ p, Link {
   padding: 0;
 }
 
+.edit {
+  color: #0366d6;
+}
+
 .start-button {
   display: inline-block;
   padding: 6px 12px;
