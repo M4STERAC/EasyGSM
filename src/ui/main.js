@@ -6,7 +6,7 @@ const { exec } = require('child_process');
 ipcMain.handle('execute-script', (event, command) => {
   const [scriptName, ...args] = command.split(' ');
   const scriptPath = path.join(__dirname, '..', 'data', scriptName);
-  const absoluteCommand = `${scriptPath} ${args.join(' ')}`;
+  const absoluteCommand = `"${scriptPath}" ${args.join(' ')}`;
   console.log(`Executing command: ${absoluteCommand}`);
     return new Promise((resolve, reject) => {
         exec(absoluteCommand, (error, stdout, stderr) => {
