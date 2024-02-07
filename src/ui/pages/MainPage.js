@@ -15,7 +15,7 @@ const MainPage = () => {
   const [state, setState] = useContext(StoreContext);
   console.log(state);
 
-  const handleServerClick = (server) => { 
+  const handleServerClick = (server) => {
     setState((prevState) => ({
       ...prevState,
       selectedServer: server,
@@ -30,7 +30,7 @@ const MainPage = () => {
       )
       .catch((error) => console.error("Error:", error));
   }, []);
-  
+
   return (
     <div className="general-style">
       <div className="content">
@@ -47,12 +47,12 @@ const MainPage = () => {
                 />
               ))}
           </ul>
-          <button
-            className="add-server"
-            onClick={() => navigate("/add-server")}
-          >
-            +
-          </button>
+            <button
+              className="add-server"
+              onClick={() => navigate("/add-server")}
+            >
+              +
+            </button>
         </Card>
         <Card>
           <h2 className="card-title">SERVER INFO</h2>

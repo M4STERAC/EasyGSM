@@ -12,17 +12,19 @@ const UpdateServer = () => {
   const [game, setGame] = useState(state.selectedServer.game);
   const [name, setName] = useState(state.selectedServer.name);
   const [executable, setExecutable] = useState(state.selectedServer.executable);
-  const [saveDirectory, setSaveDirectory] = useState(state.selectedServer.saveDirectory);
+  const [saveDirectory, setSaveDirectory] = useState(
+    state.selectedServer.saveDirectory
+  );
   const [banlist, setBanlist] = useState(state.selectedServer.banlist);
+  const [ports, setPorts] = useState("");
   const [updateFail, setUpdateFail] = useState(false);
-  
-  console.log('loaded updateserver')
-  console.log(id)
+
+  console.log("loaded updateserver");
+  console.log(id);
   console.log(state.selectedServer);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
 
     fetch(`http://localhost:3001/Server/${id}`, {
       method: "PATCH",
@@ -39,6 +41,7 @@ const UpdateServer = () => {
         saveDirectory,
         banlist,
         players: 0,
+        ports,
         lastrestart: await createUTCDate(),
         lastbackup: await createUTCDate(),
       }),
@@ -55,7 +58,7 @@ const UpdateServer = () => {
   const deleteServer = () => {
     console.log(state.selectedServer.id);
     fetch(`http://localhost:3001/Server/${state.selectedServer.id}`, {
-      method: "DELETE"
+      method: "DELETE",
     })
       .then((response) => response.json())
       .then((data) => console.log(data))
@@ -94,36 +97,18 @@ const UpdateServer = () => {
             <br />
             <label>Path to Game Executable:</label>
             <input
-              type="file"
-              webkitdirectory=""
-              directory=""
-              multiple
+              type="text"
               onChange={(e) => {
-                if (e.target.files.length > 0) {
-                  const path = e.target.files[0].webkitRelativePath
-                    .split("/")
-                    .slice(0, -1)
-                    .join("/");
-                  setExecutable(path);
-                }
+                setExecutable(e.target.value);
               }}
               placeholder={state.selectedServer.executable}
             />
             <br />
             <label>Save Directory:</label>
             <input
-              type="file"
-              webkitdirectory=""
-              directory=""
-              multiple
+              type="text"
               onChange={(e) => {
-                if (e.target.files.length > 0) {
-                  const path = e.target.files[0].webkitRelativePath
-                    .split("/")
-                    .slice(0, -1)
-                    .join("/");
-                  setSaveDirectory(path);
-                }
+                setSaveDirectory(e.target.value);
               }}
               placeholder={state.selectedServer.saveDirectory}
             />
@@ -134,6 +119,14 @@ const UpdateServer = () => {
               value={banlist}
               onChange={(e) => setBanlist(e.target.value)}
               placeholder={state.selectedServer.banlist.toString()}
+            />
+            <br />
+            <label>Ports Required:</label>
+            <input
+              type="text"
+              value={ports}
+              onChange={(e) => setPorts(e.target.value)}
+              placeholder="8221, 27115"
             />
             <br />
             {updateFail ? (
@@ -148,10 +141,7 @@ const UpdateServer = () => {
               <button className="cancel-button" onClick={() => navigate("/")}>
                 Cancel
               </button>
-              <button
-                className="delete-button"
-                onClick={() => deleteServer()}
-              >
+              <button className="delete-button" onClick={() => deleteServer()}>
                 Delete
               </button>
             </div>
