@@ -5,9 +5,11 @@ import { Link } from "react-router-dom";
 import "../css/ServerInfoItem.css";
 
 const ServerInfoItem = ({ selectedServer }) => {
-  const executeScript = (scriptPath) => {
-    window.electron.invoke("execute-script", scriptPath);
-  };
+  const runScript = (scriptPath) => {
+    window.electron.invoke('execute-script', scriptPath)
+        .then(output => console.log(output))
+        .catch(error => console.error(error));
+};
   const [state, setState] = useContext(StoreContext);
   const [buttonState, setButtonState] = useState(selectedServer.status);
   const [isButtonDisabled, setButtonDisabled] = useState(false);
@@ -17,7 +19,7 @@ const ServerInfoItem = ({ selectedServer }) => {
 
   const handleStartButtonClick = () => {
     setTimeout(() => setButtonDisabled(false), 3000);
-    executeScript("../../data/CrashManager.bat");
+    runScript("../../data/CreateBackupSchedule.bat");
     setButtonState("Running");
     setState((prevState) => {
       const serverIndex = prevState.serverList.findIndex(
@@ -63,13 +65,9 @@ const ServerInfoItem = ({ selectedServer }) => {
         <p>Ports: {selectedServer.ports}</p>
       </li>
       <li>
-        <p>Save Directory: {selectedServer.savedirectory}</p>
-      </li>
-      <li>
-        <p>Executable Directory: {selectedServer.executable}</p>
-      </li>
-      <li>
-        <Link to={"/update-server"}>Edit</Link>
+        <Link className="edit" to={"/update-server"}>
+          Edit
+        </Link>
       </li>
       <div className="button-container">
         <CSSTransition
