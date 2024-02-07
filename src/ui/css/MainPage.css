@@ -47,7 +47,7 @@ body {
   border-radius: 50%;
   background-color: transparent;
   color: #2fbf10;
-  margin: 0.25em;
+  margin: 0.5em, 0.25em, 0.25em, 0.25em;
 }
 
 .add-server:hover {
