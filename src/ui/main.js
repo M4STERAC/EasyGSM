@@ -3,9 +3,13 @@ const path = require('path');
 const { ipcMain } = require('electron');
 const { exec } = require('child_process');
 
-ipcMain.handle('execute-script', (event, scriptPath) => {
+ipcMain.handle('execute-script', (event, command) => {
+  const [scriptName, ...args] = command.split(' ');
+  const scriptPath = path.join(__dirname, '..', 'data', scriptName);
+  const absoluteCommand = `${scriptPath} ${args.join(' ')}`;
+  console.log(`Executing command: ${absoluteCommand}`);
     return new Promise((resolve, reject) => {
-        exec(`start cmd.exe /K "${scriptPath}"`, (error, stdout, stderr) => {
+        exec(absoluteCommand, (error, stdout, stderr) => {
             if (error) {
                 reject(`exec error: ${error}`);
                 return;
