@@ -19,7 +19,7 @@ const ServerInfoItem = ({ selectedServer }) => {
 
   const handleStartButtonClick = () => {
     setTimeout(() => setButtonDisabled(false), 3000);
-    runScript("../data/CreateBackupSchedule.bat");
+    runScript(`CrashManager.bat "${selectedServer.game}" "${selectedServer.executable}"`);
     setButtonState("Running");
     setState((prevState) => {
       const serverIndex = prevState.serverList.findIndex(
