@@ -2,21 +2,36 @@ const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const { ipcMain } = require('electron');
 const { exec } = require('child_process');
+const { spawn } = require('child_process');
 
-ipcMain.handle('execute-script', (event, command) => {
-  const [scriptName, ...args] = command.split(' ');
-  const scriptPath = path.join(__dirname, '..', 'data', scriptName);
-  const absoluteCommand = `"${scriptPath}" ${args.join(' ')}`;
-  console.log(`Executing command: ${absoluteCommand}`);
-    return new Promise((resolve, reject) => {
-        exec(absoluteCommand, (error, stdout, stderr) => {
-            if (error) {
-                reject(`exec error: ${error}`);
-                return;
-            }
-            resolve(`stdout: ${stdout}`);
-        });
+ipcMain.handle('run-script', (event, executable) => {
+  return new Promise((resolve, reject) => {
+    // const child = spawn('cmd.exe', ['/K', absoluteCommand], { shell: true, detached: true, stdio: 'inherit' });
+    const child = spawn(executable);
+    console.log('Spawned child pid: ' + child.pid);
+    child.on('exit', (code) => {
+      if (code !== 0) {
+        console.log('Process crashed with exit code ' + code);
+      }
     });
+
+    child.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
+
+    child.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+
+    child.on('error', (error) => {
+      reject(`spawn error: ${error}`);
+    });
+
+    child.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+      resolve(`child process exited with code ${code}`);
+    });
+  });
 });
 
 function createWindow () {
