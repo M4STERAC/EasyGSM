@@ -5,10 +5,6 @@ import { Link } from "react-router-dom";
 import "../css/ServerInfoItem.css";
 
 const ServerInfoItem = ({ selectedServer }) => {
-  // useEffect(() => {
-  //   setButtonState(selectedServer.status);
-  // }, [selectedServer.status]);
-
   const [state, setState] = useContext(StoreContext);
   const [buttonState, setButtonState] = useState("Down");
   const [isButtonDisabled, setButtonDisabled] = useState(false);
@@ -23,7 +19,6 @@ const ServerInfoItem = ({ selectedServer }) => {
   const handleStartButtonClick = () => {
     setTimeout(() => setButtonDisabled(false), 3000);
     runScript('run-script', selectedServer);
-    // runScript("start-server", `CrashManager.bat "${selectedServer.game}" "${selectedServer.executable}" "${selectedServer.executable.split("\\").pop()}"`);
     setButtonState("Running");
     setState((prevState) => {
       const serverIndex = prevState.serverList.findIndex(
