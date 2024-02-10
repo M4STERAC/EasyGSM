@@ -9,8 +9,8 @@ set outboundUDPPorts=%~5
 
 set RULE_NAME1=%game%InboundTCP
 set RULE_NAME2=%game%OutboundTCP
-set RULE_NAME3=%game%OutboundUDP
 set RULE_NAME4=%game%InboundUDP
+set RULE_NAME3=%game%OutboundUDP
 
 
 powershell -Command "if (Get-NetFirewallRule -DisplayName '%RULE_NAME1%' -ErrorAction SilentlyContinue) { Write-Host 'The rule %RULE_NAME1% already exists.' } else { New-NetFirewallRule -DisplayName '%RULE_NAME1%' -Direction Inbound -LocalPort 27015,27016,25575 -Protocol TCP -Action Allow }"
