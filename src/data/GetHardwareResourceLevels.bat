@@ -1,7 +1,9 @@
 @echo off
+
+set game=%~1
 setlocal
 
-set destination=%USERPROFILE%\Documents\PalServer\logs\error
+set destination=%USERPROFILE%\Documents\%game%\logs\error
 set filename=resource_usage.txt
 
 if not exist %destination% mkdir %destination%
