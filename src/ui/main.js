@@ -1,36 +1,47 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
-const { ipcMain } = require('electron');
+const { ipcMain, dialog } = require('electron');
 const { exec } = require('child_process');
 const { spawn } = require('child_process');
+const treeKill = require('tree-kill');
 
-ipcMain.handle('run-script', (event, executable) => {
+let children = [];
+
+ipcMain.handle('run-script', (event, server) => {
   return new Promise((resolve, reject) => {
-    // const child = spawn('cmd.exe', ['/K', absoluteCommand], { shell: true, detached: true, stdio: 'inherit' });
-    const child = spawn(executable);
+    const child = spawn(server.executable, {detached: true});
+    children.push({ pid: child.pid, game: server.game, name: server.name });
     console.log('Spawned child pid: ' + child.pid);
     child.on('exit', (code) => {
-      if (code !== 0) {
-        console.log('Process crashed with exit code ' + code);
-      }
+      if (code == 0 || code == 1 || code == 3221225786) console.log('Process exited successfully');
+      else dialog.showErrorBox(`Crash Notification`, `${server.game} - ${server.name} crashed at ${new Date().toLocaleString()}`);
     });
-
-    child.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-
-    child.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`);
-    });
-
+    child.stdout.on('data', (data) => console.log(`stdout: ${data}`));
+    child.stderr.on('data', (data) => console.error(`stderr: ${data}`));
     child.on('error', (error) => {
-      reject(`spawn error: ${error}`);
+      ipcMain.handle('stop-server', server);
+      reject(`spawn error: ${error}`)
     });
+    child.on('close', (code) => resolve(`child process closed successfully`));
+  });
+});
 
-    child.on('close', (code) => {
-      console.log(`child process exited with code ${code}`);
-      resolve(`child process exited with code ${code}`);
-    });
+ipcMain.handle('stop-server', (event, server) => {
+  return new Promise((resolve, reject) => {
+    let child = children.find((child) => child.name === server.name && child.game === server.game);
+    console.log(child)
+    if (child) {
+      console.log('found child to kill');
+      treeKill(child.pid, 'SIGTERM', (err) => {
+        if (err) console.log(err);
+        else console.log(`Server stopped for ${child.pid} ${child.game} - ${child.name}`)
+      });
+      children.splice(children.indexOf(child), 1);
+      resolve(`Server stopped for ${child.pid} ${child.game} - ${child.name}`);
+    } else {
+      console.log('Did not find child to kill');
+      reject('Server not found');
+    }
   });
 });
 
