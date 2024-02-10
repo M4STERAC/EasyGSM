@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 import "../css/ServerInfoItem.css";
 
 const ServerInfoItem = ({ selectedServer }) => {
-  useEffect(() => {
-    setButtonState(selectedServer.status);
-  }, [selectedServer.status]);
+  // useEffect(() => {
+  //   setButtonState(selectedServer.status);
+  // }, [selectedServer.status]);
 
   const [state, setState] = useContext(StoreContext);
-  const [buttonState, setButtonState] = useState(selectedServer.status);
+  const [buttonState, setButtonState] = useState("Down");
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   
   const runScript = (channel, scriptPath) => {
@@ -22,7 +22,7 @@ const ServerInfoItem = ({ selectedServer }) => {
 
   const handleStartButtonClick = () => {
     setTimeout(() => setButtonDisabled(false), 3000);
-    runScript('run-script', selectedServer.executable);
+    runScript('run-script', selectedServer);
     // runScript("start-server", `CrashManager.bat "${selectedServer.game}" "${selectedServer.executable}" "${selectedServer.executable.split("\\").pop()}"`);
     setButtonState("Running");
     setState((prevState) => {
@@ -40,7 +40,7 @@ const ServerInfoItem = ({ selectedServer }) => {
 
   const handleStopButtonClick = () => {
     setTimeout(() => setButtonDisabled(false), 3000);
-    runScript('run-script', `KillScript.bat "${selectedServer.game}"`);
+    runScript('stop-server', selectedServer);
     setButtonState("Down");
     setState((prevState) => {
       const serverIndex = prevState.serverList.findIndex(
