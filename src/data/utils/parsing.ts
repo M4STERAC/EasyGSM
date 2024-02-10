@@ -1,11 +1,11 @@
-export async function parseLogToJSON(logData) {
-    const events = [];
-    const eventLines = logData.split('\n\n').map(event => event.trim());
+export async function parseLogToJSON(logData: any) {
+    const events: object[] = [];
+    const eventLines: string[] = logData.split('\n\n').map(event => event.trim());
 
     eventLines.forEach(event => {
-        const lines = event.split('\n').map(line => line.trim());
-        const eventData = {};
-        let currentKey = "";
+        const lines: string[] = event.split('\n').map(line => line.trim());
+        const eventData: object = {};
+        let currentKey: string = "";
 
         lines.forEach(line => {
             if (line.includes(':')) {

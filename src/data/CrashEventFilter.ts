@@ -4,13 +4,13 @@ import * as os from "os";
 
 export async function FilterEvents() {
   let path = "C:\\temp\\EasyGSM\\PalWorldServerCrashLog.txt";
-  let logs = void 0;
-  let logJSON = void 0;
+  let logs: string;
+  let logJSON: any[];
   let attempt = 0;
 
   while (true) {
     try {
-      let logsBuffer = fs.readFileSync(path);
+      let logsBuffer: Buffer = fs.readFileSync(path);
       logs = logsBuffer.toString("utf-8");
       logJSON = await parseLogToJSON(logs);
       break;
