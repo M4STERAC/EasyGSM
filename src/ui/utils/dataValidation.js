@@ -15,3 +15,11 @@ export const validatePort = (port) => {
   const result = regex.test(port);
   return result;
 }
+
+export const checkDuplicateIds = (serverList, id) => {
+  console.log(`Checking for duplicate id: ${id}`);
+  const ids = serverList.map((server) => server.id);
+  const result = ids.includes(id);
+  console.log(`Result: ${result ? "Found a" : "Did not find a"} duplicate id for ${id}`);
+  return ids.includes(id);
+}
