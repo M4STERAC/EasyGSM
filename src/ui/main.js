@@ -1,7 +1,6 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const { ipcMain, dialog } = require('electron');
-const { exec } = require('child_process');
 const { spawn } = require('child_process');
 const treeKill = require('tree-kill');
 
@@ -62,6 +61,10 @@ function createWindow () {
 }
 
 app.whenReady().then(createWindow);
+
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit();
+});
 
 //Make sure the main process validates all incoming IPC maessages to prevent unauthorized or malicious commands from being executed
 //If I end up using network communication, make sure I use secure channeles (SSL/TLS)
