@@ -1,7 +1,7 @@
 {
   "Servers": [
     {
-      "id": "9629",
+      "id": "9629fd877d",
       "game": "PalWorld",
       "name": "Friend Server",
       "executable": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\PalServer\\PalServer.exe",
@@ -24,7 +24,7 @@
       "lastbackup": "2024-02-06 01:12:46"
     },
     {
-      "id": "48c8",
+      "id": "48c8WX57Fr",
       "game": "Sons of the Forest",
       "name": "Public Server",
       "executable": "D:\\SteamLibrary\\steamapps\\common\\Sons Of The Forest\\SonsOfTheForest.exe",
@@ -47,7 +47,7 @@
       "lastbackup": "2024-02-06 01:26:26"
     },
     {
-      "id": "baea",
+      "id": "baea87DPh8",
       "game": "Elden Ring",
       "name": "Solo Server",
       "executable": "D:\\SteamLibrary\\steamapps\\common\\ELDEN RING\\Game\\eldenring.exe",
@@ -65,25 +65,6 @@
       "lastrestart": "2024-02-06 16:44:35",
       "lastupdate": "2024-02-06 16:29:38",
       "lastbackup": "2024-02-06 16:44:35"
-    },
-    {
-      "id": "7b6d",
-      "game": "Elden Ring",
-      "name": "asdf;lkj",
-      "executable": "asdl;kjf",
-      "uptime": 0,
-      "status": "Down",
-      "saveDirectory": "a;lsdkfj",
-      "banlist": "",
-      "players": 0,
-      "ports": {
-        "tcpinbound": "1111",
-        "tcpoutbound": "2222",
-        "udpinbound": "3333",
-        "udpoutbound": "4444"
-      },
-      "lastrestart": "2024-02-11 00:27:42",
-      "lastupdate": "2024-02-11 00:27:42"
     }
   ]
 }
