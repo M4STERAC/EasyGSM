@@ -3,7 +3,7 @@ import { createUTCDate } from "../utils/generalFunctions";
 import { StoreContext } from "../Store";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
-import { validateIpAddress } from "../utils/dataValidation";
+import { validateIpAddress, validatePort } from "../utils/dataValidation";
 import "../css/CreateServer.css";
 
 const CreateServer = () => {
@@ -15,32 +15,58 @@ const CreateServer = () => {
   const [saveDirectory, setSaveDirectory] = useState("");
   const [banlist, setBanlist] = useState("");
   const [banlistError, setBanlistError] = useState("");
-  const [ports, setPorts] = useState({ tcpinbound: "", tcpoutbound: "", udpinbound: "", udpoutbound: "" });
+  const [ports, setPorts] = useState({
+    tcpinbound: "",
+    tcpoutbound: "",
+    udpinbound: "",
+    udpoutbound: "",
+  });
+  const [portsError, setPortsError] = useState("");
 
-  useEffect(() => { 
-    console.error(banlistError);
-  }, [banlistError]);
+  useEffect(() => {
+    if (banlistError) console.error(banlistError);
+    if (portsError) console.error(portsError);
+  }, [banlistError, portsError]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     let postFail = false;
 
-
     const ips = banlist.split(",");
     for (let ip of ips) {
       ip = ip.replaceAll(/[^\d\.]/gm, "").trim();
-      if (ip === "") continue;
+      console.log("IP: " + ip);
+      if (ip === "") {
+        setBanlistError("");
+        continue;
+      }
       if (!validateIpAddress(ip)) {
         setBanlistError("Invalid IP address: " + ip);
         postFail = true;
         break;
+      } else {
+        console.log("IP Address: " + ip + " is valid");
+        setBanlistError("");
       }
-      else console.log("IP Address: " + ip + " is valid");
+    }
+
+    const portsArray = Object.values(ports);
+    for (let port of portsArray) {
+      port = port.replaceAll(/[^\d]/gm, "").trim();
+      if (port === "") continue;
+      if (!validatePort(port)) {
+        setPortsError("Invalid Port: " + port);
+        postFail = true;
+        break;
+      } else {
+        console.log("Port: " + port + " is valid");
+        setPortsError("");
+      }
     }
 
     if (!postFail) {
       window.electron
-        .invoke('save-data', {
+        .invoke("save-data", {
           game,
           name,
           executable,
@@ -51,13 +77,15 @@ const CreateServer = () => {
           players: 0,
           ports,
           lastrestart: await createUTCDate(),
-          lastupdate: await createUTCDate()
+          lastupdate: await createUTCDate(),
         })
-        .then((data) => setState((prevState) => ({ ...prevState, serverList: data })))
-        .then(() => console.log('Database: ', state.serverList))
+        .then((data) =>
+          setState((prevState) => ({ ...prevState, serverList: data }))
+        )
+        .then(() => console.log("Database: ", state.serverList))
         .then(() => navigate("/"))
         .catch((error) => console.error(error));
-    } else console.log(banlistError);
+    }
   };
 
   return (
@@ -107,35 +135,56 @@ const CreateServer = () => {
           placeholder="255.255.255.255, 255.255.255.254"
         />
         <br />
-        <label>TCP Inbound Ports Required:</label>
-        <input
-          type="text"
-          value={ports.tcpinbound}
-          onChange={(e) => setPorts({...ports, tcpinbound: e.target.value})}
-          placeholder="8221, 27115"
-        />
-        <label>TCP Outbound Ports Required:</label>
-        <input
-          type="text"
-          value={ports.tcpoutbound}
-          onChange={(e) => setPorts({...ports, tcpoutbound: e.target.value})}
-          placeholder="8221, 27115"
-        />
-        <label>UDP Inbound Ports Required:</label>
-        <input
-          type="text"
-          value={ports.udpinbound}
-          onChange={(e) => setPorts({...ports, udpinbound: e.target.value})}
-          placeholder="8221, 27115"
-        />
-        <label>UDP Outbound Ports Required:</label>
-        <input
-          type="text"
-          value={ports.udpoutbound}
-          onChange={(e) => setPorts({...ports, udpoutbound: e.target.value})}
-          placeholder="8221, 27115"
-        />
-        <br />
+        <div>
+          {portsError ? <p className="error">{portsError}</p> : null}
+          <p>Required Ports: </p>
+          <ul>
+            <li>
+              <label>TCP Inbound:</label>
+              <input
+                type="text"
+                value={ports.tcpinbound}
+                onChange={(e) =>
+                  setPorts({ ...ports, tcpinbound: e.target.value })
+                }
+                placeholder="8221, 27115"
+              />
+            </li>
+            <li>
+              <label>TCP Outbound:</label>
+              <input
+                type="text"
+                value={ports.tcpoutbound}
+                onChange={(e) =>
+                  setPorts({ ...ports, tcpoutbound: e.target.value })
+                }
+                placeholder="8221, 27115"
+              />
+            </li>
+            <li>
+              <label>UDP Inbound:</label>
+              <input
+                type="text"
+                value={ports.udpinbound}
+                onChange={(e) =>
+                  setPorts({ ...ports, udpinbound: e.target.value })
+                }
+                placeholder="8221, 27115"
+              />
+            </li>
+            <li>
+              <label>UDP Outbound:</label>
+              <input
+                type="text"
+                value={ports.udpoutbound}
+                onChange={(e) =>
+                  setPorts({ ...ports, udpoutbound: e.target.value })
+                }
+                placeholder="8221, 27115"
+              />
+            </li>
+          </ul>
+        </div>
         {banlistError ? (
           <p className="error">
             Failed to create server. Please validate input data.
