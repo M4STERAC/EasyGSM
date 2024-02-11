@@ -29,6 +29,7 @@ const CreateServer = () => {
     const ips = banlist.split(",");
     for (let ip of ips) {
       ip = ip.replaceAll(/[^\d\.]/gm, "").trim();
+      if (ip === "") continue;
       if (!validateIpAddress(ip)) {
         setBanlistError("Invalid IP address: " + ip);
         postFail = true;
