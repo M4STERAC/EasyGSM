@@ -13,7 +13,6 @@ console.debug("loaded MainPage.js");
 const MainPage = () => {
   const navigate = useNavigate();
   const [state, setState] = useContext(StoreContext);
-  console.log(state);
 
   const handleServerClick = (server) => {
     setState((prevState) => ({
@@ -23,12 +22,11 @@ const MainPage = () => {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3001/Server")
-      .then((response) => response.json())
-      .then((data) =>
-        setState((prevState) => ({ ...prevState, serverList: data }))
-      )
-      .catch((error) => console.error("Error:", error));
+    window.electron
+      .invoke('get-data')
+      .then((data) => setState((prevState) => ({ ...prevState, serverList: data })))
+      .then(() => console.log('Database: ', state.serverList))
+      .catch((error) => console.error(error));
   }, []);
 
   return (
@@ -36,21 +34,21 @@ const MainPage = () => {
       <div className="content">
         <Card>
           <h2 className="card-title">SERVER LIST</h2>
-            {state.serverList &&
-              state.serverList.map((server, index) => (
-                <ServerListItem
-                  onClick={() => handleServerClick(server)}
-                  key={index}
-                  server={server}
-                  selectedServer={state.selectedServer}
-                />
-              ))}
-            <button
-              className="add-server"
-              onClick={() => navigate("/add-server")}
-            >
-              +
-            </button>
+          {state.serverList &&
+            state.serverList.map((server, index) => (
+              <ServerListItem
+                onClick={() => handleServerClick(server)}
+                key={index}
+                server={server}
+                selectedServer={state.selectedServer}
+              />
+            ))}
+          <button
+            className="add-server"
+            onClick={() => navigate("/add-server")}
+          >
+            +
+          </button>
         </Card>
         <Card>
           <h2 className="card-title">SERVER INFO</h2>
