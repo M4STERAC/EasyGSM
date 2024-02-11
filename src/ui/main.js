@@ -22,8 +22,26 @@ ipcMain.handle("get-data", (event) => {
 ipcMain.handle("save-data", (event, data) => {  
   return new Promise((resolve, reject) => {
     try {
-      database.Servers.push(data);
+      const index = database.Servers.findIndex((server) => server.id === data.id);
+      if (index !== -1) database.Servers[index] = data;
+      else database.Servers.push(data);
       fs.writeFileSync(path.join(__dirname, "..", "..", ".data", "db.json"), JSON.stringify(database, null, 2));
+      resolve(database.Servers);
+    } catch (error) {
+      reject(error);
+    }
+  });
+});
+
+ipcMain.handle("delete-data", (event, data) => {  
+  return new Promise((resolve, reject) => {
+    try {
+      console.log('Id to delete: ', data.id);
+      const index = database.Servers.findIndex((server) => server.id === data.id);
+      database.Servers.splice(index, 1);
+      console.log('Updated Database', database);
+      fs.writeFileSync(path.join(__dirname, "..", "..", ".data", "db.json"), JSON.stringify(database, null, 2));
+      console.log('Database saved')
       resolve(database.Servers);
     } catch (error) {
       reject(error);
