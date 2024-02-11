@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { createUTCDate } from "../utils/generalFunctions";
 import { StoreContext } from "../Store";
 import { useNavigate } from "react-router-dom";
@@ -11,49 +11,52 @@ const CreateServer = () => {
   const [state, setState] = useContext(StoreContext);
   const [game, setGame] = useState("");
   const [name, setName] = useState("");
-  const [nameError, setNameError] = useState("");
   const [executable, setExecutable] = useState("");
   const [saveDirectory, setSaveDirectory] = useState("");
   const [banlist, setBanlist] = useState("");
   const [banlistError, setBanlistError] = useState("");
   const [ports, setPorts] = useState({ tcpinbound: "", tcpoutbound: "", udpinbound: "", udpoutbound: "" });
-  const [postFail, setPostFail] = useState(false);
+
+  useEffect(() => { 
+    console.error(banlistError);
+  }, [banlistError]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let postFail = false;
+
 
     const ips = banlist.split(",");
     for (let ip of ips) {
       ip = ip.replaceAll(/[^\d\.]/gm, "").trim();
-      if (!validateIpAddress(ip)) setBanlistError("Invalid IP address: " + ip);
+      if (!validateIpAddress(ip)) {
+        setBanlistError("Invalid IP address: " + ip);
+        postFail = true;
+        break;
+      }
+      else console.log("IP Address: " + ip + " is valid");
     }
 
-    fetch("http://localhost:3001/Server", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        game,
-        name,
-        executable,
-        uptime: 0,
-        status: "Down",
-        saveDirectory,
-        banlist,
-        players: 0,
-        ports,
-        lastrestart: await createUTCDate(),
-        lastupdate: await createUTCDate(),
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .then(() => navigate("/"))
-      .catch((error) => {
-        console.error("Error:", error);
-        setPostFail(true);
-      });
+    if (!postFail) {
+      window.electron
+        .invoke('save-data', {
+          game,
+          name,
+          executable,
+          uptime: 0,
+          status: "Down",
+          saveDirectory,
+          banlist,
+          players: 0,
+          ports,
+          lastrestart: await createUTCDate(),
+          lastupdate: await createUTCDate()
+        })
+        .then((data) => setState((prevState) => ({ ...prevState, serverList: data })))
+        .then(() => console.log('Database: ', state.serverList))
+        .then(() => navigate("/"))
+        .catch((error) => console.error(error));
+    } else console.log(banlistError);
   };
 
   return (
@@ -132,7 +135,7 @@ const CreateServer = () => {
           placeholder="8221, 27115"
         />
         <br />
-        {postFail ? (
+        {banlistError ? (
           <p className="error">
             Failed to create server. Please validate input data.
           </p>
