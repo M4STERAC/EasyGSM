@@ -8,7 +8,7 @@ const ServerInfoItem = ({ selectedServer }) => {
   const [state, setState] = useContext(StoreContext);
   const [buttonState, setButtonState] = useState("Down");
   const [isButtonDisabled, setButtonDisabled] = useState(false);
-  
+
   const runScript = (channel, scriptPath) => {
     window.electron
       .invoke(channel, scriptPath)
@@ -18,7 +18,7 @@ const ServerInfoItem = ({ selectedServer }) => {
 
   const handleStartButtonClick = () => {
     setTimeout(() => setButtonDisabled(false), 3000);
-    runScript('run-script', selectedServer);
+    runScript("run-script", selectedServer);
     setButtonState("Running");
     setState((prevState) => {
       const serverIndex = prevState.serverList.findIndex(
@@ -35,7 +35,7 @@ const ServerInfoItem = ({ selectedServer }) => {
 
   const handleStopButtonClick = () => {
     setTimeout(() => setButtonDisabled(false), 3000);
-    runScript('stop-server', selectedServer);
+    runScript("stop-server", selectedServer);
     setButtonState("Down");
     setState((prevState) => {
       const serverIndex = prevState.serverList.findIndex(
@@ -52,22 +52,20 @@ const ServerInfoItem = ({ selectedServer }) => {
 
   return (
     <div>
-      <li>
-        <p>
-          {selectedServer.game} - {selectedServer.name}
-        </p>
-      </li>
-      <li>
-        <p>Uptime: {selectedServer.uptime}</p>
-      </li>
-      <li>
-        <p>Ports: {selectedServer.ports}</p>
-      </li>
-      <li>
-        <Link className="edit" to={"/update-server"}>
-          Edit
-        </Link>
-      </li>
+      <p>
+        {selectedServer.game} - {selectedServer.name}
+      </p>
+      <p>Uptime: {selectedServer.uptime}</p>
+      <label>Ports Required</label>
+      <ul>
+        <li>TCP Ports: {selectedServer.ports.tcpinbound}</li>
+        <li>TCP Ports: {selectedServer.ports.tcpoutbound}</li>
+        <li>UPD Ports: {selectedServer.ports.udpinbound}</li>
+        <li>UDP Ports: {selectedServer.ports.udpoutbound}</li>
+      </ul>
+      <Link className="edit" to={"/update-server"}>
+        Edit
+      </Link>
       <div className="button-container">
         <CSSTransition
           in={buttonState === "Down"}
