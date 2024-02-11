@@ -16,12 +16,6 @@ body {
   text-align: left;
 }
 
-.clickable-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
 .server-list,
 .server-info {
   border: 1px solid .30363d;

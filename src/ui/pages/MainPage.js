@@ -54,7 +54,7 @@ const MainPage = () => {
         </Card>
         <Card>
           <h2 className="card-title">SERVER INFO</h2>
-          <ul className="clickable-list">
+          <ul>
             {state.selectedServer ? (
               <ServerInfoItem selectedServer={state.selectedServer} />
             ) : (
