@@ -36,7 +36,6 @@ const MainPage = () => {
       <div className="content">
         <Card>
           <h2 className="card-title">SERVER LIST</h2>
-          <ul className="clickable-list">
             {state.serverList &&
               state.serverList.map((server, index) => (
                 <ServerListItem
@@ -46,7 +45,6 @@ const MainPage = () => {
                   selectedServer={state.selectedServer}
                 />
               ))}
-          </ul>
             <button
               className="add-server"
               onClick={() => navigate("/add-server")}
