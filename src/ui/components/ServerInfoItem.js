@@ -9,7 +9,7 @@ const ServerInfoItem = ({ selectedServer }) => {
   const [buttonState, setButtonState] = useState("Down");
   const [isButtonDisabled, setButtonDisabled] = useState(false);
 
-  const runScript = (channel, scriptPath) => {
+  const executeServer = (channel, scriptPath) => {
     window.electron
       .invoke(channel, scriptPath)
       .then((output) => console.log(output))
@@ -18,7 +18,7 @@ const ServerInfoItem = ({ selectedServer }) => {
 
   const handleStartButtonClick = () => {
     setTimeout(() => setButtonDisabled(false), 3000);
-    runScript("run-script", selectedServer);
+    executeServer("start-server", selectedServer);
     setButtonState("Running");
     setState((prevState) => {
       const serverIndex = prevState.serverList.findIndex(
@@ -35,7 +35,7 @@ const ServerInfoItem = ({ selectedServer }) => {
 
   const handleStopButtonClick = () => {
     setTimeout(() => setButtonDisabled(false), 3000);
-    runScript("stop-server", selectedServer);
+    executeServer("stop-server", selectedServer);
     setButtonState("Down");
     setState((prevState) => {
       const serverIndex = prevState.serverList.findIndex(
