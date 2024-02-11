@@ -24,7 +24,7 @@ ipcMain.handle("save-data", (event, data) => {
     try {
       database.Servers.push(data);
       fs.writeFileSync(path.join(__dirname, "..", "..", ".data", "db.json"), JSON.stringify(database, null, 2));
-      resolve("Data saved successfully");
+      resolve(database.Servers);
     } catch (error) {
       reject(error);
     }
