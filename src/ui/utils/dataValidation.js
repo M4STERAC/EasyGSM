@@ -7,3 +7,11 @@ export const validateIpAddress = (ip) => {
   const result = regex.test(ip);
   return result;
 };
+
+export const validatePort = (port) => {
+  console.log(`Port ${port} is being validated`);
+  if (port === "") return true;
+  const regex = new RegExp(/^([1-9]|\d{2,4}|6[0-5][0-5][0-3][0-5])$/gm);
+  const result = regex.test(port);
+  return result;
+}
