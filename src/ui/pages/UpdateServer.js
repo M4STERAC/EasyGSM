@@ -1,5 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { createUTCDate } from "../utils/generalFunctions";
+import {
+  validateIpAddress,
+  validatePort,
+} from "../utils/dataValidation";
 import { StoreContext } from "../Store";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
@@ -8,7 +12,7 @@ import "../css/CreateServer.css";
 const UpdateServer = () => {
   const navigate = useNavigate();
   const [state, setState] = useContext(StoreContext);
-  const [id, setId] = useState(state.selectedServer.id);
+  const [id] = useState(state.selectedServer.id);
   const [game, setGame] = useState(state.selectedServer.game);
   const [name, setName] = useState(state.selectedServer.name);
   const [executable, setExecutable] = useState(state.selectedServer.executable);
@@ -16,57 +20,93 @@ const UpdateServer = () => {
     state.selectedServer.saveDirectory
   );
   const [banlist, setBanlist] = useState(state.selectedServer.banlist);
-  const [ports, setPorts] = useState("");
-  const [updateFail, setUpdateFail] = useState(false);
+  const [banlistError, setBanlistError] = useState("");
+  const [ports, setPorts] = useState(state.selectedServer.ports);
+  const [portsError, setPortsError] = useState("");
 
   console.log("loaded updateserver");
   console.log(id);
   console.log(state.selectedServer);
 
+  useEffect(() => {
+    if (banlistError) console.error(banlistError);
+    if (portsError) console.error(portsError);
+  }, [banlistError, portsError]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let postFail = false;
 
-    fetch(`http://localhost:3001/Server/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        game,
-        name,
-        executable,
-        uptime: 0,
-        status: "Down",
-        saveDirectory,
-        banlist,
-        players: 0,
-        ports,
-        lastrestart: await createUTCDate(),
-        lastbackup: await createUTCDate(),
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .then(() => navigate("/"))
-      .catch((error) => {
-        console.error("Error:", error);
-        setUpdateFail(true);
-      });
+    const ips = banlist.split(",");
+    for (let ip of ips) {
+      ip = ip.replaceAll(/[^\d\.]/gm, "").trim();
+      console.log("IP: " + ip);
+      if (ip === "") {
+        setBanlistError("");
+        continue;
+      }
+      if (!validateIpAddress(ip)) {
+        setBanlistError("Invalid IP address: " + ip);
+        postFail = true;
+        break;
+      } else {
+        console.log("IP Address: " + ip + " is valid");
+        setBanlistError("");
+      }
+    }
+
+    const portsArray = Object.values(ports);
+    for (let portList of portsArray) {
+      const portSplit = portList.split(",");
+      for (let port of portSplit) {
+        port = port.replaceAll(/[^\d]/gm, "").trim();
+        if (port === "") continue;
+        if (!validatePort(port)) {
+          setPortsError("Invalid Port: " + port);
+          postFail = true;
+          break;
+        } else {
+          console.log("Port: " + port + " is valid");
+          setPortsError("");
+        }
+      }
+    }
+
+    if (!postFail) {
+      window.electron
+        .invoke("save-data", {
+          id,
+          game,
+          name,
+          executable,
+          uptime: 0,
+          status: "Down",
+          saveDirectory,
+          banlist,
+          players: 0,
+          ports,
+          lastrestart: await createUTCDate(),
+          lastupdate: await createUTCDate(),
+        })
+        .then((data) =>
+          setState((prevState) => ({ ...prevState, serverList: data }))
+        )
+        .then(() => console.log("Updated Database: ", state.serverList))
+        .then(() => navigate("/"))
+        .catch((error) => console.error(error));
+    }
   };
 
   const deleteServer = () => {
-    console.log(state.selectedServer.id);
-    fetch(`http://localhost:3001/Server/${state.selectedServer.id}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .then(() => navigate("/"))
-      .catch((error) => {
-        console.error("Error:", error);
-        setUpdateFail(true);
-      });
+    console.log(`Deleting server with Id ${state.selectedServer.id}`);
+    window.electron
+        .invoke("delete-data", { id })
+        .then((data) =>
+          setState((prevState) => ({ ...prevState, serverList: data }))
+        )
+        .then(() => console.log("Updated Database: ", state.serverList))
+        .then(() => navigate("/"))
+        .catch((error) => console.error(error));
   };
 
   return (
@@ -114,22 +154,65 @@ const UpdateServer = () => {
             />
             <br />
             <label>Banlist:</label>
+            {banlistError ? <p className="error">{banlistError}</p> : null}
             <input
               type="text"
               value={banlist}
               onChange={(e) => setBanlist(e.target.value)}
-              placeholder={state.selectedServer.banlist.toString()}
+              placeholder="255.255.255.255, 255.255.255.254"
             />
             <br />
-            <label>Ports Required:</label>
-            <input
-              type="text"
-              value={ports}
-              onChange={(e) => setPorts(e.target.value)}
-              placeholder="8221, 27115"
-            />
-            <br />
-            {updateFail ? (
+            <div>
+              {portsError ? <p className="error">{portsError}</p> : null}
+              <p>Required Ports: </p>
+              <ul>
+                <li>
+                  <label>TCP Inbound:</label>
+                  <input
+                    type="text"
+                    value={ports.tcpinbound}
+                    onChange={(e) =>
+                      setPorts({ ...ports, tcpinbound: e.target.value })
+                    }
+                    placeholder="8221, 27115"
+                  />
+                </li>
+                <li>
+                  <label>TCP Outbound:</label>
+                  <input
+                    type="text"
+                    value={ports.tcpoutbound}
+                    onChange={(e) =>
+                      setPorts({ ...ports, tcpoutbound: e.target.value })
+                    }
+                    placeholder="8221, 27115"
+                  />
+                </li>
+                <li>
+                  <label>UDP Inbound:</label>
+                  <input
+                    type="text"
+                    value={ports.udpinbound}
+                    onChange={(e) =>
+                      setPorts({ ...ports, udpinbound: e.target.value })
+                    }
+                    placeholder="8221, 27115"
+                  />
+                </li>
+                <li>
+                  <label>UDP Outbound:</label>
+                  <input
+                    type="text"
+                    value={ports.udpoutbound}
+                    onChange={(e) =>
+                      setPorts({ ...ports, udpoutbound: e.target.value })
+                    }
+                    placeholder="8221, 27115"
+                  />
+                </li>
+              </ul>
+            </div>
+            {banlistError || portsError ? (
               <p className="error">
                 Failed to update/delete server. Please validate input data.
               </p>
