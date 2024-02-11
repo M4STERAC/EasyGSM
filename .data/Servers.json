@@ -32,7 +32,12 @@
         "19.35.88.30"
       ],
       "players": 0,
-      "ports": "8221, 68573",
+      "ports": {
+        "tcpinbound": "8221",
+        "tcpoutbound": "27115",
+        "udpinbound": "8221",
+        "udpoutbound": "27115"
+      },
       "lastrestart": "2024-02-06 01:26:26",
       "lastbackup": "2024-02-06 01:26:26"
     },
@@ -46,10 +51,34 @@
       "saveDirectory": "C:\\Users\\mrman\\AppData\\Roaming\\EldenRing\\76561198108742533",
       "banlist": "",
       "players": 0,
-      "ports": "8221",
+      "ports": {
+        "tcpinbound": "",
+        "tcpoutbound": "",
+        "udpinbound": "",
+        "udpoutbound": ""
+      },
       "lastrestart": "2024-02-06 16:44:35",
       "lastupdate": "2024-02-06 16:29:38",
       "lastbackup": "2024-02-06 16:44:35"
+    },
+    {
+      "id": "7b6d",
+      "game": "Elden Ring",
+      "name": "asdf;lkj",
+      "executable": "asdl;kjf",
+      "uptime": 0,
+      "status": "Down",
+      "saveDirectory": "a;lsdkfj",
+      "banlist": "",
+      "players": 0,
+      "ports": {
+        "tcpinbound": "1111",
+        "tcpoutbound": "2222",
+        "udpinbound": "3333",
+        "udpoutbound": "4444"
+      },
+      "lastrestart": "2024-02-11 00:27:42",
+      "lastupdate": "2024-02-11 00:27:42"
     }
   ]
 }
