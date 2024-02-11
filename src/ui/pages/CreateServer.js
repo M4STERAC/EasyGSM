@@ -1,14 +1,19 @@
 import React, { useState, useContext, useEffect } from "react";
-import { createUTCDate } from "../utils/generalFunctions";
+import { createUTCDate, generateId } from "../utils/generalFunctions";
 import { StoreContext } from "../Store";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
-import { validateIpAddress, validatePort } from "../utils/dataValidation";
+import {
+  validateIpAddress,
+  validatePort,
+  checkDuplicateIds,
+} from "../utils/dataValidation";
 import "../css/CreateServer.css";
 
 const CreateServer = () => {
   const navigate = useNavigate();
   const [state, setState] = useContext(StoreContext);
+  const [id, setId] = useState(generateId(10));
   const [game, setGame] = useState("");
   const [name, setName] = useState("");
   const [executable, setExecutable] = useState("");
@@ -31,6 +36,7 @@ const CreateServer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let postFail = false;
+    console.log(`Creating ID: ${id}`);
 
     const ips = banlist.split(",");
     for (let ip of ips) {
@@ -51,22 +57,35 @@ const CreateServer = () => {
     }
 
     const portsArray = Object.values(ports);
-    for (let port of portsArray) {
-      port = port.replaceAll(/[^\d]/gm, "").trim();
-      if (port === "") continue;
-      if (!validatePort(port)) {
-        setPortsError("Invalid Port: " + port);
-        postFail = true;
-        break;
-      } else {
-        console.log("Port: " + port + " is valid");
-        setPortsError("");
+    for (let portList of portsArray) {
+      const portSplit = portList.split(",");
+      for (let port of portSplit) {
+        port = port.replaceAll(/[^\d]/gm, "").trim();
+        if (port === "") continue;
+        if (!validatePort(port)) {
+          setPortsError("Invalid Port: " + port);
+          postFail = true;
+          break;
+        } else {
+          console.log("Port: " + port + " is valid");
+          setPortsError("");
+        }
       }
     }
 
+    while (true) {
+      if (checkDuplicateIds(state.serverList, id)) {
+        const newId = generateId(10);
+        if (id === newId) continue;
+        setId(newId);
+      }
+      break;
+    }
+    
     if (!postFail) {
       window.electron
         .invoke("save-data", {
+          id,
           game,
           name,
           executable,
@@ -185,7 +204,7 @@ const CreateServer = () => {
             </li>
           </ul>
         </div>
-        {banlistError ? (
+        {banlistError || portsError ? (
           <p className="error">
             Failed to create server. Please validate input data.
           </p>
