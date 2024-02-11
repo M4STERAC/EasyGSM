@@ -56,9 +56,10 @@ module.exports = {
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: "src/data", to: "../data/" },
+        { from: "src/data/*.bat", to: "../../" },
         { from: "src/ui/main.js", to: "./"},
-        { from: "src/ui/preload.js", to: "./"}
+        { from: "src/ui/preload.js", to: "./"},
+        { from: ".data/db.json", to: "../../.data/"}
       ],
     }),
   ],
