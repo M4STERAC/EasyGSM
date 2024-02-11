@@ -5,13 +5,47 @@
   "main": "./out/src/ui/main.js",
   "scripts": {
     "test": "jest",
-    "build": "npm run webpack && electron . --trace-warnings",
+    "build": "npm run webpack && electron-builder",
+    "electron": "npm run webpack && electron . --trace-warnings",
     "build:pkg": "npm run webpack && npm run pkg",
     "webpack": "webpack --mode production",
-    "pkg": "pkg -t node18-win-x64 ./out/src/data/index.js -o ./out/src/data/FilterLogs.exe",
     "release:minor": "npm version minor && git push && git push --tags",
     "release:patch": "npm version patch && git push && git push --tags",
-    "start:json-server": "json-server --watch ./.data/Servers.json --port 3001"
+    "start:json-server": "json-server --watch ./.data/db.json --port 3001"
+  },
+  "build": {
+    "appId": "com.mrmanka.easygsm",
+    "productName": "EasyGSM",
+    "directories": {
+      "output": "build"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
+    "icon": "src/ui/images/EasyGSMLogo.ico",
+    "files": [
+      "out/**/*"
+    ],
+    "nsis": {
+      "license": "./license.md",
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "src/ui/images/EasyGSMLogo.ico",
+      "installerHeader": "src/ui/images/EasyGSMLogo.bmp",
+      "installerSidebar": "src/ui/images/EasyGSMLogo.bmp",
+      "uninstallerIcon": "src/ui/images/EasyGSMLogo.ico",
+      "uninstallerSidebar": "src/ui/images/EasyGSMLogo.bmp",
+      "deleteAppDataOnUninstall": true
+    }
   },
   "author": "Matthew Manka",
   "license": "ISC",
@@ -27,6 +61,7 @@
     "copy-webpack-plugin": "^12.0.2",
     "copyfiles": "^2.4.1",
     "css-loader": "^6.10.0",
+    "electron": "^28.2.2",
     "electron-builder": "^24.9.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.6.0",
@@ -45,9 +80,8 @@
     "@types/react": "^18.2.51",
     "@types/react-dom": "^18.2.18",
     "axios": "^1.6.7",
-    "electron": "^28.2.0",
     "fs": "^0.0.1-security",
-    "json-server": "^1.0.0-alpha.23",
+    "lowdb": "^7.0.1",
     "os": "^0.1.2",
     "react-dom": "^18.2.0",
     "react-router": "^6.22.0",
