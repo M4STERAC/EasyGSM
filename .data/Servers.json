@@ -14,7 +14,12 @@
         "10.79.88.244"
       ],
       "players": 0,
-      "ports": "25565, 25566",
+      "ports": {
+        "tcpinbound": "2556",
+        "tcpoutbound": "2555",
+        "udpinbound": "2556",
+        "udpoutbound": "2555"
+      },
       "lastrestart": "2024-02-06 01:12:46",
       "lastbackup": "2024-02-06 01:12:46"
     },
