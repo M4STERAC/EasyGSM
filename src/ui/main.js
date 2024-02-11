@@ -11,8 +11,20 @@ let database;
 ipcMain.handle("get-data", (event) => {
   return new Promise((resolve, reject) => {
     try {
-      database = JSON.parse(fs.readFileSync(path.join(__dirname, "db.json"), "utf8"));
+      database = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "..", ".data", "db.json"), "utf8"));
       resolve(database.Servers);
+    } catch (error) {
+      reject(error);
+    }
+  });
+});
+
+ipcMain.handle("save-data", (event, data) => {  
+  return new Promise((resolve, reject) => {
+    try {
+      database.Servers.push(data);
+      fs.writeFileSync(path.join(__dirname, "..", "..", ".data", "db.json"), JSON.stringify(database, null, 2));
+      resolve("Data saved successfully");
     } catch (error) {
       reject(error);
     }
