@@ -16,7 +16,7 @@ const CreateServer = () => {
   const [saveDirectory, setSaveDirectory] = useState("");
   const [banlist, setBanlist] = useState("");
   const [banlistError, setBanlistError] = useState("");
-  const [ports, setPorts] = useState("");
+  const [ports, setPorts] = useState({ tcpinbound: "", tcpoutbound: "", udpinbound: "", udpoutbound: "" });
   const [postFail, setPostFail] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -103,11 +103,32 @@ const CreateServer = () => {
           placeholder="255.255.255.255, 255.255.255.254"
         />
         <br />
-        <label>Ports Required:</label>
+        <label>TCP Inbound Ports Required:</label>
         <input
           type="text"
-          value={ports}
-          onChange={(e) => setPorts(e.target.value)}
+          value={ports.tcpinbound}
+          onChange={(e) => setPorts({...ports, tcpinbound: e.target.value})}
+          placeholder="8221, 27115"
+        />
+        <label>TCP Outbound Ports Required:</label>
+        <input
+          type="text"
+          value={ports.tcpoutbound}
+          onChange={(e) => setPorts({...ports, tcpoutbound: e.target.value})}
+          placeholder="8221, 27115"
+        />
+        <label>UDP Inbound Ports Required:</label>
+        <input
+          type="text"
+          value={ports.udpinbound}
+          onChange={(e) => setPorts({...ports, udpinbound: e.target.value})}
+          placeholder="8221, 27115"
+        />
+        <label>UDP Outbound Ports Required:</label>
+        <input
+          type="text"
+          value={ports.udpoutbound}
+          onChange={(e) => setPorts({...ports, udpoutbound: e.target.value})}
           placeholder="8221, 27115"
         />
         <br />
