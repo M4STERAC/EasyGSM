@@ -52,6 +52,7 @@ const ServerInfoItem = ({ selectedServer }) => {
 
   return (
     <div>
+      <p>Id: {selectedServer.id}</p>
       <p>
         {selectedServer.game} - {selectedServer.name}
       </p>
