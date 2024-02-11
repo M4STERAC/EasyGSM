@@ -22,11 +22,15 @@ const MainPage = () => {
   };
 
   useEffect(() => {
-    window.electron
-      .invoke('get-data')
-      .then((data) => setState((prevState) => ({ ...prevState, serverList: data })))
-      .then(() => console.log('Database: ', state.serverList))
-      .catch((error) => console.error(error));
+    console.log(`[MainPage]: UseEffect Called. State: ${state.serverList}, ${state.selectedServer}`);
+    if (!state.serverList) {
+      window.electron
+        .invoke("get-data")
+        .then((data) => setState((prevState) => ({ ...prevState, serverList: data }))
+        )
+        .then(() => console.log("Database: ", state.serverList))
+        .catch((error) => console.error(error));
+    }
   }, []);
 
   return (
