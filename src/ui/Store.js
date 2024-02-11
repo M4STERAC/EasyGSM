@@ -1,21 +1,21 @@
-import React, { createContext, useState, /* useEffect */ } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 export const StoreContext = createContext();
 
 export const StoreProvider = ({ children }) => {
   const [state, setState] = useState({
-    // Your initial state here
+    serverList: [],
+    selectedServer: null,
   });
   console.log("Store Loaded");
 
-  // useEffect(() => {
-  //   fetch("http://localhost:3001/Server")
-  //     .then((response) => response.json())
-  //     .then((data) =>
-  //       setState((prevState) => ({ ...prevState, serverList: data }))
-  //     )
-  //     .catch((error) => console.error("Error:", error));
-  // }, []);
+  useEffect(() => {
+    window.electron
+      .invoke('get-data')
+      .then((data) => setState((prevState) => ({ ...prevState, serverList: data })))
+      .then(() => console.log('Database: ', state.serverList))
+      .catch((error) => console.error(error));
+  }, []);
 
   return (
     <StoreContext.Provider value={[state, setState]}>
