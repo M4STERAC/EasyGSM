@@ -2,7 +2,7 @@ const store = require("electron-store");
 
 const storage = new store();
 
-export function getWindowSettings() {
+function getWindowSettings() {
   const defaultBounds = { width: 800, height: 600 };
   const savedBounds = storage.get("windowBounds");
   if (savedBounds) return savedBounds;
@@ -12,14 +12,15 @@ export function getWindowSettings() {
   }
 }
 
-export function saveBounds(boundsArray) {
+function saveBounds(bounds) {
   try {
-    console.log("boundsArray: ", boundsArray);
-    const width = boundsArray[0];
-    const height = boundsArray[1];
-    storage.set("windowBounds", { width, height });
+    console.log("bounds: ", bounds);
+    const newBounds = { width: bounds.width, height: bounds.height };
+    storage.set("windowBounds", newBounds);
   } catch (error) {
     console.log("error: ", error);
   }
   return;
 }
+
+module.exports = { getWindowSettings, saveBounds };
