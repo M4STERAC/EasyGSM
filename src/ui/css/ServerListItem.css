@@ -6,11 +6,11 @@
   color: #ff6b6b;
 }
 
-li a {
+p a {
   text-decoration: none;
   color: inherit;
 }
 
-li a:hover {
+p a:hover {
   text-decoration: underline;
 } 
