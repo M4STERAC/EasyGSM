@@ -1,11 +1,13 @@
-const { saveBounds, getWindowSettings } = require('./settings.js');
+const { saveBounds, getWindowSettings } = require("./settings.js");
 const { app, BrowserWindow } = require("electron");
 const { ipcMain, dialog } = require("electron");
-const store = require('electron-store');
+const store = require("electron-store");
 const { spawn } = require("child_process");
 const treeKill = require("tree-kill");
 const path = require("path");
 const fs = require("fs");
+// const xssFilters = require("xss-filters");
+// const quote = require('shell-quote').quote;
 
 const storage = new store();
 
@@ -14,13 +16,13 @@ let children = [];
 ipcMain.handle("get-data", (event) => {
   return new Promise((resolve, reject) => {
     try {
-      let database = storage.get('database');
+      let database = storage.get("database");
       if (!database) {
         database = { Servers: [] };
-        storage.set('database', database);
+        storage.set("database", database);
       }
-      console.log('got database: ', database);
-      resolve(database.Servers)
+      console.log("got database: ", database);
+      resolve(database.Servers);
     } catch (error) {
       reject(error);
     }
@@ -30,12 +32,16 @@ ipcMain.handle("get-data", (event) => {
 ipcMain.handle("save-data", (event, data) => {
   return new Promise((resolve, reject) => {
     try {
-      const database = storage.get('database');
-      const index = database.Servers.findIndex((server) => server.id === data.id);
-      if (index === -1 && database && database.Servers) database.Servers.push(data);
+      // const sanitizedValue = xssFilters.inHTMLData(data);
+      const database = storage.get("database");
+      const index = database.Servers.findIndex(
+        (server) => server.id === data.id
+      );
+      if (index === -1 && database && database.Servers)
+        database.Servers.push(data);
       else database.Servers[index] = data;
-      storage.set('database', database);
-      console.log('saved database: ', database);
+      storage.set("database", database);
+      console.log("saved database: ", database);
       resolve(database.Servers);
     } catch (error) {
       reject(error);
@@ -46,12 +52,15 @@ ipcMain.handle("save-data", (event, data) => {
 ipcMain.handle("delete-data", (event, data) => {
   return new Promise((resolve, reject) => {
     try {
-      let database = storage.get('database');
-      if (!database || !database.Servers) throw 'Database not found or empty';
-      const index = database.Servers.findIndex((server) => server.id === data.id);
+      // const sanitizedValue = xssFilters.inHTMLData(data);
+      let database = storage.get("database");
+      if (!database || !database.Servers) throw "Database not found or empty";
+      const index = database.Servers.findIndex(
+        (server) => server.id === data.id
+      );
       database.Servers.splice(index, 1);
-      storage.set('database', database);
-      console.log('updated database: ', database);
+      storage.set("database", database);
+      console.log("updated database: ", database);
       resolve(database.Servers);
     } catch (error) {
       reject(error);
@@ -61,6 +70,8 @@ ipcMain.handle("delete-data", (event, data) => {
 
 ipcMain.handle("start-server", (event, server) => {
   return new Promise((resolve, reject) => {
+    // const sanitizedServer = xssFilters.inHTMLData(server);
+    // const safeExecutable = quote([server.executable]);
     const child = spawn(server.executable, { detached: true });
     children.push({ pid: child.pid, game: server.game, name: server.name });
     console.log("Spawned child pid: " + child.pid);
@@ -87,8 +98,9 @@ ipcMain.handle("start-server", (event, server) => {
 
 ipcMain.handle("stop-server", (event, server) => {
   return new Promise((resolve, reject) => {
+    // const sanitizedServer = xssFilters.inHTMLData(server);
     let child = children.find(
-      (child) => child.name === server.name && child.game === server.game
+      (child) => child.name === server.name && server.game === server.game
     );
     console.log(child);
     if (child) {
@@ -143,7 +155,7 @@ app.on("window-all-closed", function () {
 
 //Possible vulnerabilities:
 //Command Injection: If the batch scripts use input from the renderer, they may be able to execute arbitrary commands on the system
-//Insecure IPC channelse: If the IPC channel is not secured, an attacker might be able to eavesdrop or send unauthorized commands to the main process
+//Insecure IPC channels: If the IPC channel is not secured, an attacker might be able to eavesdrop or send unauthorized commands to the main process
 //Insufficient Input Validation: If the main process does not properly validate incoming IPC messages, it might execute malicious commands or scripts
 //Insecure Dependencies: If the IPC libraries or other dependencies have known vulnerabilities, an attacker might be able to exploit them to compromise the system
 //Privilege Escalation: If the renderer process has more permissions than it needs, an attacker who compromises the render process might be able to perform unauthroized actions
