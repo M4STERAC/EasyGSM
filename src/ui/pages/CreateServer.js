@@ -27,6 +27,8 @@ const CreateServer = () => {
     udpoutbound: "",
   });
   const [portsError, setPortsError] = useState("");
+  const [genericError, setGenericError] = useState("");
+  const [backupTime, setBackupTime] = useState("06:00");
 
   useEffect(() => {
     if (banlistError) console.error(banlistError);
@@ -81,6 +83,11 @@ const CreateServer = () => {
       }
       break;
     }
+
+    if (game === "" || name === "" || executable === "" || saveDirectory === "") {
+      setGenericError("Game, Name, Executable, and Save Directory are required fields.");
+      postFail = true;
+    }
     
     if (!postFail) {
       window.electron
@@ -96,7 +103,7 @@ const CreateServer = () => {
           players: 0,
           ports,
           lastrestart: await createUTCDate(),
-          lastupdate: await createUTCDate(),
+          backuptime: backupTime,
         })
         .then((data) =>
           setState((prevState) => ({ ...prevState, serverList: data }))
@@ -143,6 +150,14 @@ const CreateServer = () => {
             setSaveDirectory(e.target.value);
           }}
           placeholder="C:\Users\mrman\AppData\Roaming\EldenRing\76561198108742533"
+        />
+        <br />
+        <label>Backup Time:</label>
+        <input
+          type="time"
+          value={backupTime}
+          onChange={(e) => setBackupTime(e.target.value)}
+          placeholder="06:00"
         />
         <br />
         <label>Banlist:</label>
@@ -204,7 +219,8 @@ const CreateServer = () => {
             </li>
           </ul>
         </div>
-        {banlistError || portsError ? (
+        {genericError ? <p className="error">{genericError}</p> : null}
+        {banlistError || portsError || genericError ? (
           <p className="error">
             Failed to create server. Please validate input data.
           </p>

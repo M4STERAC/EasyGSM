@@ -20,6 +20,7 @@ const UpdateServer = () => {
   const [banlistError, setBanlistError] = useState("");
   const [ports, setPorts] = useState(state.selectedServer.ports);
   const [portsError, setPortsError] = useState("");
+  const [backupTime, setBackupTime] = useState("06:00");
 
   console.log("loaded updateserver");
   console.log(id);
@@ -82,7 +83,7 @@ const UpdateServer = () => {
           players: 0,
           ports,
           lastrestart: await createUTCDate(),
-          lastupdate: await createUTCDate(),
+          backuptime: backupTime,
         })
         .then((data) =>
           setState((prevState) => ({ ...prevState, serverList: data }))
@@ -147,6 +148,14 @@ const UpdateServer = () => {
                 setSaveDirectory(e.target.value);
               }}
               placeholder={state.selectedServer.saveDirectory}
+            />
+            <br />
+            <label>Backup Time:</label>
+            <input
+              type="time"
+              value={setBackupTime}
+              onChange={(e) => setBackupTime(e.target.value)}
+              placeholder="06:00"
             />
             <br />
             <label>Banlist:</label>
@@ -217,9 +226,13 @@ const UpdateServer = () => {
               <button type="submit" className="submit-button">
                 Update
               </button>
-              <button className="cancel-button" onClick={(e) => {
-                e.preventDefault();
-                navigate("/");}}>
+              <button
+                className="cancel-button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/");
+                }}
+              >
                 Cancel
               </button>
               <button

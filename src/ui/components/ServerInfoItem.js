@@ -57,6 +57,7 @@ const ServerInfoItem = ({ selectedServer }) => {
         {selectedServer.game} - {selectedServer.name}
       </p>
       <p>Uptime: {selectedServer.uptime}</p>
+      <p>Backup Scheduled: {selectedServer.backuptime}</p>
       <label>Ports Required</label>
       <ul>
         <li>TCP Ports: {selectedServer.ports.tcpinbound}</li>
