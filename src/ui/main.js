@@ -1,52 +1,121 @@
+const { saveBounds, getWindowSettings } = require('./settings.js');
 const { app, BrowserWindow } = require("electron");
-const path = require("path");
 const { ipcMain, dialog } = require("electron");
+const store = require('electron-store');
 const { spawn } = require("child_process");
 const treeKill = require("tree-kill");
+const path = require("path");
 const fs = require("fs");
 
+const storage = new store();
+
 let children = [];
-let database;
 
 ipcMain.handle("get-data", (event) => {
+
   return new Promise((resolve, reject) => {
     try {
-      database = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "..", ".data", "db.json"), "utf8"));
+      let database = storage.get('database');
+      if (!database) {
+        database = { Servers: [] };
+        storage.set('database', database);
+      }
+      console.log('got database: ', database);
+      resolve(database.Servers)
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+  // return new Promise((resolve, reject) => {
+  //   try {
+  //     const database = JSON.parse(
+  //       fs.readFileSync(
+  //         path.join(__dirname, "..", "..", ".data", "db.json"),
+  //         "utf8"
+  //       )
+  //     );
+  //     resolve(database.Servers);
+  //   } catch (error) {
+  //     reject(error);
+  //   }
+  // });
+});
+
+ipcMain.handle("save-data", (event, data) => {
+
+  return new Promise((resolve, reject) => {
+    try {
+      const database = storage.get('database');
+      if (database && database.Servers) database.Servers.push(data);
+      storage.set('database', { Servers: [data] });
+      console.log('saved database: ', database);
       resolve(database.Servers);
     } catch (error) {
       reject(error);
     }
   });
+
+  // return new Promise((resolve, reject) => {
+  //   try {
+  //     const filePath = path.join(__dirname, "..", "..", ".data", "db.json");
+  //     const fileContent = fs.readFileSync(filePath, 'utf-8');
+  //     const database = JSON.parse(fileContent);
+
+  //     const index = database.Servers.findIndex((server) => server.id === data.id);
+  //     if (index !== -1) database.Servers.splice(index, 1, data);
+  //     else database.Servers.push(data);
+
+  //     fs.writeFileSync(filePath, JSON.stringify(database, null, 2));
+  //     resolve(database.Servers);
+  //   } catch (error) {
+  //     reject(error);
+  //   }
+  // });
 });
 
-ipcMain.handle("save-data", (event, data) => {  
-  return new Promise((resolve, reject) => {
-    try {
-      const index = database.Servers.findIndex((server) => server.id === data.id);
-      if (index !== -1) database.Servers[index] = data;
-      else database.Servers.push(data);
-      fs.writeFileSync(path.join(__dirname, "..", "..", ".data", "db.json"), JSON.stringify(database, null, 2));
-      resolve(database.Servers);
-    } catch (error) {
-      reject(error);
-    }
-  });
-});
+ipcMain.handle("delete-data", (event, data) => {
 
-ipcMain.handle("delete-data", (event, data) => {  
   return new Promise((resolve, reject) => {
     try {
-      console.log('Id to delete: ', data.id);
+      const database = storage.get('database');
+      if (!database || !database.Servers) throw 'Database not found or empty';
       const index = database.Servers.findIndex((server) => server.id === data.id);
       database.Servers.splice(index, 1);
-      console.log('Updated Database', database);
-      fs.writeFileSync(path.join(__dirname, "..", "..", ".data", "db.json"), JSON.stringify(database, null, 2));
-      console.log('Database saved')
+      storage.set('database', database);
+      console.log('updated database: ', database);
       resolve(database.Servers);
     } catch (error) {
       reject(error);
     }
   });
+
+  // return new Promise((resolve, reject) => {
+  //   try {
+  //     const filePath = path.join(__dirname, "..", "..", ".data", "db.json");
+  //     const fileContent = fs.readFileSync(filePath, 'utf-8');
+  //     const database = JSON.parse(fileContent);
+  //     console.log('database: ', database);
+
+  //     const index = database.Servers.findIndex((server) => server.id === data.id);
+  //     if (index === -1) throw `Server with id ${data.id} not found in database`;
+
+  //     database.Servers.splice(index, 1);
+  //     const stringDB = JSON.stringify(database, null, 2);
+
+  //     console.log('string database: ', stringDB);
+  //     fs.writeFileSync(filePath, stringDB);
+
+  //     const checkfilePath = path.join(__dirname, "..", "..", ".data", "db.json");
+  //     const checkfileContent = fs.readFileSync(filePath, 'utf-8');
+  //     const checkdatabase = JSON.parse(fileContent);
+  //     console.log('updated database: ', database);
+
+  //     resolve(database.Servers);
+  //   } catch (error) {
+  //     reject(error);
+  //   }
+  // });
 });
 
 ipcMain.handle("start-server", (event, server) => {
@@ -100,9 +169,10 @@ ipcMain.handle("stop-server", (event, server) => {
 });
 
 function createWindow() {
-  const win = new BrowserWindow({
-    width: 1200,
-    height: 1200,
+  const bounds = getWindowSettings();
+  const window = new BrowserWindow({
+    width: bounds.width,
+    height: bounds.height,
     minWidth: 800,
     minHeight: 550,
     webPreferences: {
@@ -112,7 +182,8 @@ function createWindow() {
     },
   });
 
-  win.loadFile(path.join(__dirname, "index.html"));
+  window.loadFile(path.join(__dirname, "index.html"));
+  window.on("resized", () => saveBounds(window.getBounds()));
 }
 
 app.whenReady().then(createWindow);
