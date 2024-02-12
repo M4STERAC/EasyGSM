@@ -16,14 +16,20 @@ const UpdateServer = () => {
   const isUpdate = location.pathname === "/update-server";
   const [state, setState] = useContext(StoreContext);
   const [id] = useState(isUpdate ? state.selectedServer.id : generateId(10));
-  const [game, setGame] = useState((isUpdate ? state.selectedServer.game : ''));
-  const [name, setName] = useState((isUpdate ? state.selectedServer.name : ''));
-  const [executable, setExecutable] = useState((isUpdate ? state.selectedServer.executable : ''));
-  const [saveDirectory, setSaveDirectory] = useState(
-    (isUpdate ? state.selectedServer.saveDirectory : '')
+  const [game, setGame] = useState(isUpdate ? state.selectedServer.game : "");
+  const [name, setName] = useState(isUpdate ? state.selectedServer.name : "");
+  const [executable, setExecutable] = useState(
+    isUpdate ? state.selectedServer.executable : ""
   );
-  const [banlist, setBanlist] = useState((isUpdate ? state.selectedServer.banlist : ''));
-  const [ports, setPorts] = useState((isUpdate ? state.selectedServer.ports : ''));
+  const [saveDirectory, setSaveDirectory] = useState(
+    isUpdate ? state.selectedServer.saveDirectory : ""
+  );
+  const [banlist, setBanlist] = useState(
+    isUpdate ? state.selectedServer.banlist : ""
+  );
+  const [ports, setPorts] = useState(
+    isUpdate ? state.selectedServer.ports : ""
+  );
   const [backupTime, setBackupTime] = useState("06:00");
   const [errors, setErrors] = useState({
     errors: "",
@@ -154,7 +160,9 @@ const UpdateServer = () => {
         </p>
       ) : (
         <div>
-          <h2 className="card-title">{isUpdate ? 'Update ' : 'Create '}Server</h2>
+          <h2 className="card-title">
+            {isUpdate ? "Update " : "Create "}Server
+          </h2>
           <form onSubmit={handleSubmit} className="server-form">
             <label>Game:</label>
             <input
@@ -179,7 +187,11 @@ const UpdateServer = () => {
               onChange={(e) => {
                 setExecutable(e.target.value);
               }}
-              placeholder={isUpdate ? executable : "C:\\Program Files\\Elden Ring\\EldenRing.exe"}
+              placeholder={
+                isUpdate
+                  ? executable
+                  : "C:\\Program Files\\Elden Ring\\EldenRing.exe"
+              }
             />
             <br />
             <label>Save Directory:</label>
@@ -189,7 +201,9 @@ const UpdateServer = () => {
               onChange={(e) => {
                 setSaveDirectory(e.target.value);
               }}
-              placeholder={isUpdate ? saveDirectory : "C:\\Program Files\\Elden Ring"}
+              placeholder={
+                isUpdate ? saveDirectory : "C:\\Program Files\\Elden Ring"
+              }
             />
             <br />
             <label>Backup Time:</label>
@@ -219,7 +233,7 @@ const UpdateServer = () => {
                     onChange={(e) =>
                       setPorts({ ...ports, tcpinbound: e.target.value })
                     }
-                    placeholder={isUpdate ? ports.tcpinbound : '8221, 27115'}
+                    placeholder={isUpdate ? ports.tcpinbound : "8221, 27115"}
                   />
                 </li>
                 <li>
@@ -230,7 +244,7 @@ const UpdateServer = () => {
                     onChange={(e) =>
                       setPorts({ ...ports, tcpoutbound: e.target.value })
                     }
-                    placeholder={isUpdate ? ports.tcpoutbound : '8221, 27115'}
+                    placeholder={isUpdate ? ports.tcpoutbound : "8221, 27115"}
                   />
                 </li>
                 <li>
@@ -241,7 +255,7 @@ const UpdateServer = () => {
                     onChange={(e) =>
                       setPorts({ ...ports, udpinbound: e.target.value })
                     }
-                    placeholder={isUpdate ? ports.udpinbound : '8221, 27115'}
+                    placeholder={isUpdate ? ports.udpinbound : "8221, 27115"}
                   />
                 </li>
                 <li>
@@ -252,7 +266,7 @@ const UpdateServer = () => {
                     onChange={(e) =>
                       setPorts({ ...ports, udpoutbound: e.target.value })
                     }
-                    placeholder={isUpdate ? ports.udpoutbound : '8221, 27115'}
+                    placeholder={isUpdate ? ports.udpoutbound : "8221, 27115"}
                   />
                 </li>
               </ul>
@@ -270,18 +284,20 @@ const UpdateServer = () => {
               <p className="error">{errors.portError}</p>
             ) : null}
             <div className="button-container">
-              <button type="submit" className="submit-button">
-                {isUpdate ? 'Update' : 'Create'}
-              </button>
-              <button
-                className="cancel-button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/");
-                }}
-              >
-                Cancel
-              </button>
+              <div className="submit-cancel-container">
+                <button type="submit" className="submit-button">
+                  {isUpdate ? "Update" : "Create"}
+                </button>
+                <button
+                  className="cancel-button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/");
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
               {isUpdate ? (
                 <button
                   className="delete-button"
