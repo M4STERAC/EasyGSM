@@ -5,8 +5,9 @@ import {
   validatePort,
   validateFilePath,
   sanitizeAlphanumeric,
-  sanitizeFilePath
+  sanitizeFilePath,
 } from "../utils/dataValidation";
+import { executeScript } from "../utils/executeScript";
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../components/Card";
@@ -137,6 +138,19 @@ const UpdateServer = () => {
           setState((prevState) => ({ ...prevState, serverList: data }))
         )
         .then(() => console.log("Updated Database: ", state.serverList))
+        .then(() => {
+          console.log("Opening Ports");
+          executeScript({ name: "OpenPorts.bat", args: `${game} ${ports.tcpinbound} ${ports.tcpoutbound} ${ports.udpinbound} ${ports.udpoutbound}` });
+          console.log("Successfully opened ports");
+        })
+        .then(() => {
+          console.log("Creating Backup Schedule");
+          executeScript({
+            name: "CreateBackupSchedule.bat",
+            args: `${game} ${backupTime} ${saveDirectory}`,
+          });
+          console.log("Successfully created backup schedule");
+        })
         .then(() => navigate("/"))
         .catch((error) => console.error(error));
     }
@@ -254,7 +268,7 @@ const UpdateServer = () => {
                   <input
                     type="text"
                     value={ports.udpinbound}
-                    onChange={(e) => 
+                    onChange={(e) =>
                       setPorts({ ...ports, udpinbound: e.target.value })
                     }
                     placeholder={isUpdate ? ports.udpinbound : "8221, 27115"}
