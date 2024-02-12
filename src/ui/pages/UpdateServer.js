@@ -1,9 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { createUTCDate } from "../utils/generalFunctions";
-import {
-  validateIpAddress,
-  validatePort,
-} from "../utils/dataValidation";
+import { validateIpAddress, validatePort } from "../utils/dataValidation";
 import { StoreContext } from "../Store";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
@@ -99,13 +96,13 @@ const UpdateServer = () => {
   const deleteServer = () => {
     console.log(`Deleting server with Id ${state.selectedServer.id}`);
     window.electron
-        .invoke("delete-data", { id })
-        .then((data) =>
-          setState((prevState) => ({ ...prevState, serverList: data }))
-        )
-        .then(() => console.log("Updated Database: ", state.serverList))
-        .then(() => navigate("/"))
-        .catch((error) => console.error(error));
+      .invoke("delete-data", { id })
+      .then((data) =>
+        setState((prevState) => ({ ...prevState, serverList: data }))
+      )
+      .then(() => console.log("Updated Database: ", state.serverList))
+      .then(() => navigate("/"))
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -220,10 +217,18 @@ const UpdateServer = () => {
               <button type="submit" className="submit-button">
                 Update
               </button>
-              <button className="cancel-button" onClick={() => navigate("/")}>
+              <button className="cancel-button" onClick={(e) => {
+                e.preventDefault();
+                navigate("/");}}>
                 Cancel
               </button>
-              <button className="delete-button" onClick={() => deleteServer()}>
+              <button
+                className="delete-button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteServer();
+                }}
+              >
                 Delete
               </button>
             </div>
