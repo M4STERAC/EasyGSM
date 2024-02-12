@@ -2,7 +2,6 @@ import React from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import NotFound from "./pages/NotFound";
-import CreateServer from "./pages/CreateServer";
 import UpdateServer from "./pages/UpdateServer";
 import "./css/General.css";
 import * as Sentry from "@sentry/react";
@@ -23,7 +22,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/add-server" element={<CreateServer />} />
+          <Route path="/add-server" element={<UpdateServer />} />
           <Route path="/update-server" element={<UpdateServer />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
