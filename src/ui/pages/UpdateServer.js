@@ -8,7 +8,7 @@ import {
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../components/Card";
-import "../css/CreateServer.css";
+import "../css/UpdateServer.css";
 
 const UpdateServer = () => {
   const navigate = useNavigate();
