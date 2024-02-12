@@ -153,7 +153,7 @@ const UpdateServer = () => {
             <label>Backup Time:</label>
             <input
               type="time"
-              value={setBackupTime}
+              value={backupTime}
               onChange={(e) => setBackupTime(e.target.value)}
               placeholder="06:00"
             />
