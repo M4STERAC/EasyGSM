@@ -4,6 +4,8 @@ import {
   validateIpAddress,
   validatePort,
   validateFilePath,
+  sanitizeAlphanumeric,
+  sanitizeTime
 } from "../utils/dataValidation";
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -46,6 +48,12 @@ const UpdateServer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let postFail = false;
+    const sanitizedGame = sanitizeAlphanumeric(game);
+    const sanitizedName = sanitizeAlphanumeric(name);
+    const sanitizedTime = sanitizeTime(backupTime);
+    setGame(sanitizedGame);
+    setName(sanitizedName);
+    setBackupTime(sanitizedTime);
 
     const ips = banlist.split(",");
     for (let ip of ips) {

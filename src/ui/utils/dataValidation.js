@@ -37,3 +37,11 @@ export const validateFilePath = (path) => {
   };
   return true;
 }
+
+export const sanitizeAlphanumeric = (input) => {
+  return input.replaceAll(/[^a-z0-9 ]/gi, '');
+}
+
+export const sanitizeTime = (input) => {
+  return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(input);
+}
