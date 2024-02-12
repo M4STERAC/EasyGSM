@@ -140,7 +140,10 @@ const UpdateServer = () => {
         .then(() => console.log("Updated Database: ", state.serverList))
         .then(() => {
           console.log("Opening Ports");
-          executeScript({ name: "OpenPorts.bat", args: `${game} ${ports.tcpinbound} ${ports.tcpoutbound} ${ports.udpinbound} ${ports.udpoutbound}` });
+          executeScript({
+            name: "OpenPorts.bat",
+            args: `${game} ${ports.tcpinbound} ${ports.tcpoutbound} ${ports.udpinbound} ${ports.udpoutbound}`,
+          });
           console.log("Successfully opened ports");
         })
         .then(() => {
@@ -164,6 +167,15 @@ const UpdateServer = () => {
         setState((prevState) => ({ ...prevState, serverList: data }))
       )
       .then(() => console.log("Updated Database: ", state.serverList))
+      // .then(() => {
+      //   executeScript({ name: "DeleteOpenPorts.bat", args: `${game}` });
+      // })
+      // .then(() => {
+      //   executeScript({
+      //     name: "DeleteBackupSchedule.bat",
+      //     args: `${name}`,
+      //   });
+      // })
       .then(() => navigate("/"))
       .catch((error) => console.error(error));
   };
