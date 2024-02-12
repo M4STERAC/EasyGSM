@@ -7,7 +7,7 @@ import {
   sanitizeAlphanumeric,
   sanitizeFilePath,
 } from "../utils/dataValidation";
-import { executeScript } from "../utils/executeScript";
+import { executeScript } from "../utils/ipcExecutions";
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../components/Card";
