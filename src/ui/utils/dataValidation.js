@@ -24,15 +24,15 @@ export const checkDuplicateIds = (serverList, id) => {
   return ids.includes(id);
 }
 
-export const validateFilePath = (path) => {
-  console.log(`Path ${path} is being validated`);
-  if (path === "") return false;
+export const validateFilePath = (sanitizedPath) => {
+  console.log(`Path ${sanitizedPath} is being validated`);
+  if (sanitizedPath === "") return false;
   const unixRegex = new RegExp(/^\/(\/[a-zA-Z0-9-_\(\)\.]+)*$/gm);
   const windowsRegex = new RegExp(/^([A-Z]:)(\\[a-zA-Z0-9\s\(\)-_\.]+)*$/gm);
-  const unixResult = unixRegex.test(path);
-  const windowsResult = windowsRegex.test(path);
+  const unixResult = unixRegex.test(sanitizedPath);
+  const windowsResult = windowsRegex.test(sanitizedPath);
   if (!windowsResult && !unixResult) {
-    console.log(`Path ${path} is not a valid Unix or Windows file path`);
+    console.log(`Path ${sanitizedPath} is not a valid Unix or Windows file path`);
     return false;
   };
   return true;
@@ -42,6 +42,6 @@ export const sanitizeAlphanumeric = (input) => {
   return input.replaceAll(/[^a-z0-9 ]/gi, '');
 }
 
-export const sanitizeTime = (input) => {
-  return input.replaceAll(/^[^0-9: ]$/gi, '');
+export const sanitizeFilePath = (input) => {
+  return input.replaceAll(/[^a-z0-9\s\(\)\._\\:-]/gi, '');
 }

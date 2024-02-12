@@ -5,7 +5,7 @@ import {
   validatePort,
   validateFilePath,
   sanitizeAlphanumeric,
-  sanitizeTime
+  sanitizeFilePath
 } from "../utils/dataValidation";
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -48,12 +48,6 @@ const UpdateServer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let postFail = false;
-    const sanitizedGame = sanitizeAlphanumeric(game);
-    const sanitizedName = sanitizeAlphanumeric(name);
-    const sanitizedTime = sanitizeTime(backupTime);
-    setGame(sanitizedGame);
-    setName(sanitizedName);
-    setBackupTime(sanitizedTime);
 
     const ips = banlist.split(",");
     for (let ip of ips) {
@@ -176,7 +170,7 @@ const UpdateServer = () => {
             <input
               type="text"
               value={game}
-              onChange={(e) => setGame(e.target.value)}
+              onChange={(e) => setGame(sanitizeAlphanumeric(e.target.value))}
               placeholder={isUpdate ? game : "Elden Ring"}
             />
             <br />
@@ -184,7 +178,7 @@ const UpdateServer = () => {
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setName(sanitizeAlphanumeric(e.target.value))}
               placeholder={isUpdate ? name : "Elden Ring Server"}
             />
             <br />
@@ -193,7 +187,7 @@ const UpdateServer = () => {
               type="text"
               value={executable}
               onChange={(e) => {
-                setExecutable(e.target.value);
+                setExecutable(sanitizeFilePath(e.target.value));
               }}
               placeholder={
                 isUpdate
@@ -207,7 +201,7 @@ const UpdateServer = () => {
               type="text"
               value={saveDirectory}
               onChange={(e) => {
-                setSaveDirectory(e.target.value);
+                setSaveDirectory(sanitizeFilePath(e.target.value));
               }}
               placeholder={
                 isUpdate ? saveDirectory : "C:\\Program Files\\Elden Ring"
@@ -260,7 +254,7 @@ const UpdateServer = () => {
                   <input
                     type="text"
                     value={ports.udpinbound}
-                    onChange={(e) =>
+                    onChange={(e) => 
                       setPorts({ ...ports, udpinbound: e.target.value })
                     }
                     placeholder={isUpdate ? ports.udpinbound : "8221, 27115"}
