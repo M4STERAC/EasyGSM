@@ -121,6 +121,32 @@ ipcMain.handle("stop-server", (event, server) => {
   });
 });
 
+ipcMain.handle("execute-script", (event, script) => {
+  return new Promise((resolve, reject) => {
+    const { name, args } = script;
+    const CompletePath = path.join(__dirname, "..", "data", name);
+    const CompleteScript = args ? `${CompletePath} ${args}` : CompletePath;
+    const child = spawn(CompleteScript, { detached: true, shell: true, stdio: "inherit" });
+    children.push({ pid: child.pid, name: name });
+    console.log("Spawned child pid: " + child.pid);
+    child.stdout.on("data", (data) => console.log(`${name} stdout: ${data}`));
+    child.stderr.on("data", (data) => console.error(`${name} stderr: ${data}`));
+    child.on("exit", (code) => {
+      children.splice(children.indexOf(child), 1);
+      resolve(`child process closed successfully`);
+    });
+    child.on("close", () => {
+      children.splice(children.indexOf(child), 1);
+      resolve(`child process closed successfully`);
+    });
+    child.on("error", (error) => {
+      children.splice(children.indexOf(child), 1);
+      reject(`${name} error: ${error}`);
+    });
+  });
+
+});
+
 function createWindow() {
   const bounds = getWindowSettings();
   const window = new BrowserWindow({
