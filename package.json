@@ -80,6 +80,7 @@
     "@types/react": "^18.2.51",
     "@types/react-dom": "^18.2.18",
     "axios": "^1.6.7",
+    "electron-store": "^8.1.0",
     "fs": "^0.0.1-security",
     "os": "^0.1.2",
     "react-dom": "^18.2.0",
