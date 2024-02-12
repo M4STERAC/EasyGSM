@@ -40,7 +40,6 @@ const UpdateServer = () => {
     const ips = banlist.split(",");
     for (let ip of ips) {
       ip = ip.replaceAll(/[^\d\.]/gm, "").trim();
-      console.log("IP: " + ip);
       if (ip === "") {
         setBanlistError("");
         continue;
@@ -124,7 +123,7 @@ const UpdateServer = () => {
               type="text"
               value={game}
               onChange={(e) => setGame(e.target.value)}
-              placeholder={state.selectedServer.game}
+              placeholder={game}
             />
             <br />
             <label>Name:</label>
@@ -132,7 +131,7 @@ const UpdateServer = () => {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={state.selectedServer.name}
+              placeholder={name}
             />
             <br />
             <label>Path to Game Executable:</label>
@@ -141,7 +140,7 @@ const UpdateServer = () => {
               onChange={(e) => {
                 setExecutable(e.target.value);
               }}
-              placeholder={state.selectedServer.executable}
+              placeholder={executable}
             />
             <br />
             <label>Save Directory:</label>
@@ -159,7 +158,7 @@ const UpdateServer = () => {
               type="text"
               value={banlist}
               onChange={(e) => setBanlist(e.target.value)}
-              placeholder="255.255.255.255, 255.255.255.254"
+              placeholder={banlist}
             />
             <br />
             <div>
@@ -174,7 +173,7 @@ const UpdateServer = () => {
                     onChange={(e) =>
                       setPorts({ ...ports, tcpinbound: e.target.value })
                     }
-                    placeholder="8221, 27115"
+                    placeholder={ports.tcpinbound}
                   />
                 </li>
                 <li>
@@ -185,7 +184,7 @@ const UpdateServer = () => {
                     onChange={(e) =>
                       setPorts({ ...ports, tcpoutbound: e.target.value })
                     }
-                    placeholder="8221, 27115"
+                    placeholder={ports.tcpoutbound}
                   />
                 </li>
                 <li>
@@ -196,7 +195,7 @@ const UpdateServer = () => {
                     onChange={(e) =>
                       setPorts({ ...ports, udpinbound: e.target.value })
                     }
-                    placeholder="8221, 27115"
+                    placeholder={ports.udpinbound}
                   />
                 </li>
                 <li>
@@ -207,7 +206,7 @@ const UpdateServer = () => {
                     onChange={(e) =>
                       setPorts({ ...ports, udpoutbound: e.target.value })
                     }
-                    placeholder="8221, 27115"
+                    placeholder={ports.udpoutbound}
                   />
                 </li>
               </ul>
