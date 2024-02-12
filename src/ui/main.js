@@ -31,8 +31,10 @@ ipcMain.handle("save-data", (event, data) => {
   return new Promise((resolve, reject) => {
     try {
       const database = storage.get('database');
-      if (database && database.Servers) database.Servers.push(data);
-      storage.set('database', { Servers: [data] });
+      const index = database.Servers.findIndex((server) => server.id === data.id);
+      if (index === -1 && database && database.Servers) database.Servers.push(data);
+      else database.Servers[index] = data;
+      storage.set('database', database);
       console.log('saved database: ', database);
       resolve(database.Servers);
     } catch (error) {
@@ -44,7 +46,7 @@ ipcMain.handle("save-data", (event, data) => {
 ipcMain.handle("delete-data", (event, data) => {
   return new Promise((resolve, reject) => {
     try {
-      const database = storage.get('database');
+      let database = storage.get('database');
       if (!database || !database.Servers) throw 'Database not found or empty';
       const index = database.Servers.findIndex((server) => server.id === data.id);
       database.Servers.splice(index, 1);
