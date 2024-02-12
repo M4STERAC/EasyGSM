@@ -23,3 +23,17 @@ export const checkDuplicateIds = (serverList, id) => {
   console.log(`Result: ${result ? "Found a" : "Did not find a"} duplicate id for ${id}`);
   return ids.includes(id);
 }
+
+export const validateFilePath = (path) => {
+  console.log(`Path ${path} is being validated`);
+  if (path === "") return false;
+  const unixRegex = new RegExp(/^\/(\/[a-zA-Z0-9-_\(\)\.]+)*$/gm);
+  const windowsRegex = new RegExp(/^([A-Z]:)(\\[a-zA-Z0-9\s\(\)-_\.]+)*$/gm);
+  const unixResult = unixRegex.test(path);
+  const windowsResult = windowsRegex.test(path);
+  if (!windowsResult && !unixResult) {
+    console.log(`Path ${path} is not a valid Unix or Windows file path`);
+    return false;
+  };
+  return true;
+}
