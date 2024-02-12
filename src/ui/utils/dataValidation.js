@@ -43,5 +43,5 @@ export const sanitizeAlphanumeric = (input) => {
 }
 
 export const sanitizeTime = (input) => {
-  return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(input);
+  return input.replaceAll(/^[^0-9: ]$/gi, '');
 }
