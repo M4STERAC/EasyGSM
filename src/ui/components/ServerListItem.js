@@ -3,8 +3,8 @@ import "../css/ServerListItem.css";
 
 const ServerListItem = ({ server, onClick }) => {
   return (
-    <li onClick={onClick}>
-      <a href="javascript:void(0)">
+    <p onClick={onClick}>
+      <a href="javascript:void(0)" >
         {server.game} - {server.name}{" "}
         <span
           className={
@@ -13,7 +13,7 @@ const ServerListItem = ({ server, onClick }) => {
           {server.status}
         </span>
       </a>
-    </li>
+    </p>
   );
 };
 
