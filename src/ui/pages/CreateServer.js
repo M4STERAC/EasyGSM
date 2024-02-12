@@ -7,7 +7,7 @@ import {
   validateIpAddress,
   validatePort,
   checkDuplicateIds,
-  validateFilePath
+  validateFilePath,
 } from "../utils/dataValidation";
 import "../css/CreateServer.css";
 
@@ -26,7 +26,12 @@ const CreateServer = () => {
     udpinbound: "",
     udpoutbound: "",
   });
-  const [errors, setErrors] = useState({banlistError: '', portError: '', pathError: '', requiredFieldsError: ''});
+  const [errors, setErrors] = useState({
+    banlistError: "",
+    portError: "",
+    pathError: "",
+    requiredFieldsError: "",
+  });
   const [backupTime, setBackupTime] = useState("06:00");
 
   useEffect(() => {
@@ -42,32 +47,49 @@ const CreateServer = () => {
     for (let ip of ips) {
       ip = ip.replaceAll(/[^\d\.]/gm, "").trim();
       if (ip === "") {
-        setErrors((prevState) => ({...prevState, banlistError: ''}));
+        setErrors((prevState) => ({ ...prevState, banlistError: "" }));
         continue;
       }
       if (!validateIpAddress(ip)) {
-        setErrors((prevState) => ({...prevState, banlistError: "Invalid IP address: " + ip}));
+        setErrors((prevState) => ({
+          ...prevState,
+          banlistError: "Invalid IP address: " + ip,
+        }));
         postFail = true;
         break;
       } else {
         console.log("IP Address: " + ip + " is valid");
-        setErrors((prevState) => ({...prevState, banlistError: ''}));
+        setErrors((prevState) => ({ ...prevState, banlistError: "" }));
       }
     }
 
-    const portsArray = Object.values(ports);
-    for (let portList of portsArray) {
-      const portSplit = portList.split(",");
-      for (let port of portSplit) {
-        port = port.replaceAll(/[^\d]/gm, "").trim();
-        if (port === "") continue;
-        if (!validatePort(port)) {
-          setErrors((prevState) => ({...prevState, portError: "Invalid Port: " + port}));
-          postFail = true;
-          break;
-        } else {
-          console.log("Port: " + port + " is valid");
-          setErrors((prevState) => ({...prevState, portError: ''}));
+    if (
+      ports.tcpinbound === "" &&
+      ports.tcpoutbound === "" &&
+      ports.udpinbound === "" &&
+      ports.udpoutbound === ""
+    ) {
+      postFail = false;
+      setErrors((prevState) => ({ ...prevState, portError: "" }));
+    } else {
+      const portsArray = Object.values(ports);
+      for (let portList of portsArray) {
+        const portSplit = portList.split(",");
+        for (let port of portSplit) {
+          port = port.replaceAll(/[^\d]/gm, "").trim();
+          if (port === "") continue;
+          if (!validatePort(port)) {
+            setErrors((prevState) => ({
+              ...prevState,
+              portError: "Invalid Port: " + port,
+            }));
+            postFail = true;
+            break;
+          } else {
+            console.log("Port: " + port + " is valid");
+            setErrors((prevState) => ({ ...prevState, portError: "" }));
+            postFail = false;
+          }
         }
       }
     }
@@ -82,19 +104,36 @@ const CreateServer = () => {
     }
 
     if (!validateFilePath(executable)) {
-      setErrors((prevState) => ({...prevState, pathError: "Invalid Path to Game Executable. Ensure the path is correct and it only contains alphanumeric characters, dashes, and/or underscores."}));
+      setErrors((prevState) => ({
+        ...prevState,
+        pathError:
+          "Invalid Path to Game Executable. Ensure the path is correct and it only contains alphanumeric characters, dashes, and/or underscores.",
+      }));
       postFail = true;
     }
     if (!validateFilePath(saveDirectory)) {
-      setErrors((prevState) => ({...prevState, pathError: "Invalid Save Directory. Ensure the path is correct and it only contains alphanumeric characters, dashes, and/or underscores."}));
+      setErrors((prevState) => ({
+        ...prevState,
+        pathError:
+          "Invalid Save Directory. Ensure the path is correct and it only contains alphanumeric characters, dashes, and/or underscores.",
+      }));
       postFail = true;
     }
 
-    if (game === "" || name === "" || executable === "" || saveDirectory === "") {
-      setErrors((prevState) => ({...prevState, requiredFieldsError: "Game, Name, Executable, and Save Directory are required fields."}));
+    if (
+      game === "" ||
+      name === "" ||
+      executable === "" ||
+      saveDirectory === ""
+    ) {
+      setErrors((prevState) => ({
+        ...prevState,
+        requiredFieldsError:
+          "Game, Name, Executable, and Save Directory are required fields.",
+      }));
       postFail = true;
     }
-    
+
     if (!postFail) {
       window.electron
         .invoke("save-data", {
@@ -223,10 +262,14 @@ const CreateServer = () => {
             </li>
           </ul>
         </div>
-        {errors.banlistError ? <p className="error">{errors.banlistError}</p> : null}
+        {errors.banlistError ? (
+          <p className="error">{errors.banlistError}</p>
+        ) : null}
         {errors.portError ? <p className="error">{errors.portError}</p> : null}
         {errors.pathError ? <p className="error">{errors.pathError}</p> : null}
-        {errors.requiredFieldsError ? <p className="error">{errors.requiredFieldsError}</p> : null}
+        {errors.requiredFieldsError ? (
+          <p className="error">{errors.requiredFieldsError}</p>
+        ) : null}
         <div className="button-container">
           <button type="submit" className="submit-button">
             Create

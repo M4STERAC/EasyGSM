@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { createUTCDate } from "../utils/generalFunctions";
-import { validateIpAddress, validatePort } from "../utils/dataValidation";
+import { validateIpAddress, validatePort, validateFilePath } from "../utils/dataValidation";
 import { StoreContext } from "../Store";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
@@ -17,19 +17,18 @@ const UpdateServer = () => {
     state.selectedServer.saveDirectory
   );
   const [banlist, setBanlist] = useState(state.selectedServer.banlist);
-  const [banlistError, setBanlistError] = useState("");
   const [ports, setPorts] = useState(state.selectedServer.ports);
-  const [portsError, setPortsError] = useState("");
   const [backupTime, setBackupTime] = useState("06:00");
+  const [errors, setErrors] = useState({errors: '', portError: '', pathError: '', requiredFieldsError: ''});
 
   console.log("loaded updateserver");
   console.log(id);
   console.log(state.selectedServer);
 
   useEffect(() => {
-    if (banlistError) console.error(banlistError);
-    if (portsError) console.error(portsError);
-  }, [banlistError, portsError]);
+    if (errors) console.error(errors);
+    if (errors) console.error(errors);
+  }, [errors, errors]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,34 +38,57 @@ const UpdateServer = () => {
     for (let ip of ips) {
       ip = ip.replaceAll(/[^\d\.]/gm, "").trim();
       if (ip === "") {
-        setBanlistError("");
+        setErrors((prevState) => ({...prevState, banlistError: ''}));
         continue;
       }
       if (!validateIpAddress(ip)) {
-        setBanlistError("Invalid IP address: " + ip);
+        setErrors((prevState) => ({...prevState, banlistError: "Invalid IP address: " + ip}));
         postFail = true;
         break;
       } else {
         console.log("IP Address: " + ip + " is valid");
-        setBanlistError("");
+        setErrors((prevState) => ({...prevState, banlistError: ''}));
       }
     }
 
-    const portsArray = Object.values(ports);
-    for (let portList of portsArray) {
-      const portSplit = portList.split(",");
-      for (let port of portSplit) {
-        port = port.replaceAll(/[^\d]/gm, "").trim();
-        if (port === "") continue;
-        if (!validatePort(port)) {
-          setPortsError("Invalid Port: " + port);
-          postFail = true;
-          break;
-        } else {
-          console.log("Port: " + port + " is valid");
-          setPortsError("");
+    if (
+      ports.tcpinbound === "" &&
+      ports.tcpoutbound === "" &&
+      ports.udpinbound === "" &&
+      ports.udpoutbound === ""
+    ) {
+      postFail = false;
+      setErrors((prevState) => ({ ...prevState, portError: "" }));
+    } else {
+      const portsArray = Object.values(ports);
+      for (let portList of portsArray) {
+        const portSplit = portList.split(",");
+        for (let port of portSplit) {
+          port = port.replaceAll(/[^\d]/gm, "").trim();
+          if (port === "") continue;
+          if (!validatePort(port)) {
+            setErrors((prevState) => ({
+              ...prevState,
+              portError: "Invalid Port: " + port,
+            }));
+            postFail = true;
+            break;
+          } else {
+            console.log("Port: " + port + " is valid");
+            setErrors((prevState) => ({ ...prevState, portError: "" }));
+            postFail = false;
+          }
         }
       }
+    }
+
+    if (!validateFilePath(executable)) {
+      setErrors((prevState) => ({...prevState, pathError: "Invalid Path to Game Executable. Ensure the path is correct and it only contains alphanumeric characters, dashes, and/or underscores."}));
+      postFail = true;
+    }
+    if (!validateFilePath(saveDirectory)) {
+      setErrors((prevState) => ({...prevState, pathError: "Invalid Save Directory. Ensure the path is correct and it only contains alphanumeric characters, dashes, and/or underscores."}));
+      postFail = true;
     }
 
     if (!postFail) {
@@ -159,7 +181,6 @@ const UpdateServer = () => {
             />
             <br />
             <label>Banlist:</label>
-            {banlistError ? <p className="error">{banlistError}</p> : null}
             <input
               type="text"
               value={banlist}
@@ -168,7 +189,6 @@ const UpdateServer = () => {
             />
             <br />
             <div>
-              {portsError ? <p className="error">{portsError}</p> : null}
               <p>Required Ports: </p>
               <ul>
                 <li>
@@ -217,11 +237,10 @@ const UpdateServer = () => {
                 </li>
               </ul>
             </div>
-            {banlistError || portsError ? (
-              <p className="error">
-                Failed to update/delete server. Please validate input data.
-              </p>
-            ) : null}
+            {errors.requiredFieldsError ? <p className="error">{errors.requiredFieldsError}</p> : null}
+            {errors.pathError ? <p className="error">{errors.pathError}</p> : null}
+            {errors.banlistError ? <p className="error">{errors.banlistError}</p> : null}
+            {errors.portError ? <p className="error">{errors.portError}</p> : null}
             <div className="button-container">
               <button type="submit" className="submit-button">
                 Update
