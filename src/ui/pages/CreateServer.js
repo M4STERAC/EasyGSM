@@ -7,6 +7,7 @@ import {
   validateIpAddress,
   validatePort,
   checkDuplicateIds,
+  validateFilePath
 } from "../utils/dataValidation";
 import "../css/CreateServer.css";
 
@@ -19,21 +20,18 @@ const CreateServer = () => {
   const [executable, setExecutable] = useState("");
   const [saveDirectory, setSaveDirectory] = useState("");
   const [banlist, setBanlist] = useState("");
-  const [banlistError, setBanlistError] = useState("");
   const [ports, setPorts] = useState({
     tcpinbound: "",
     tcpoutbound: "",
     udpinbound: "",
     udpoutbound: "",
   });
-  const [portsError, setPortsError] = useState("");
-  const [genericError, setGenericError] = useState("");
+  const [errors, setErrors] = useState({banlistError: '', portError: '', pathError: '', requiredFieldsError: ''});
   const [backupTime, setBackupTime] = useState("06:00");
 
   useEffect(() => {
-    if (banlistError) console.error(banlistError);
-    if (portsError) console.error(portsError);
-  }, [banlistError, portsError]);
+    if (errors) console.error(errors);
+  }, [errors]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,18 +41,17 @@ const CreateServer = () => {
     const ips = banlist.split(",");
     for (let ip of ips) {
       ip = ip.replaceAll(/[^\d\.]/gm, "").trim();
-      console.log("IP: " + ip);
       if (ip === "") {
-        setBanlistError("");
+        setErrors((prevState) => ({...prevState, banlistError: ''}));
         continue;
       }
       if (!validateIpAddress(ip)) {
-        setBanlistError("Invalid IP address: " + ip);
+        setErrors((prevState) => ({...prevState, banlistError: "Invalid IP address: " + ip}));
         postFail = true;
         break;
       } else {
         console.log("IP Address: " + ip + " is valid");
-        setBanlistError("");
+        setErrors((prevState) => ({...prevState, banlistError: ''}));
       }
     }
 
@@ -65,12 +62,12 @@ const CreateServer = () => {
         port = port.replaceAll(/[^\d]/gm, "").trim();
         if (port === "") continue;
         if (!validatePort(port)) {
-          setPortsError("Invalid Port: " + port);
+          setErrors((prevState) => ({...prevState, portError: "Invalid Port: " + port}));
           postFail = true;
           break;
         } else {
           console.log("Port: " + port + " is valid");
-          setPortsError("");
+          setErrors((prevState) => ({...prevState, portError: ''}));
         }
       }
     }
@@ -84,8 +81,17 @@ const CreateServer = () => {
       break;
     }
 
+    if (!validateFilePath(executable)) {
+      setErrors((prevState) => ({...prevState, pathError: "Invalid Path to Game Executable. Ensure the path is correct and it only contains alphanumeric characters, dashes, and/or underscores."}));
+      postFail = true;
+    }
+    if (!validateFilePath(saveDirectory)) {
+      setErrors((prevState) => ({...prevState, pathError: "Invalid Save Directory. Ensure the path is correct and it only contains alphanumeric characters, dashes, and/or underscores."}));
+      postFail = true;
+    }
+
     if (game === "" || name === "" || executable === "" || saveDirectory === "") {
-      setGenericError("Game, Name, Executable, and Save Directory are required fields.");
+      setErrors((prevState) => ({...prevState, requiredFieldsError: "Game, Name, Executable, and Save Directory are required fields."}));
       postFail = true;
     }
     
@@ -161,7 +167,6 @@ const CreateServer = () => {
         />
         <br />
         <label>Banlist:</label>
-        {banlistError ? <p className="error">{banlistError}</p> : null}
         <input
           type="text"
           value={banlist}
@@ -170,7 +175,6 @@ const CreateServer = () => {
         />
         <br />
         <div>
-          {portsError ? <p className="error">{portsError}</p> : null}
           <p>Required Ports: </p>
           <ul>
             <li>
@@ -219,12 +223,10 @@ const CreateServer = () => {
             </li>
           </ul>
         </div>
-        {genericError ? <p className="error">{genericError}</p> : null}
-        {banlistError || portsError || genericError ? (
-          <p className="error">
-            Failed to create server. Please validate input data.
-          </p>
-        ) : null}
+        {errors.banlistError ? <p className="error">{errors.banlistError}</p> : null}
+        {errors.portError ? <p className="error">{errors.portError}</p> : null}
+        {errors.pathError ? <p className="error">{errors.pathError}</p> : null}
+        {errors.requiredFieldsError ? <p className="error">{errors.requiredFieldsError}</p> : null}
         <div className="button-container">
           <button type="submit" className="submit-button">
             Create
