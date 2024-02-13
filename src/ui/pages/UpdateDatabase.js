@@ -16,7 +16,7 @@ import "../css/UpdateDatabase.css";
 const UpdateDatabase = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isUpdate = location.pathname === "/update-server";
+  const isUpdate = location.pathname === "/edit-server";
   const [state, setState] = useContext(StoreContext);
   const [id] = useState(isUpdate ? state.selectedServer.id : generateId(10));
   const [game, setGame] = useState(isUpdate ? state.selectedServer.game : "");

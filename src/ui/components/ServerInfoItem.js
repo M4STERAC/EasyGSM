@@ -65,7 +65,7 @@ const ServerInfoItem = ({ selectedServer }) => {
         <li>UPD Ports: {selectedServer.ports.udpinbound}</li>
         <li>UDP Ports: {selectedServer.ports.udpoutbound}</li>
       </ul>
-      <Link className="edit" to={"/update-server"}>
+      <Link className="edit" to={"/edit-server"}>
         Edit
       </Link>
       <div className="button-container">

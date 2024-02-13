@@ -23,7 +23,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/add-server" element={<UpdateDatabase />} />
-          <Route path="/update-server" element={<UpdateDatabase />} />
+          <Route path="/edit-server" element={<UpdateDatabase />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
