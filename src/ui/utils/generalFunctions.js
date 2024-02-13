@@ -10,6 +10,15 @@ export async function createUTCDate() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
+export function createDatePartition() {
+    const date = new Date();
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+
+    return `${year}/${month}/${day}`;
+}
+
 export function generateId(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
