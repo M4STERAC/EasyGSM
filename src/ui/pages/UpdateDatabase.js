@@ -50,43 +50,19 @@ const UpdateDatabase = () => {
     e.preventDefault();
     let postFail = false;
 
-    const result = validateIpAddress(banlist);
-    console.log("Banlist validation Result: ", result);
-    if (result !== true) {
-      setErrors((prevState) => ({ ...prevState, banlistError: result }));
+    const banlistResult = validateIpAddress(banlist);
+    console.log("Banlist validation Result: ", banlistResult);
+    if (banlistResult !== true) {
+      setErrors((prevState) => ({ ...prevState, banlistError: banlistResult }));
       postFail = true;
     } else setErrors((prevState) => ({ ...prevState, banlistError: "" }));
 
-    if (
-      ports.tcpinbound === "" &&
-      ports.tcpoutbound === "" &&
-      ports.udpinbound === "" &&
-      ports.udpoutbound === ""
-    ) {
-      postFail = false;
-      setErrors((prevState) => ({ ...prevState, portError: "" }));
-    } else {
-      const portsArray = Object.values(ports);
-      for (let portList of portsArray) {
-        const portSplit = portList.split(",");
-        for (let port of portSplit) {
-          port = port.replaceAll(/[^\d]/gm, "").trim();
-          if (port === "") continue;
-          if (!validatePort(port)) {
-            setErrors((prevState) => ({
-              ...prevState,
-              portError: "Invalid Port: " + port,
-            }));
-            postFail = true;
-            break;
-          } else {
-            console.log("Port: " + port + " is valid");
-            setErrors((prevState) => ({ ...prevState, portError: "" }));
-            postFail = false;
-          }
-        }
-      }
-    }
+    const portResult = validatePort(ports);
+    console.log("Port validation Result: ", portResult);
+    if (portResult !== true) {
+      setErrors((prevState) => ({ ...prevState, portError: portResult }));
+      postFail = true;
+    } else setErrors((prevState) => ({ ...prevState, portError: "" }));
 
     if (!validateFilePath(executable)) {
       setErrors((prevState) => ({

@@ -18,12 +18,33 @@ export const validateIpAddress = (banlist) => {
   return error === "" ? true : error;
 };
 
-export const validatePort = (port) => {
-  console.log(`Port ${port} is being validated`);
-  if (port === "") return true;
-  const regex = new RegExp(/^([1-9]|\d{2,4}|6[0-5][0-5][0-3][0-5])$/gm);
-  const result = regex.test(port);
-  return result;
+export const validatePort = (ports) => {
+  let error = "";
+  if (
+    ports.tcpinbound === "" &&
+    ports.tcpoutbound === "" &&
+    ports.udpinbound === "" &&
+    ports.udpoutbound === ""
+  )
+    return true;
+  else {
+    const portsArray = Object.values(ports);
+    for (let portList of portsArray) {
+      const portSplit = portList.split(",");
+      for (let port of portSplit) {
+        port = port.replaceAll(/[^\d]/gm, "").trim();
+        console.log(`Port ${port} is being validated`);
+        if (+port < 0 || +port > 65535) {
+          error = `Invalid port ${port}. The max value for a port is 65535.`;
+          return error;
+        } else {
+          console.log(`Port: ${port} is valid`);
+          error = "";
+        }
+      }
+    }
+    return error === "" ? true : error;
+  }
 };
 
 export const checkDuplicateIds = (serverList, id) => {
