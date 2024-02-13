@@ -80,3 +80,11 @@ export const sanitizeAlphanumeric = (input) => {
 export const sanitizeFilePath = (input) => {
   return input.replaceAll(/[^a-z0-9\s\(\)\._\\:-]/gi, "");
 };
+
+export const sanitizePorts = (input) => {
+  return input.replaceAll(/[^0-9,\s]/gi, "");
+};
+
+export const sanitizeIpAddress = (input) => {
+  return input.replaceAll(/[^0-9.,\s]/gi, "");
+};

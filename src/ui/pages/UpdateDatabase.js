@@ -6,6 +6,8 @@ import {
   validateFilePath,
   sanitizeAlphanumeric,
   sanitizeFilePath,
+  sanitizePorts,
+  sanitizeIpAddress,
 } from "../utils/dataValidation";
 import { executeScript } from "../utils/ipcExecutions";
 import { StoreContext } from "../Store";
@@ -209,7 +211,7 @@ const UpdateDatabase = () => {
             <input
               type="text"
               value={banlist}
-              onChange={(e) => setBanlist(e.target.value)}
+              onChange={(e) => setBanlist(sanitizeIpAddress(e.target.value))}
               placeholder={isUpdate ? banlist : "255.255.255.255"}
             />
             <br />
@@ -222,7 +224,7 @@ const UpdateDatabase = () => {
                     type="text"
                     value={ports.tcpinbound}
                     onChange={(e) =>
-                      setPorts({ ...ports, tcpinbound: e.target.value })
+                      setPorts({ ...ports, tcpinbound: sanitizePorts(e.target.value) })
                     }
                     placeholder={isUpdate ? ports.tcpinbound : "8221, 27115"}
                   />
@@ -232,8 +234,8 @@ const UpdateDatabase = () => {
                   <input
                     type="text"
                     value={ports.tcpoutbound}
-                    onChange={(e) =>
-                      setPorts({ ...ports, tcpoutbound: e.target.value })
+                    onChange={(e) => 
+                      setPorts({ ...ports, tcpoutbound: sanitizePorts(e.target.value) })
                     }
                     placeholder={isUpdate ? ports.tcpoutbound : "8221, 27115"}
                   />
@@ -244,7 +246,7 @@ const UpdateDatabase = () => {
                     type="text"
                     value={ports.udpinbound}
                     onChange={(e) =>
-                      setPorts({ ...ports, udpinbound: e.target.value })
+                      setPorts({ ...ports, udpinbound: sanitizePorts(e.target.value) })
                     }
                     placeholder={isUpdate ? ports.udpinbound : "8221, 27115"}
                   />
@@ -255,7 +257,7 @@ const UpdateDatabase = () => {
                     type="text"
                     value={ports.udpoutbound}
                     onChange={(e) =>
-                      setPorts({ ...ports, udpoutbound: e.target.value })
+                      setPorts({ ...ports, udpoutbound: sanitizePorts(e.target.value) })
                     }
                     placeholder={isUpdate ? ports.udpoutbound : "8221, 27115"}
                   />
