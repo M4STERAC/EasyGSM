@@ -126,25 +126,21 @@ ipcMain.handle("execute-script", (event, script) => {
     const { name, args } = script;
     const CompletePath = path.join(__dirname, "..", "data", name);
     const CompleteScript = args ? `${CompletePath} ${args}` : CompletePath;
+    console.log('Executing script: ', CompleteScript);
     const child = spawn(CompleteScript, { detached: true, shell: true, stdio: "inherit" });
-    children.push({ pid: child.pid, name: name });
-    console.log("Spawned child pid: " + child.pid);
-    child.stdout.on("data", (data) => console.log(`${name} stdout: ${data}`));
-    child.stderr.on("data", (data) => console.error(`${name} stderr: ${data}`));
-    child.on("exit", (code) => {
-      children.splice(children.indexOf(child), 1);
+    console.log("execute-script: Spawned child pid: " + child.pid);
+    child.on("exit", () => {
       resolve(`child process closed successfully`);
     });
+    // child.stdout.on("data", (data) => console.log(`stdout: ${data}`));
+    // child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
     child.on("close", () => {
-      children.splice(children.indexOf(child), 1);
       resolve(`child process closed successfully`);
     });
     child.on("error", (error) => {
-      children.splice(children.indexOf(child), 1);
-      reject(`${name} error: ${error}`);
+      reject(`error: ${error}`);
     });
   });
-
 });
 
 function createWindow() {
