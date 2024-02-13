@@ -345,4 +345,4 @@ const UpdateDatabase = () => {
   );
 };
 
-export default UpdateServer;
+export default UpdateDatabase;
