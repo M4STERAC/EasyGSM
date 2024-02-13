@@ -11,9 +11,9 @@ import { executeScript } from "../utils/ipcExecutions";
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../components/Card";
-import "../css/UpdateServer.css";
+import "../css/UpdateDatabase.css";
 
-const UpdateServer = () => {
+const UpdateDatabase = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isUpdate = location.pathname === "/update-server";

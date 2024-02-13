@@ -2,7 +2,7 @@ import React from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import NotFound from "./pages/NotFound";
-import UpdateServer from "./pages/UpdateServer";
+import UpdateDatabase from "./pages/UpdateDatabase";
 import "./css/General.css";
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/browser";
@@ -22,8 +22,8 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/add-server" element={<UpdateServer />} />
-          <Route path="/update-server" element={<UpdateServer />} />
+          <Route path="/add-server" element={<UpdateDatabase />} />
+          <Route path="/update-server" element={<UpdateDatabase />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
