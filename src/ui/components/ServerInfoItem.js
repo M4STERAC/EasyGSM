@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { StoreContext } from "../Store";
 import { CSSTransition } from "react-transition-group";
 import { Link } from "react-router-dom";
