@@ -50,25 +50,12 @@ const UpdateDatabase = () => {
     e.preventDefault();
     let postFail = false;
 
-    const ips = banlist.split(",");
-    for (let ip of ips) {
-      ip = ip.replaceAll(/[^\d\.]/gm, "").trim();
-      if (ip === "") {
-        setErrors((prevState) => ({ ...prevState, banlistError: "" }));
-        continue;
-      }
-      if (!validateIpAddress(ip)) {
-        setErrors((prevState) => ({
-          ...prevState,
-          banlistError: "Invalid IP address: " + ip,
-        }));
-        postFail = true;
-        break;
-      } else {
-        console.log("IP Address: " + ip + " is valid");
-        setErrors((prevState) => ({ ...prevState, banlistError: "" }));
-      }
-    }
+    const result = validateIpAddress(banlist);
+    console.log("Banlist validation Result: ", result);
+    if (result !== true) {
+      setErrors((prevState) => ({ ...prevState, banlistError: result }));
+      postFail = true;
+    } else setErrors((prevState) => ({ ...prevState, banlistError: "" }));
 
     if (
       ports.tcpinbound === "" &&
