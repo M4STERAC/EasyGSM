@@ -6,6 +6,7 @@ const { spawn } = require("child_process");
 const treeKill = require("tree-kill");
 const path = require("path");
 const fs = require("fs");
+const sudo = require('sudo-prompt');
 // const xssFilters = require("xss-filters");
 // const quote = require('shell-quote').quote;
 
@@ -125,20 +126,17 @@ ipcMain.handle("execute-script", (event, script) => {
   return new Promise((resolve, reject) => {
     const { name, args } = script;
     const CompletePath = path.join(__dirname, "..", "data", name);
-    const CompleteScript = args ? `${CompletePath} ${args}` : CompletePath;
+    const CompleteScript = args ? `cmd.exe /K ${CompletePath} ${args}` : CompletePath;
     console.log('Executing script: ', CompleteScript);
-    const child = spawn(CompleteScript, { detached: true, shell: true, stdio: "inherit" });
-    console.log("execute-script: Spawned child pid: " + child.pid);
-    child.on("exit", () => {
-      resolve(`child process closed successfully`);
-    });
-    // child.stdout.on("data", (data) => console.log(`stdout: ${data}`));
-    // child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
-    child.on("close", () => {
-      resolve(`child process closed successfully`);
-    });
-    child.on("error", (error) => {
-      reject(`error: ${error}`);
+
+    const options = {
+      name: 'Electron',
+    };
+
+    sudo.exec(CompleteScript, options, (error, stdout, stderr) => {
+      if (error) reject(`error: ${error}`);
+      else if (stderr) reject(`stderr: ${stderr}`);
+      else resolve(`stdout: ${stdout}`);
     });
   });
 });
