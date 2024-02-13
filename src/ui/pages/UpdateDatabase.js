@@ -9,7 +9,7 @@ import {
   sanitizePorts,
   sanitizeIpAddress,
 } from "../utils/dataValidation";
-import { executeScript } from "../utils/ipcExecutions";
+import { onboardServer, offboardServer } from "../utils/onboard-offboard-server";
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../components/Card";
@@ -37,16 +37,16 @@ const UpdateDatabase = () => {
   );
   const [backupTime, setBackupTime] = useState("06:00");
   const [errors, setErrors] = useState({
-    errors: "",
+    banlistError: "",
     portError: "",
     pathError: "",
     requiredFieldsError: "",
   });
 
   useEffect(() => {
-    if (errors) console.error(errors);
-    if (errors) console.error(errors);
-  }, [errors, errors]);
+    const errs = Object.values(errors).toString().replaceAll(/[,\s]/g, "");
+    if (errs !== '') console.error(errors);
+  }, [errors]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,20 +104,8 @@ const UpdateDatabase = () => {
         )
         .then(() => console.log("Updated Database: ", state.serverList))
         .then(() => {
-          console.log("Opening Ports");
-          executeScript({
-            name: "OpenPorts.bat",
-            args: `${game} ${ports.tcpinbound} ${ports.tcpoutbound} ${ports.udpinbound} ${ports.udpoutbound}`,
-          });
-          console.log("Successfully opened ports");
-        })
-        .then(() => {
-          console.log("Creating Backup Schedule");
-          executeScript({
-            name: "CreateBackupSchedule.bat",
-            args: `${game} ${backupTime} ${saveDirectory}`,
-          });
-          console.log("Successfully created backup schedule");
+          const onboardResult = onboardServer({ game, ports, backupTime, saveDirectory });
+          console.log("Onboard Result: ", onboardResult);
         })
         .then(() => navigate("/"))
         .catch((error) => console.error(error));
@@ -132,15 +120,10 @@ const UpdateDatabase = () => {
         setState((prevState) => ({ ...prevState, serverList: data }))
       )
       .then(() => console.log("Updated Database: ", state.serverList))
-      // .then(() => {
-      //   executeScript({ name: "DeleteOpenPorts.bat", args: `${game}` });
-      // })
-      // .then(() => {
-      //   executeScript({
-      //     name: "DeleteBackupSchedule.bat",
-      //     args: `${name}`,
-      //   });
-      // })
+      .then(() => {
+        const offboardResult = offboardServer({ game, ports, backupTime, saveDirectory });
+        console.log("Offboard Result: ", offboardResult);
+      })
       .then(() => navigate("/"))
       .catch((error) => console.error(error));
   };
