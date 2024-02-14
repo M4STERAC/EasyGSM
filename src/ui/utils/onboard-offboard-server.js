@@ -8,7 +8,7 @@ export const onboardServer = (server) => {
     window.electron
       .invoke("execute-script", {
         name: "OpenPorts.bat",
-        args: `${game} ${ports.tcpinbound ? ports.tcpinbound + " " : ""}${ports.tcpoutbound ? ports.tcpoutbound + " " : ""}${ports.udpinbound ? ports.udpinbound + " " : ""}${ports.udpoutbound ? ports.udpoutbound : ""}`,
+        args: `${game} ${ports.tcpinbound ? ports.tcpinbound + " " : "NA"}${ports.tcpoutbound ? ports.tcpoutbound + " " : "NA"}${ports.udpinbound ? ports.udpinbound + " " : "NA"}${ports.udpoutbound ? ports.udpoutbound : "NA"}`,
       })
       .then(() => console.log("Success"))
       .then(() => (result.ports = true))
