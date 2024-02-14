@@ -1,0 +1,70 @@
+{
+  "Servers": [
+    {
+      "id": "9629fd877d",
+      "game": "PalWorld",
+      "name": "Friend Server",
+      "executable": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\PalServer\\PalServer.exe",
+      "uptime": 0,
+      "status": "Down",
+      "savedirectory": "C:/Users/JohnDoe/Documents/PalWorld/SaveFiles/",
+      "banlist": [
+        "29.113.64.2",
+        "10.24.45.44",
+        "10.79.88.244"
+      ],
+      "players": 0,
+      "ports": {
+        "tcpinbound": "2556",
+        "tcpoutbound": "2555",
+        "udpinbound": "2556",
+        "udpoutbound": "2555"
+      },
+      "lastrestart": "2024-02-06 01:12:46",
+      "lastbackup": "2024-02-06 01:12:46"
+    },
+    {
+      "id": "48c8WX57Fr",
+      "game": "Sons of the Forest",
+      "name": "Public Server",
+      "executable": "D:\\SteamLibrary\\steamapps\\common\\Sons Of The Forest\\SonsOfTheForest.exe",
+      "uptime": 0,
+      "status": "Down",
+      "savedirectory": "C:\\Users\\mrman\\AppData\\LocalLow\\Endnight\\SonsOfTheForest\\Saves",
+      "banlist": [
+        "20.113.64.5",
+        "10.222.45.44",
+        "19.35.88.30"
+      ],
+      "players": 0,
+      "ports": {
+        "tcpinbound": "8221",
+        "tcpoutbound": "27115",
+        "udpinbound": "8221",
+        "udpoutbound": "27115"
+      },
+      "lastrestart": "2024-02-06 01:26:26",
+      "lastbackup": "2024-02-06 01:26:26"
+    },
+    {
+      "id": "baea87DPh8",
+      "game": "Elden Ring",
+      "name": "Solo Server",
+      "executable": "D:\\SteamLibrary\\steamapps\\common\\ELDEN RING\\Game\\eldenring.exe",
+      "uptime": 0,
+      "status": "Down",
+      "saveDirectory": "C:\\Users\\mrman\\AppData\\Roaming\\EldenRing\\76561198108742533",
+      "banlist": "",
+      "players": 0,
+      "ports": {
+        "tcpinbound": "",
+        "tcpoutbound": "",
+        "udpinbound": "",
+        "udpoutbound": ""
+      },
+      "lastrestart": "2024-02-06 16:44:35",
+      "lastupdate": "2024-02-06 16:29:38",
+      "lastbackup": "2024-02-06 16:44:35"
+    }
+  ]
+}

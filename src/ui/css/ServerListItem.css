@@ -1,0 +1,16 @@
+.running {
+  color: #32cd32;
+}
+
+.down {
+  color: #ff6b6b;
+}
+
+p a {
+  text-decoration: none;
+  color: inherit;
+}
+
+p a:hover {
+  text-decoration: underline;
+} 

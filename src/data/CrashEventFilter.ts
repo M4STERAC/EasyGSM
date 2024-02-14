@@ -1,12 +1,12 @@
 import * as fs from "fs";
-import { parseLogToJSON } from "../../utils/functions";
+import { parseLogToJSON } from "./utils/parsing";
 import * as os from "os";
 
-export async function FilterEvents() {
-  let path: string = "C:\\temp\\EasyGSM\\PalWorldServerCrashLog.txt";
-  let logs: any = void 0;
-  let logJSON: any = void 0;
-  let attempt: number = 0;
+export async function FilterEvents(game: string) {
+  let path = `C:\\temp\\EasyGSM\\${game}-CrashLog.txt`;
+  let logs: string;
+  let logJSON: any[];
+  let attempt = 0;
 
   while (true) {
     try {
@@ -20,10 +20,11 @@ export async function FilterEvents() {
     }
   }
   if (logs && logJSON.length === 0) throw `Failed to parse logs into JSON`;
-  const PalServerErrorLogs: any = logJSON.filter((log: any) => { return /PalSer\w{0,3}.{0,19}/gi.test(log.P1) });
+  const regex: RegExp = new RegExp(game, "gi");
+  const ErrorLogs = logJSON.filter((log) => { return regex.test(log.P1) });
   fs.writeFileSync(
-    `${os.homedir()}\\Documents\\EasyGSM\\PalServer\\logs\\error\\PalServerErrorLogs.json`,
-    JSON.stringify(PalServerErrorLogs)
+    `${os.homedir()}\\Documents\\EasyGSM\\${game}\\logs\\error\\${game}-ErrorLogs.json`,
+    JSON.stringify(ErrorLogs)
   );
-  return { statusCode: 200, PalServerErrorLogs };
+  return { statusCode: 200, ErrorLogs };
 }

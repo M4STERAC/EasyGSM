@@ -1,20 +1,24 @@
 @echo off
-title PalServer Manager
+
+set gameName=%~1
+set executable=%~2
+set executableName=%~3
+
+title EasyGSM %gameName% Manager
 setlocal enabledelayedexpansion
 
+set destinationPath=%USERPROFILE%\Documents\EasyGSM\%gameName%\logs\error
 set crashCount=0
-set applicationName=PalServer-Win64-Test-Cmd.exe
 set logName=Application
 set errorLogPath=C:\temp\EasyGSM
-set errorLogFile=%errorLogPath%\PalWorldServerCrashLog.txt
+set errorLogFile=%errorLogPath%\%gameName%CrashLog.txt
 set query=*[System[(EventID=1000 or EventID=1001)]]
-set destinationPath=%USERPROFILE%\Documents\EasyGSM\PalServer\logs\error
 
 :Start
-    "C:\Program Files (x86)\Steam\steamapps\common\PalServer\PalServer.exe"
+    start /wait "%executable%"
     cls
     call GetHardwareResourceLevels.bat
-    echo Hardware Resource Levels writen to %USERPROFILE%\Documents\EasyGSM\PalServer\logs\error\resource_usage.txt
+    echo Hardware Resource Levels writen to %USERPROFILE%\Documents\EasyGSM\%gameName%\logs\error\resource_usage.txt
     set /a crashCount+=1
 
     if not exist "%errorLogPath%" mkdir "%errorLogPath%"
@@ -24,8 +28,8 @@ set destinationPath=%USERPROFILE%\Documents\EasyGSM\PalServer\logs\error
     
     echo Crash Number: !crashCount!
 
-    "../Filterlogs.exe"
-    echo Filtered Eventlogs to %destinationPath%\PalServerErrorLogs.json
+    @REM "../../Filterlogs.exe"
+    @REM echo Filtered Eventlogs to %destinationPath%\PalServerErrorLogs.json
 
     TIMEOUT /T 15
 
