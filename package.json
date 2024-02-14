@@ -9,6 +9,7 @@
     "electron": "npm run webpack && electron . --trace-warnings",
     "build:pkg": "npm run webpack && npm run pkg",
     "webpack": "webpack --mode production",
+    "release:major": "npm version major && git push && git push --tags",
     "release:minor": "npm version minor && git push && git push --tags",
     "release:patch": "npm version patch && git push && git push --tags",
     "start:json-server": "json-server --watch ./.data/db.json --port 3001"
