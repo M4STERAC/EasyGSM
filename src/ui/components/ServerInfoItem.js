@@ -60,10 +60,10 @@ const ServerInfoItem = ({ selectedServer }) => {
       <p>Backup Scheduled: {selectedServer.backuptime}</p>
       <label>Ports Required</label>
       <ul>
-        <li>TCP Ports: {selectedServer.ports.tcpinbound}</li>
-        <li>TCP Ports: {selectedServer.ports.tcpoutbound}</li>
-        <li>UPD Ports: {selectedServer.ports.udpinbound}</li>
-        <li>UDP Ports: {selectedServer.ports.udpoutbound}</li>
+        <li>TCP I Ports: {selectedServer.ports.tcpinbound}</li>
+        <li>TCP O Ports: {selectedServer.ports.tcpoutbound}</li>
+        <li>UPD I Ports: {selectedServer.ports.udpinbound}</li>
+        <li>UDP O Ports: {selectedServer.ports.udpoutbound}</li>
       </ul>
       <Link className="edit" to={"/edit-server"}>
         Edit
