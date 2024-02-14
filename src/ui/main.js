@@ -17,6 +17,8 @@ const storage = new store();
 
 let children = [];
 let scheduledJobs = [];
+let retryCount = 0;
+const maxRetries = 50;
 
 ipcMain.handle("get-data", (event) => {
   return new Promise((resolve, reject) => {
@@ -76,24 +78,18 @@ ipcMain.handle("start-server", (event, server) => {
     const child = spawn(server.executable, { detached: true });
     children.push({ pid: child.pid, game: server.game, name: server.name });
     console.log("Spawned child pid: " + child.pid);
-    child.on("exit", (code) => {
-      if (code == 0 || code == 1 || code == 3221225786)
-        console.log("Process exited successfully");
-      else
-        dialog.showErrorBox(
-          `Crash Notification`,
-          `${server.game} - ${
-            server.name
-          } crashed at ${new Date().toLocaleString()}`
-        );
+    child.on("error", (code) => {
+      console.log(`Child exited with code ${code}`);
+      if (retryCount < maxRetries) {
+        retryCount++;
+        console.log("Retrying to start server. Crash #: ", retryCount);
+        ipcMain.handle("start-server", event, server);
+      }
+      resolve('Child process crashed');
     });
     child.stdout.on("data", (data) => console.log(`stdout: ${data}`));
     child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
-    child.on("error", (error) => {
-      ipcMain.handle("stop-server", server);
-      reject(`spawn error: ${error}`);
-    });
-    child.on("close", (code) => resolve(`child process closed successfully`));
+    child.on("close", (code) => resolve(`Child process closed successfully`));
   });
 });
 
