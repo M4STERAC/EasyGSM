@@ -1,6 +1,6 @@
 {
   "name": "palserver-manager",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A Palworld server manager to auto manage your server",
   "main": "./out/src/ui/main.js",
   "scripts": {
