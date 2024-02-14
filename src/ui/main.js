@@ -142,7 +142,7 @@ ipcMain.handle("execute-script", (event, script) => {
   });
 });
 
-ipcMain.handle("create-schedule", (event, { source, game, time, id }) => {
+ipcMain.handle("create-schedule", (event, { source, game, time }) => {
   return new Promise((resolve, reject) => {
     console.log("Creating backup schedule for: ", game, time, source);
     const unixTarget = `${os.homedir()}/Documents/EasyGSM/${game}/Backups/`;
@@ -172,21 +172,41 @@ ipcMain.handle("create-schedule", (event, { source, game, time, id }) => {
 
     console.log(scheduledJob);
     scheduledJob.start();
-    scheduledJobs.push({source, scheduledJob});
-    resolve('Successfuly created backup schedule for ' + game);
+    scheduledJobs.push({ source, scheduledJob });
+    resolve("Successfuly created backup schedule for " + game);
   });
 });
 
 ipcMain.handle("delete-schedule", (event, { source, game, time }) => {
   return new Promise((resolve, reject) => {
     console.log("Deleting backup schedule for: ", game, time, source);
-    const index = scheduledJobs.findIndex(job => job.source === source);
-    const scheduledJob = scheduledJobs[index] ? scheduledJobs[index].scheduledJob : null;
-    if (scheduledJob) console.log('Found backup schedule to delete: ', scheduledJob);
-    if (!scheduledJob) reject("No backup schedule found for " + game + '. Nothing to delete');
+    const index = scheduledJobs.findIndex((job) => job.source === source);
+    const scheduledJob = scheduledJobs[index]
+      ? scheduledJobs[index].scheduledJob
+      : null;
+    if (scheduledJob)
+      console.log("Found backup schedule to delete: ", scheduledJob);
+    if (!scheduledJob)
+      reject("No backup schedule found for " + game + ". Nothing to delete");
     scheduledJob.stop();
     scheduledJobs.splice(index, 1);
     resolve("Deleted backup schedule for " + game);
+  });
+});
+
+ipcMain.handle("dialog-box", (event, options) => {
+  return new Promise((resolve, reject) => {
+    const defaultOptions = {
+      type: "warning",
+      title: "Irrevocable Action Confirmation",
+      buttons: ["Yes", "No"],
+      message: "Are you sure you want to continue?",
+      detail: "This action cannot be undone.",
+    };
+    dialog
+      .showMessageBox(options ? {...defaultOptions, ...options} : defaultOptions)
+      .then((response) => { resolve(response) })
+      .catch((error) => reject(error));
   });
 });
 

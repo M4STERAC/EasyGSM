@@ -9,7 +9,10 @@ import {
   sanitizePorts,
   sanitizeIpAddress,
 } from "../utils/dataValidation";
-import { onboardServer, offboardServer } from "../utils/onboard-offboard-server";
+import {
+  onboardServer,
+  offboardServer,
+} from "../utils/onboard-offboard-server";
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../components/Card";
@@ -45,7 +48,7 @@ const UpdateDatabase = () => {
 
   useEffect(() => {
     const errs = Object.values(errors).toString().replaceAll(/[,\s]/g, "");
-    if (errs !== '') console.error(errors);
+    if (errs !== "") console.error(errors);
   }, [errors]);
 
   const handleSubmit = async (e) => {
@@ -99,14 +102,19 @@ const UpdateDatabase = () => {
           players: 0,
           ports,
           lastrestart: await createUTCDate(),
-          backuptime
+          backuptime,
         })
         .then((data) =>
           setState((prevState) => ({ ...prevState, serverList: data }))
         )
         .then(() => console.log("Updated Database: ", state.serverList))
         .then(() => {
-          const onboardResult = onboardServer({ game, ports, backuptime, saveDirectory });
+          const onboardResult = onboardServer({
+            game,
+            ports,
+            backuptime,
+            saveDirectory,
+          });
           console.log("Onboard Result: ", onboardResult);
         })
         .then(() => navigate("/"))
@@ -115,18 +123,35 @@ const UpdateDatabase = () => {
   };
 
   const deleteServer = () => {
-    console.log(`Deleting server with Id ${state.selectedServer.id}`);
+    let deletePorts = false;
+    let confirmDelete = false;
     window.electron
-      .invoke("delete-data", { id })
-      .then((data) =>
-        setState((prevState) => ({ ...prevState, serverList: data }))
-      )
-      .then(() => console.log("Updated Database: ", state.serverList))
-      .then(() => {
-        const offboardResult = offboardServer({ game, ports, backuptime, saveDirectory });
-        console.log("Offboard Result: ", offboardResult);
+      .invoke("dialog-box", {
+        checkboxLabel:
+          "Would you like to delete the open ports used for this server?",
+        checkboxChecked: false,
       })
-      .then(() => navigate("/"))
+      .then((response) => {
+        console.log("Response: ", response);
+        if (response.response === 0) confirmDelete = true;
+        deletePorts = response.checkboxChecked;
+        if (!confirmDelete) return;
+        window.electron
+          .invoke("delete-data", { id })
+          .then((data) =>
+            setState((prevState) => ({ ...prevState, serverList: data }))
+          )
+          .then(() => console.log("Updated Database: ", state.serverList))
+          .then(() => {
+            const offboardResult = offboardServer(
+              { game, ports, backuptime, saveDirectory },
+              deletePorts
+            );
+            console.log("Offboard Result: ", offboardResult);
+          })
+          .then(() => navigate("/"))
+          .catch((error) => console.error(error));
+      })
       .catch((error) => console.error(error));
   };
 
@@ -209,7 +234,10 @@ const UpdateDatabase = () => {
                     type="text"
                     value={ports.tcpinbound}
                     onChange={(e) =>
-                      setPorts({ ...ports, tcpinbound: sanitizePorts(e.target.value) })
+                      setPorts({
+                        ...ports,
+                        tcpinbound: sanitizePorts(e.target.value),
+                      })
                     }
                     placeholder={isUpdate ? ports.tcpinbound : "8221, 27115"}
                   />
@@ -219,8 +247,11 @@ const UpdateDatabase = () => {
                   <input
                     type="text"
                     value={ports.tcpoutbound}
-                    onChange={(e) => 
-                      setPorts({ ...ports, tcpoutbound: sanitizePorts(e.target.value) })
+                    onChange={(e) =>
+                      setPorts({
+                        ...ports,
+                        tcpoutbound: sanitizePorts(e.target.value),
+                      })
                     }
                     placeholder={isUpdate ? ports.tcpoutbound : "8221, 27115"}
                   />
@@ -231,7 +262,10 @@ const UpdateDatabase = () => {
                     type="text"
                     value={ports.udpinbound}
                     onChange={(e) =>
-                      setPorts({ ...ports, udpinbound: sanitizePorts(e.target.value) })
+                      setPorts({
+                        ...ports,
+                        udpinbound: sanitizePorts(e.target.value),
+                      })
                     }
                     placeholder={isUpdate ? ports.udpinbound : "8221, 27115"}
                   />
@@ -242,7 +276,10 @@ const UpdateDatabase = () => {
                     type="text"
                     value={ports.udpoutbound}
                     onChange={(e) =>
-                      setPorts({ ...ports, udpoutbound: sanitizePorts(e.target.value) })
+                      setPorts({
+                        ...ports,
+                        udpoutbound: sanitizePorts(e.target.value),
+                      })
                     }
                     placeholder={isUpdate ? ports.udpoutbound : "8221, 27115"}
                   />

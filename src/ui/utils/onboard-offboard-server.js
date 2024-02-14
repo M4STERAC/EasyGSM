@@ -20,34 +20,44 @@ export const onboardServer = (server) => {
 
   console.log("Creating Backup Schedule: ", game, backuptime, saveDirectory);
   window.electron
-    .invoke("create-schedule", { source: saveDirectory, game: game, time: backuptime })
+    .invoke("create-schedule", {
+      source: saveDirectory,
+      game: game,
+      time: backuptime,
+    })
     .then((data) => console.log(data))
     .catch((error) => console.error("Create Schedule Error: ", error));
 
   return result;
 };
 
-export const offboardServer = (server) => {
+export const offboardServer = (server, deletePorts) => {
   let result;
   const { game, backuptime, saveDirectory } = server;
 
   console.log("Offboarding Server: ", server);
   console.log("Closing Ports for game: ", game);
-  window.electron
-    .invoke("execute-script", {
-      name: "DeleteOpenPorts.bat",
-      args: `${game}`,
-    })
-    .then(() => console.log("Success"))
-    .then(() => (result.ports = true))
-    .catch((error) => {
-      console.error("Error closing ports: ", error);
-      result.ports = error;
-    });
+  if (deletePorts) {
+    window.electron
+      .invoke("execute-script", {
+        name: "DeleteOpenPorts.bat",
+        args: `${game}`,
+      })
+      .then(() => console.log("Success"))
+      .then(() => (result.ports = true))
+      .catch((error) => {
+        console.error("Error closing ports: ", error);
+        result.ports = error;
+      });
+  }
 
   console.log("Deleting Backup Schedule for game: ", game);
   window.electron
-    .invoke("delete-schedule", { source: saveDirectory, game: game, time: backuptime })
+    .invoke("delete-schedule", {
+      source: saveDirectory,
+      game: game,
+      time: backuptime,
+    })
     .then((message) => console.log(message))
     .then(() => (result.schedule = true))
     .catch((error) => {
