@@ -2,17 +2,21 @@ const { saveBounds, getWindowSettings } = require("./settings.js");
 const { app, BrowserWindow } = require("electron");
 const { ipcMain, dialog } = require("electron");
 const store = require("electron-store");
+const os = require("os");
 const { spawn } = require("child_process");
 const treeKill = require("tree-kill");
 const path = require("path");
 const fs = require("fs");
-const sudo = require('sudo-prompt');
+const sudo = require("sudo-prompt");
+const cron = require("node-cron");
+const archiver = require("archiver");
 // const xssFilters = require("xss-filters");
 // const quote = require('shell-quote').quote;
 
 const storage = new store();
 
 let children = [];
+let scheduledJobs = [];
 
 ipcMain.handle("get-data", (event) => {
   return new Promise((resolve, reject) => {
@@ -33,7 +37,6 @@ ipcMain.handle("get-data", (event) => {
 ipcMain.handle("save-data", (event, data) => {
   return new Promise((resolve, reject) => {
     try {
-      // const sanitizedValue = xssFilters.inHTMLData(data);
       const database = storage.get("database");
       const index = database.Servers.findIndex(
         (server) => server.id === data.id
@@ -53,7 +56,6 @@ ipcMain.handle("save-data", (event, data) => {
 ipcMain.handle("delete-data", (event, data) => {
   return new Promise((resolve, reject) => {
     try {
-      // const sanitizedValue = xssFilters.inHTMLData(data);
       let database = storage.get("database");
       if (!database || !database.Servers) throw "Database not found or empty";
       const index = database.Servers.findIndex(
@@ -71,8 +73,6 @@ ipcMain.handle("delete-data", (event, data) => {
 
 ipcMain.handle("start-server", (event, server) => {
   return new Promise((resolve, reject) => {
-    // const sanitizedServer = xssFilters.inHTMLData(server);
-    // const safeExecutable = quote([server.executable]);
     const child = spawn(server.executable, { detached: true });
     children.push({ pid: child.pid, game: server.game, name: server.name });
     console.log("Spawned child pid: " + child.pid);
@@ -99,7 +99,6 @@ ipcMain.handle("start-server", (event, server) => {
 
 ipcMain.handle("stop-server", (event, server) => {
   return new Promise((resolve, reject) => {
-    // const sanitizedServer = xssFilters.inHTMLData(server);
     let child = children.find(
       (child) => child.name === server.name && server.game === server.game
     );
@@ -126,11 +125,13 @@ ipcMain.handle("execute-script", (event, script) => {
   return new Promise((resolve, reject) => {
     const { name, args } = script;
     const CompletePath = path.join(__dirname, "..", "data", name);
-    const CompleteScript = args ? `cmd.exe /K ${CompletePath} ${args}` : CompletePath;
-    console.log('Executing script: ', CompleteScript);
+    const CompleteScript = args
+      ? `cmd.exe /K ${CompletePath} ${args}`
+      : CompletePath;
+    console.log("Executing script: ", CompleteScript);
 
     const options = {
-      name: 'Electron',
+      name: "Electron",
     };
 
     sudo.exec(CompleteScript, options, (error, stdout, stderr) => {
@@ -138,6 +139,54 @@ ipcMain.handle("execute-script", (event, script) => {
       else if (stderr) reject(`stderr: ${stderr}`);
       else resolve(`stdout: ${stdout}`);
     });
+  });
+});
+
+ipcMain.handle("create-schedule", (event, { source, game, time, id }) => {
+  return new Promise((resolve, reject) => {
+    console.log("Creating backup schedule for: ", game, time, source);
+    const unixTarget = `${os.homedir()}/Documents/EasyGSM/${game}/Backups/`;
+    const windowsTarget = `${os.homedir()}\\Documents\\EasyGSM\\${game}\\Backups\\`;
+    const target = os.platform() === "win32" ? windowsTarget : unixTarget;
+    if (!fs.existsSync(target)) fs.mkdirSync(target, { recursive: true });
+    const hour = time.split(":")[0];
+    const minute = time.split(":")[1];
+    const scheduledJob = cron.schedule(`${minute} ${hour} * * *`, () => {
+      const output = fs.createWriteStream(`${target}backup.zip`);
+      const archive = archiver("zip", { zlib: { level: 9 } });
+
+      output.on("close", () => {
+        console.log(
+          `Archived and backed up source directory. Total bytes: ${archive.pointer()}`
+        );
+      });
+
+      archive.on("error", (err) => {
+        reject(err);
+      });
+
+      archive.pipe(output);
+      archive.directory(source, false);
+      archive.finalize();
+    });
+
+    console.log(scheduledJob);
+    scheduledJob.start();
+    scheduledJobs.push({source, scheduledJob});
+    resolve('Successfuly created backup schedule for ' + game);
+  });
+});
+
+ipcMain.handle("delete-schedule", (event, { source, game, time }) => {
+  return new Promise((resolve, reject) => {
+    console.log("Deleting backup schedule for: ", game, time, source);
+    const index = scheduledJobs.findIndex(job => job.source === source);
+    const scheduledJob = scheduledJobs[index] ? scheduledJobs[index].scheduledJob : null;
+    if (scheduledJob) console.log('Found backup schedule to delete: ', scheduledJob);
+    if (!scheduledJob) reject("No backup schedule found for " + game + '. Nothing to delete');
+    scheduledJob.stop();
+    scheduledJobs.splice(index, 1);
+    resolve("Deleted backup schedule for " + game);
   });
 });
 
@@ -150,6 +199,7 @@ function createWindow() {
     minHeight: 550,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
+      worldSafeExecuteJavaScript: true,
       contextIsolation: true,
       nodeIntegration: false,
     },

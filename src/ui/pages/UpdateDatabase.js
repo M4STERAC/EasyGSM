@@ -35,7 +35,7 @@ const UpdateDatabase = () => {
   const [ports, setPorts] = useState(
     isUpdate ? state.selectedServer.ports : ""
   );
-  const [backupTime, setBackupTime] = useState("06:00");
+  const [backuptime, setBackupTime] = useState("06:00");
   const [errors, setErrors] = useState({
     banlistError: "",
     portError: "",
@@ -58,6 +58,8 @@ const UpdateDatabase = () => {
       setErrors((prevState) => ({ ...prevState, banlistError: banlistResult }));
       postFail = true;
     } else setErrors((prevState) => ({ ...prevState, banlistError: "" }));
+
+    if (!backuptime) setBackupTime("06:00");
 
     const portResult = validatePort(ports);
     console.log("Port validation Result: ", portResult);
@@ -97,14 +99,14 @@ const UpdateDatabase = () => {
           players: 0,
           ports,
           lastrestart: await createUTCDate(),
-          backuptime: backupTime,
+          backuptime
         })
         .then((data) =>
           setState((prevState) => ({ ...prevState, serverList: data }))
         )
         .then(() => console.log("Updated Database: ", state.serverList))
         .then(() => {
-          const onboardResult = onboardServer({ game, ports, backupTime, saveDirectory });
+          const onboardResult = onboardServer({ game, ports, backuptime, saveDirectory });
           console.log("Onboard Result: ", onboardResult);
         })
         .then(() => navigate("/"))
@@ -121,7 +123,7 @@ const UpdateDatabase = () => {
       )
       .then(() => console.log("Updated Database: ", state.serverList))
       .then(() => {
-        const offboardResult = offboardServer({ game, ports, backupTime, saveDirectory });
+        const offboardResult = offboardServer({ game, ports, backuptime, saveDirectory });
         console.log("Offboard Result: ", offboardResult);
       })
       .then(() => navigate("/"))
@@ -185,7 +187,7 @@ const UpdateDatabase = () => {
             <label>Backup Time:</label>
             <input
               type="time"
-              value={backupTime}
+              value={backuptime}
               onChange={(e) => setBackupTime(e.target.value)}
               placeholder="06:00"
             />

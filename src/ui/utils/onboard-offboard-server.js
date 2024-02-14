@@ -1,6 +1,6 @@
 export const onboardServer = (server) => {
   let result = {};
-  const { game, ports, backupTime, saveDirectory } = server;
+  const { game, ports, backuptime, saveDirectory } = server;
 
   console.log("Onboarding Server: ", server);
   if (ports) {
@@ -10,7 +10,7 @@ export const onboardServer = (server) => {
         name: "OpenPorts.bat",
         args: `${game} ${ports.tcpinbound ? ports.tcpinbound + " " : ""}${ports.tcpoutbound ? ports.tcpoutbound + " " : ""}${ports.udpinbound ? ports.udpinbound + " " : ""}${ports.udpoutbound ? ports.udpoutbound : ""}`,
       })
-      .then(() => console.log('Success'))
+      .then(() => console.log("Success"))
       .then(() => (result.ports = true))
       .catch((error) => {
         console.error("Error opening ports: ", error);
@@ -18,25 +18,18 @@ export const onboardServer = (server) => {
       });
   }
 
-  console.log("Creating Backup Schedule: ", game, backupTime, saveDirectory);
+  console.log("Creating Backup Schedule: ", game, backuptime, saveDirectory);
   window.electron
-    .invoke("execute-script", {
-      name: "CreateBackupSchedule.bat",
-      args: `${game} ${backupTime} ${saveDirectory}`,
-    })
-    .then(() => console.log('Success'))
-    .then(() => (result.schedule = true))
-    .catch((error) => {
-      console.error("Error creating backup schedule: ", error);
-      result.schedule = error;
-    });
+    .invoke("create-schedule", { source: saveDirectory, game: game, time: backuptime })
+    .then((data) => console.log(data))
+    .catch((error) => console.error("Create Schedule Error: ", error));
 
   return result;
 };
 
 export const offboardServer = (server) => {
   let result;
-  const { game, name } = server;
+  const { game, backuptime, saveDirectory } = server;
 
   console.log("Offboarding Server: ", server);
   console.log("Closing Ports for game: ", game);
@@ -45,7 +38,7 @@ export const offboardServer = (server) => {
       name: "DeleteOpenPorts.bat",
       args: `${game}`,
     })
-    .then(() => console.log('Success'))
+    .then(() => console.log("Success"))
     .then(() => (result.ports = true))
     .catch((error) => {
       console.error("Error closing ports: ", error);
@@ -54,11 +47,8 @@ export const offboardServer = (server) => {
 
   console.log("Deleting Backup Schedule for game: ", game);
   window.electron
-    .invoke("execute-script", {
-      name: "DeleteBackupSchedule.bat",
-      args: `${name}`,
-    })
-    .then(() => console.log('Success'))
+    .invoke("delete-schedule", { source: saveDirectory, game: game, time: backuptime })
+    .then((message) => console.log(message))
     .then(() => (result.schedule = true))
     .catch((error) => {
       console.error("Error deleting backup schedule: ", error);
