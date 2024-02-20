@@ -1,7 +1,7 @@
 {
-  "name": "palserver-manager",
+  "name": "easygsm",
   "version": "2.0.1",
-  "description": "A Palworld server manager to auto manage your server",
+  "description": "A simple application to manage your game servers",
   "main": "./out/src/ui/main.js",
   "scripts": {
     "test": "jest",
@@ -27,10 +27,10 @@
     },
     "linux": {
       "target": [
-        "AppImage"
+        "deb"
       ]
     },
-    "icon": "src/ui/images/EasyGSMLogo.ico",
+    "icon": "src/ui/images/EasyGSMLogo.png",
     "files": [
       "out/**/*"
     ],
@@ -48,7 +48,10 @@
       "deleteAppDataOnUninstall": true
     }
   },
-  "author": "Matthew Manka",
+  "author": {
+    "name": "Matthew Manka",
+    "email": "mrmanka0307@gmail.com"
+  },
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.23.9",
