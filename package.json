@@ -1,7 +1,7 @@
 {
   "name": "easygsm",
   "version": "2.0.1",
-  "description": "A simple application to manage your game servers",
+  "description": "A simple application to manage all of your game servers",
   "main": "./out/src/ui/main.js",
   "scripts": {
     "test": "jest",
