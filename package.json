@@ -2,6 +2,11 @@
   "name": "easygsm",
   "version": "2.0.1",
   "description": "A simple application to manage all of your game servers",
+  "author": {
+    "name": "Matthew Manka",
+    "email": "mrmanka0307@gmail.com"
+  },
+  "license": "LICENSE.md",
   "main": "./out/src/ui/main.js",
   "scripts": {
     "test": "jest",
@@ -48,11 +53,6 @@
       "deleteAppDataOnUninstall": true
     }
   },
-  "author": {
-    "name": "Matthew Manka",
-    "email": "mrmanka0307@gmail.com"
-  },
-  "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@babel/preset-env": "^7.23.9",
