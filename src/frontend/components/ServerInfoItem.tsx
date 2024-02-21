@@ -5,17 +5,17 @@ import { Link } from "react-router-dom";
 import "../css/ServerInfoItem.css";
 
 //When a server is selected from ServerListItem component, this component will display the properties of that selected server
-const ServerInfoItem = ({ selectedServer }) => {
+const ServerInfoItem = ({ selectedServer }: { selectedServer: Server }) => {
   const [state, setState] = useContext(StoreContext);
   const [buttonState, setButtonState] = useState("Down");
   const [isButtonDisabled, setButtonDisabled] = useState(false);
 
 
   //Function to start and stop selected server
-  const executeServer = (channel, scriptPath) => {
-    window.electron.invoke(channel, scriptPath)
-      .then((output) => console.log(output))
-      .catch((error) => console.error(error));
+  const executeServer = (channel: string, server: Server) => {
+    window.electron.invoke(channel, server)
+      .then((output: any) => console.log(output))
+      .catch((error: any) => console.error(error));
   };
 
 
@@ -24,8 +24,8 @@ const ServerInfoItem = ({ selectedServer }) => {
     setTimeout(() => setButtonDisabled(false), 3000);
     executeServer("start-server", selectedServer);
     setButtonState("Running");
-    setState((prevState) => {
-      const serverIndex = prevState.serverList.findIndex((server) => server.id === selectedServer.id);
+    setState((prevState: any) => {
+      const serverIndex = prevState.serverList.findIndex((server: Server) => server.id === selectedServer.id);
       const newServerList = [...prevState.serverList];
       newServerList[serverIndex] = { ...newServerList[serverIndex], status: "Running" };
       return { ...prevState, serverList: newServerList };
@@ -38,8 +38,8 @@ const ServerInfoItem = ({ selectedServer }) => {
     setTimeout(() => setButtonDisabled(false), 3000);
     executeServer("stop-server", selectedServer);
     setButtonState("Down");
-    setState((prevState) => {
-      const serverIndex = prevState.serverList.findIndex((server) => server.id === selectedServer.id);
+    setState((prevState: any) => {
+      const serverIndex = prevState.serverList.findIndex((server: Server) => server.id === selectedServer.id);
       const newServerList = [...prevState.serverList];
       newServerList[serverIndex] = { ...newServerList[serverIndex], status: "Down" };
       return { ...prevState, serverList: newServerList };

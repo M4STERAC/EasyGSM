@@ -7,11 +7,16 @@ interface Window {
 interface Server {
     game: string;
     name: string;
-    ports: Ports;
     backuptime: string;
     saveDirectory: string;
     executable: string;
     id: string;
+    lastrestart: string;
+    status: string;
+    banlist: string;
+    ports: Ports;
+    uptime: number;
+    players: number;
 }
 
 interface Ports {
