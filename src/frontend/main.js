@@ -148,7 +148,7 @@ ipcMain.handle("stop-server", (event, server) => {
 ipcMain.handle("execute-script", (event, script) => {
   return new Promise((resolve, reject) => {
     const { name, args } = script;
-    const CompletePath = path.join(__dirname, "..", "data", name);
+    const CompletePath = path.join(__dirname, "..", "backend", name);
     const CompleteScript = args ? `cmd.exe /K ${CompletePath} ${args}` : CompletePath;
     const options = { name: "Electron" };
 

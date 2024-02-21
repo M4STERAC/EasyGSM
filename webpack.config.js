@@ -8,7 +8,7 @@ require("dotenv").config();
 module.exports = {
   devtool: "source-map",
   target: "electron-main",
-  entry: "./src/ui/index.js",
+  entry: "./src/frontend/index.js",
   module: {
     rules: [
       {
@@ -35,11 +35,11 @@ module.exports = {
   },
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "out", "src", "ui"),
+    path: path.resolve(__dirname, "out", "src", "frontend"),
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src", "ui", "index.html"),
+      template: path.resolve(__dirname, "src", "frontend", "index.html"),
     }),
     sentryWebpackPlugin({
       org: "easygsm",
@@ -56,10 +56,10 @@ module.exports = {
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: "src/data/*.bat", to: "../../" },
-        { from: "src/ui/main.js", to: "./"},
-        { from: "src/ui/preload.js", to: "./"},
-        { from: "src/ui/settings.js", to: "./"},
+        { from: "src/backend/*.bat", to: "../../" },
+        { from: "src/frontend/main.js", to: "./"},
+        { from: "src/frontend/preload.js", to: "./"},
+        { from: "src/frontend/settings.js", to: "./"},
         { from: ".data/db.json", to: "../../.data/"}
       ],
     }),
