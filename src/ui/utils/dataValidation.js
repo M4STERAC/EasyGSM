@@ -62,7 +62,21 @@ export const validateFilePath = (sanitizedPath) => {
   const windowsRegex = new RegExp(/^([A-Z]:)(\\[a-zA-Z0-9\s\(\)-_\.]+)*$/gm);
   const unixResult = unixRegex.test(sanitizedPath);
   const windowsResult = windowsRegex.test(sanitizedPath);
-  if (!windowsResult && !unixResult) return false;
+  if (!windowsResult && !unixResult) return "Invalid file path. Please use a valid file path starting from Unix: Home or Windows: Drive letter";
+  return true;
+};
+
+
+/**
+ * Validates that all required fields are filled
+ * @param {string} game Name of the game the server is for
+ * @param {string} name Custom name for the server
+ * @param {string} executable File path to the server executable
+ * @param {string} saveDirectory File path to the server save directory
+ * @returns {true | string} Returns true if all required fields are filled, returns an error message if they are not
+ */
+export const validateRequiredFieldsFilled = (game, name, executable, saveDirectory) => {
+  if (game === "" || name === "" || executable === "" || saveDirectory === "") return "Game, Name, Executable, and Save Directory fields are required.";
   return true;
 };
 
@@ -83,10 +97,8 @@ export const sanitizeAlphanumeric = (input) => {
  * @returns {string} Sanitized input
  */
 export const sanitizeFilePath = (input) => {
-  //Windows
-  if (input.includes('\\')) return input.replaceAll(/[^a-z0-9\s\(\)\._\\:-]/gi, "");
-  //Unix
-  else return input.replaceAll(/[^a-z0-9\s\(\)\._/-]/gi, "");
+  //Windows and Unix
+  return input.replaceAll(/[^a-z0-9\s\(\)\._\\/:-]/gi, "");
 };
 
 
