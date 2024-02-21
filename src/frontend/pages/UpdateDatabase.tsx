@@ -226,7 +226,7 @@ const UpdateDatabase = () => {
             </ul>
 
             {/* List all errors */}
-            { Object.keys(errors).map((error) => <p key={error} className="error">{ error }</p>) }
+            { Object.values(errors).map((error) => <p key={error} className="error">{ error }</p>) }
 
             <div className="button-container">
               <div className="submit-cancel-container">
