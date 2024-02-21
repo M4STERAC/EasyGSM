@@ -24,7 +24,6 @@ const storage = new store();
 //Global variables
 let children = [];
 let scheduledJobs = [];
-let retryCount = 0;
 const maxRetries = 50;
 
 
@@ -97,18 +96,27 @@ ipcMain.handle("delete-data", (event, data) => {
  * @returns {Promise} A promise that resolves with a message depending on user action with the executed server application.
  */
 ipcMain.handle("start-server", (event, server) => {
-  return new Promise((resolve, reject) => {
-    const child = spawn(server.executable, { detached: true });
-    children.push({ pid: child.pid, game: server.game, name: server.name });
-    child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
-    child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
-    child.on("close", () => resolve(`Child process closed successfully`));
-    child.on("error", (code) => {
-      console.debug(`Child exited with code ${code}`);
-      retryCount++;
-      ipcMain.handle("start-server", event, server);
-      if (retryCount >= maxRetries) reject(`Child process crashed with code ${code}`);
-    });
+  return new Promise((resolve) => {
+    const startChildProcess = () => {
+      child = spawn(server.executable, { detached: true });
+      children.push({ pid: child.pid, game: server.game, name: server.name });
+
+      child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
+      child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
+
+      child.on("close", () => {
+        if (children.pop() === 'STOP') return;
+        startChildProcess();
+      });
+
+      child.on("error", () => {
+        if (children.pop() === 'STOP') return;
+        startChildProcess();
+      });
+    };
+
+    startChildProcess();
+    resolve(`Successfully started the server for ${server.game} - ${server.name}`);
   });
 });
 
@@ -120,6 +128,7 @@ ipcMain.handle("start-server", (event, server) => {
  */
 ipcMain.handle("stop-server", (event, server) => {
   return new Promise((resolve, reject) => {
+    children.push('STOP');
     let child = children.find((child) => child.name === server.name && server.game === server.game);
     if (!child) reject("Server not found");
     treeKill(child.pid, "SIGTERM", (err) => {
