@@ -7,22 +7,26 @@ p, Link {
   color: #0366d6;
 }
 
-.start-button {
+.start-button,
+.stop-button {
   display: inline-block;
   padding: 6px 12px;
   margin-top: 20px;
   color: #fff;
-  background-color: #2ea44f;
-  border: 1px solid rgba(27, 31, 35, 0.15);
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
   user-select: none;
   transition: .2s cubic-bezier(0.3, 0, 0.5, 1);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.start-button {
+  background-color: #2ea44f;
+  border: 1px solid rgba(27, 31, 35, 0.15);
 }
 
 .start-button:hover {
@@ -30,24 +34,10 @@ p, Link {
 }
 
 .stop-button {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-top: 20px;
   margin-left: auto;
-  color: #fff;
   background-color: transparent;
-  border: 1px solid #d73a49;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-  text-align: center;
-  vertical-align: middle;
-  cursor: pointer;
-  user-select: none;
-  transition: .2s cubic-bezier(0.3, 0, 0.5, 1);
-  color: #fff;
   align-items: right;
+  border: 1px solid #d73a49;
 }
 
 .stop-button:hover {
@@ -59,25 +49,20 @@ p, Link {
   transform: translateX(100%);
 }
 
+.stop-button-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
 .start-button-enter-active {
   opacity: 1;
   transform: translateX(0);
   transition: opacity 300ms, transform 300ms;
 }
 
-.start-button-exit {
+.start-button-exit,
+.stop-button-exit {
   opacity: 1;
-}
-
-.start-button-exit-active {
-  opacity: 0;
-  transform: translateX(100%);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.stop-button-enter {
-  opacity: 0;
-  transform: translateX(-100%);
 }
 
 .stop-button-enter-active {
@@ -86,8 +71,10 @@ p, Link {
   transition: opacity 300ms, transform 300ms;
 }
 
-.stop-button-exit {
-  opacity: 1;
+.start-button-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 300ms, transform 300ms;
 }
 
 .stop-button-exit-active {
