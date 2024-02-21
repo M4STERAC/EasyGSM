@@ -2,7 +2,7 @@ import React from "react";
 import "../css/ServerListItem.css";
 
 //Lists the servers stored in electron store
-const ServerListItem = ({ server, onClick }) => {
+const ServerListItem = ({ server, onClick }: { server: Server, onClick: any }) => {
   return (
     <p onClick={onClick}>
       <a href="javascript:void(0)" >

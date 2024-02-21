@@ -1,9 +1,9 @@
 import React, { createContext, useState, useEffect } from "react";
 
 //Create context for context API
-export const StoreContext = createContext();
+export const StoreContext: React.Context<any> = createContext({} as any);
 
-export const StoreProvider = ({ children }) => {
+export const StoreProvider = ({ children }: any) => {
   //Initial State
   const [state, setState] = useState({
     serverList: [],
@@ -13,9 +13,9 @@ export const StoreProvider = ({ children }) => {
 
   //Get data from database and create backup schedules
   useEffect(() => {
-    window.electron.invoke("get-data").then((servers) => {
-      setState((prevState) => ({ ...prevState, serverList: servers }));
-      const schedulesToCreate = [];
+    window.electron.invoke("get-data").then((servers: Server[]) => {
+      setState((prevState: any) => ({ ...prevState, serverList: servers }));
+      const schedulesToCreate: Schedule[] = [];
       servers.forEach((server) => {
         if (!schedulesToCreate.includes({
             source: server.saveDirectory,
@@ -30,9 +30,9 @@ export const StoreProvider = ({ children }) => {
       });
       schedulesToCreate.forEach((schedule) => {
         window.electron.invoke("create-schedule", schedule)
-          .catch((error) => console.error("Create Schedule Error: ", error));
+          .catch((error: any) => console.error("Create Schedule Error: ", error));
       });
-    }).catch((error) => console.error("Get Database Error: ", error));
+    }).catch((error: any) => console.error("Get Database Error: ", error));
   }, []);
 
   return (

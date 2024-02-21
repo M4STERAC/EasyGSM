@@ -1,12 +1,12 @@
 /**
  * Creates a backup schedule and, if available, opens the ports listed in the server
- * @param {Object} server A server from the serverList
- * @returns {Object}
- * @param {boolean} ports True if ports opened successfully, false if not
- * @param {boolean} schedule True if schedule created successfully
+ * @param {Server} server A server from the serverList
+ * @returns {OnOffboardServerResult}
  */
-export const onboardServer = (server) => {
-  let result = {};
+import { OnOffboardServerResult } from './types';
+
+export const onboardServer = (server: Server): OnOffboardServerResult => {
+  let result: OnOffboardServerResult = { ports: false, schedule: false };
   const { game, ports, backuptime, saveDirectory } = server;
 
   window.electron.invoke("create-schedule", {
@@ -15,7 +15,7 @@ export const onboardServer = (server) => {
     time: backuptime,
   })
   .then(() => result.schedule = true)
-  .catch((error) => result.schedule = error);
+  .catch((error: string) => result.schedule = error);
 
   if (!ports) return result;
   window.electron.invoke("execute-script", {
@@ -23,7 +23,7 @@ export const onboardServer = (server) => {
       args: `${game} ${ports.tcpinbound ? ports.tcpinbound + " " : "NA"}${ports.tcpoutbound ? ports.tcpoutbound + " " : "NA"}${ports.udpinbound ? ports.udpinbound + " " : "NA"}${ports.udpoutbound ? ports.udpoutbound : "NA"}`,
   })
   .then(() => (result.ports = true))
-  .catch((error) => result.ports = error);
+  .catch((error: string) => result.ports = error);
 
   return result;
 };
@@ -31,22 +31,20 @@ export const onboardServer = (server) => {
 
 /**
  * Deletes the backup schedule and, if selected, will delete the open ports in the firewall
- * @param {Object} server A server from the serverList
- * @returns {Object}
- * @param {boolean} ports True if ports opened successfully, false if not
- * @param {boolean} schedule True if schedule created successfully
+ * @param {Server} server A server from the serverList
+ * @param {boolean} deletePorts If true, will delete the open ports in the firewall, will not otherwise
+ * @returns {OnOffboardServerResult}
  */
-export const offboardServer = (server, deletePorts) => {
-  let result;
+export const offboardServer = (server: Server, deletePorts: boolean): OnOffboardServerResult => {
+  let result: OnOffboardServerResult = { ports: false, schedule: false };
   const { game, backuptime, saveDirectory } = server;
 
   window.electron.invoke("delete-schedule", {
     source: saveDirectory,
     game: game,
-    time: backuptime,
   })
   .then(() => (result.schedule = true))
-  .catch((error) => result.schedule = error);
+  .catch((error: string) => result.schedule = error);
 
   if (!deletePorts) return result;
   window.electron.invoke("execute-script", {
@@ -54,7 +52,7 @@ export const offboardServer = (server, deletePorts) => {
     args: `${game}`,
   })
   .then(() => (result.ports = true))
-  .catch((error) => result.ports = error);
+  .catch((error: string) => result.ports = error);
 
   return result;
 };

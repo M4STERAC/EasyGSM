@@ -3,7 +3,7 @@
  * @param {string} sanitizedBanlist List of IP addresses to validate
  * @returns {true | string} - Returns true if the IP addresses in the string list is valid, returns an error message if it is not
  */
-export const validateIpAddress = (sanitizedBanlist) => {
+export const validateIpAddress = (sanitizedBanlist: string): true | string => {
   if (sanitizedBanlist === "") return true;
   const ips = sanitizedBanlist.split(",");
   const regex = new RegExp(/^(\d{1,2}|0\d{0,2}|1\d{0,2}|2[0-4]\d|2[0-5][0-5])\.(\d{1,2}|0\d{0,2}|1\d{0,2}|2[0-4]\d|2[0-5][0-5])\.(\d{1,2}|0\d{0,2}|1\d{0,2}|2[0-4]\d|2[0-5][0-5])\.(\d{1,2}|0\d{0,2}|1\d{0,2}|2[0-4]\d|2[0-5][0-5])$/gm);
@@ -17,10 +17,10 @@ export const validateIpAddress = (sanitizedBanlist) => {
 
 /**
  * Validates a list of ports to ensure they are within the valid range
- * @param {string} sanitizedPorts List of ports to validate
+ * @param {Ports} sanitizedPorts List of ports to validate
  * @returns {true | string} - Returns true if the ports in the string list is valid, returns an error message if it is not
  */
-export const validatePort = (sanitizedPorts) => {
+export const validatePort = (sanitizedPorts: Ports): true | string => {
   if (
     sanitizedPorts.tcpinbound === "" &&
     sanitizedPorts.tcpoutbound === "" &&
@@ -41,11 +41,11 @@ export const validatePort = (sanitizedPorts) => {
 
 /**
  * Validates that the unique server id is not already in use
- * @param {string[]} serverList Array of server objects pulled from electron store
+ * @param {Server[]} serverList Array of server objects pulled from electron store
  * @param {string} id Generated ID to validate
  * @returns {boolean} - Returns true if the ID is unique, false if it is not
  */
-export const checkDuplicateIds = (serverList, id) => {
+export const checkDuplicateIds = (serverList: Server[], id: string): boolean => {
   const ids = serverList.map((server) => server.id);
   return ids.includes(id);
 };
@@ -54,15 +54,16 @@ export const checkDuplicateIds = (serverList, id) => {
 /**
  * Validates that a file path is in the correct format
  * @param {string} sanitizedPath File path to validate
- * @returns {boolean} - Returns true if the path is valid, false if it is not
+ * @returns {boolean | string} - Returns true if the path is valid, false if it is not
  */
-export const validateFilePath = (sanitizedPath) => {
-  if (sanitizedPath === "") return false;
+export const validateFilePath = (sanitizedPath: string): boolean | string => {
+  const errorMessage: string = "Invalid file path. Please use a valid file path starting from Unix: Home or Windows: Drive letter";
+  if (sanitizedPath === "") return errorMessage;
   const unixRegex = new RegExp(/^\/(\/[a-zA-Z0-9-_\(\)\.]+)*$/gm);
   const windowsRegex = new RegExp(/^([A-Z]:)(\\[a-zA-Z0-9\s\(\)-_\.]+)*$/gm);
   const unixResult = unixRegex.test(sanitizedPath);
   const windowsResult = windowsRegex.test(sanitizedPath);
-  if (!windowsResult && !unixResult) return "Invalid file path. Please use a valid file path starting from Unix: Home or Windows: Drive letter";
+  if (!windowsResult && !unixResult) return errorMessage;
   return true;
 };
 
@@ -75,7 +76,7 @@ export const validateFilePath = (sanitizedPath) => {
  * @param {string} saveDirectory File path to the server save directory
  * @returns {true | string} Returns true if all required fields are filled, returns an error message if they are not
  */
-export const validateRequiredFieldsFilled = (game, name, executable, saveDirectory) => {
+export const validateRequiredFieldsFilled = (game: string, name: string, executable: string, saveDirectory: string): true | string => {
   if (game === "" || name === "" || executable === "" || saveDirectory === "") return "Game, Name, Executable, and Save Directory fields are required.";
   return true;
 };
@@ -86,7 +87,7 @@ export const validateRequiredFieldsFilled = (game, name, executable, saveDirecto
  * @param {string} input Input to sanitize
  * @returns {string} Sanitized input
  */
-export const sanitizeAlphanumeric = (input) => {
+export const sanitizeAlphanumeric = (input: string): string => {
   return input.replaceAll(/[^a-z0-9 ]/gi, "");
 };
 
@@ -96,7 +97,7 @@ export const sanitizeAlphanumeric = (input) => {
  * @param {string} input Input to sanitize
  * @returns {string} Sanitized input
  */
-export const sanitizeFilePath = (input) => {
+export const sanitizeFilePath = (input: string): string => {
   //Windows and Unix
   return input.replaceAll(/[^a-z0-9\s\(\)\._\\/:-]/gi, "");
 };
@@ -107,7 +108,7 @@ export const sanitizeFilePath = (input) => {
  * @param {string} input Input to sanitize
  * @returns {string} Sanitized input
  */
-export const sanitizePorts = (input) => {
+export const sanitizePorts = (input: string): string => {
   return input.replaceAll(/[^0-9,\s]/gi, "");
 };
 
@@ -117,6 +118,6 @@ export const sanitizePorts = (input) => {
  * @param {string} input Input to sanitize
  * @returns {string} Sanitized input
  */
-export const sanitizeIpAddress = (input) => {
+export const sanitizeIpAddress = (input: string): string => {
   return input.replaceAll(/[^0-9.,\s]/gi, "");
 };
