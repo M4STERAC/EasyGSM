@@ -4,6 +4,7 @@ import {
   validateIpAddress,
   validatePort,
   validateFilePath,
+  validateRequiredFieldsFilled,
   sanitizeAlphanumeric,
   sanitizeFilePath,
   sanitizePorts,
@@ -26,146 +27,104 @@ const UpdateDatabase = () => {
   const [id] = useState(isUpdate ? state.selectedServer.id : generateId(10));
   const [game, setGame] = useState(isUpdate ? state.selectedServer.game : "");
   const [name, setName] = useState(isUpdate ? state.selectedServer.name : "");
-  const [executable, setExecutable] = useState(
-    isUpdate ? state.selectedServer.executable : ""
-  );
-  const [saveDirectory, setSaveDirectory] = useState(
-    isUpdate ? state.selectedServer.saveDirectory : ""
-  );
-  const [banlist, setBanlist] = useState(
-    isUpdate ? state.selectedServer.banlist : ""
-  );
-  const [ports, setPorts] = useState(
-    isUpdate ? state.selectedServer.ports : ""
-  );
+  const [executable, setExecutable] = useState(isUpdate ? state.selectedServer.executable : "");
+  const [saveDirectory, setSaveDirectory] = useState(isUpdate ? state.selectedServer.saveDirectory : "");
+  const [banlist, setBanlist] = useState(isUpdate ? state.selectedServer.banlist : "");
+  const [ports, setPorts] = useState(isUpdate ? state.selectedServer.ports : "");
   const [backuptime, setBackupTime] = useState("06:00");
-  const [errors, setErrors] = useState({
-    banlistError: "",
-    portError: "",
-    pathError: "",
-    requiredFieldsError: "",
-  });
+  const [errors, setErrors] = useState({ banlistError: "", portError: "", pathError: "", requiredFieldsError: "" });
 
+
+  //Whenever an error is created, log it to the console
   useEffect(() => {
     const errs = Object.values(errors).toString().replaceAll(/[,\s]/g, "");
     if (errs !== "") console.error(errors);
   }, [errors]);
 
+
+  //When the user submits the form, validate the data and save it to the database
   const handleSubmit = async (e) => {
     e.preventDefault();
     let postFail = false;
 
-    const banlistResult = validateIpAddress(banlist);
-    console.log("Banlist validation Result: ", banlistResult);
-    if (banlistResult !== true) {
-      setErrors((prevState) => ({ ...prevState, banlistError: banlistResult }));
-      postFail = true;
-    } else setErrors((prevState) => ({ ...prevState, banlistError: "" }));
+    //Validate all input fields
+    const requiredFieldsValidated = validateRequiredFieldsFilled(game, name, executable, saveDirectory);
+    const banlistValidated = validateIpAddress(banlist);
+    const portsValidated = validatePort(ports);
+    const executableValidated = validateFilePath(executable);
+    const saveDirectoryValidated = validateFilePath(saveDirectory);
 
-    if (!backuptime) setBackupTime("06:00");
-
-    const portResult = validatePort(ports);
-    console.log("Port validation Result: ", portResult);
-    if (portResult !== true) {
-      setErrors((prevState) => ({ ...prevState, portError: portResult }));
-      postFail = true;
-    } else setErrors((prevState) => ({ ...prevState, portError: "" }));
-
-    if (!validateFilePath(executable)) {
-      setErrors((prevState) => ({
-        ...prevState,
-        pathError:
-          "Invalid Path to Game Executable. Ensure the path is correct and it only contains alphanumeric characters, dashes, and/or underscores.",
+    //If any of the fields are invalid, set the errors and return
+    if (requiredFieldsValidated !== true || portsValidated !== true || banlistValidated !== true || executableValidated !== true || saveDirectoryValidated !== true) {
+      setErrors((prevState) => ({ 
+        ...prevState, 
+        requiredFieldsError: requiredFieldsValidated !== true ? requiredFieldsValidated : "",
+        banlistError: banlistValidated !== true ? banlistValidated : "",
+        portError: portsValidated !== true ? portsValidated : "",
+        pathError: (executableValidated !== true ? executableValidated : "") || (saveDirectoryValidated !== true ? saveDirectoryValidated : ""),
       }));
       postFail = true;
-    }
-    if (!validateFilePath(saveDirectory)) {
-      setErrors((prevState) => ({
-        ...prevState,
-        pathError:
-          "Invalid Save Directory. Ensure the path is correct and it only contains alphanumeric characters, dashes, and/or underscores.",
-      }));
-      postFail = true;
-    }
+      return;
+    } else postFail = false;
 
-    if (!postFail) {
-      window.electron
-        .invoke("save-data", {
-          id,
-          game,
-          name,
-          executable,
-          uptime: 0,
-          status: "Down",
-          saveDirectory,
-          banlist,
-          players: 0,
-          ports,
-          lastrestart: await createUTCDate(),
-          backuptime,
-        })
-        .then((data) =>
-          setState((prevState) => ({ ...prevState, serverList: data }))
-        )
-        .then(() => console.log("Updated Database: ", state.serverList))
-        .then(() => {
-          const onboardResult = onboardServer({
-            game,
-            ports,
-            backuptime,
-            saveDirectory,
-          });
-          console.log("Onboard Result: ", onboardResult);
-        })
-        .then(() => navigate("/"))
-        .catch((error) => console.error(error));
-    }
+    if (postFail) return;
+    //Post the database
+    window.electron.invoke("save-data", {
+      id,
+      game,
+      name,
+      executable,
+      uptime: 0,
+      status: "Down",
+      saveDirectory,
+      banlist,
+      players: 0,
+      ports,
+      lastrestart: await createUTCDate(),
+      backuptime,
+    })
+    .then((data) => {
+      setState((prevState) => ({ ...prevState, serverList: data }));
+      console.debug("Onboard Result: ", onboardServer({
+        game,
+        ports,
+        backuptime,
+        saveDirectory,
+      }));
+    })
+    .then(() => navigate("/"))
+    .catch((error) => console.error(error));
   };
 
   const deleteServer = () => {
-    let deletePorts = false;
-    let confirmDelete = false;
-    window.electron
-      .invoke("dialog-box", {
-        checkboxLabel:
-          "Would you like to delete the open ports used for this server?",
-        checkboxChecked: false,
+    //Ask the user if they're sure they want to delete the server and/or the ports
+    window.electron.invoke("dialog-box", {
+      checkboxLabel: "Would you like to delete the open ports used for this server?",
+      checkboxChecked: false,
+    })
+    .then((response) => {
+      if (response.response !== 0) return;
+      //Delete the server and/or the ports
+      window.electron.invoke("delete-data", { id })
+      .then((data) => {
+        setState((prevState) => ({ ...prevState, serverList: data }))
+        console.debug("Offboard Result: ", offboardServer(
+          { game, ports, backuptime, saveDirectory },
+          response.checkboxChecked
+        ));
       })
-      .then((response) => {
-        console.log("Response: ", response);
-        if (response.response === 0) confirmDelete = true;
-        deletePorts = response.checkboxChecked;
-        if (!confirmDelete) return;
-        window.electron
-          .invoke("delete-data", { id })
-          .then((data) =>
-            setState((prevState) => ({ ...prevState, serverList: data }))
-          )
-          .then(() => console.log("Updated Database: ", state.serverList))
-          .then(() => {
-            const offboardResult = offboardServer(
-              { game, ports, backuptime, saveDirectory },
-              deletePorts
-            );
-            console.log("Offboard Result: ", offboardResult);
-          })
-          .then(() => navigate("/"))
-          .catch((error) => console.error(error));
-      })
-      .catch((error) => console.error(error));
+      .then(() => navigate("/"))
+      .catch((error) => console.error('Delete Server Error: ', error));
+    })
+    .catch((error) => console.error('Dialog Box Error: ', error));
   };
 
   return (
     <Card>
-      {isUpdate && !state.selectedServer ? (
-        <p className="error">
-          Failed to get Server Configuration. Please try again later.
-        </p>
-      ) : (
+      {isUpdate && !state.selectedServer ? (<p className="error">Failed to get Server Configuration. Please try again later.</p>) 
+      : (
         <div>
-          <h2 className="card-title">
-            {isUpdate ? "Update " : "Create "}Server
-          </h2>
+          <h2 className="card-title">{ isUpdate ? "Update " : "Create " }Server</h2>
           <form onSubmit={handleSubmit} className="server-form">
             <label>Game:</label>
             <input
@@ -175,6 +134,7 @@ const UpdateDatabase = () => {
               placeholder={isUpdate ? game : "Elden Ring"}
             />
             <br />
+
             <label>Name:</label>
             <input
               type="text"
@@ -183,32 +143,25 @@ const UpdateDatabase = () => {
               placeholder={isUpdate ? name : "Elden Ring Server"}
             />
             <br />
+
             <label>Path to Game Executable:</label>
             <input
               type="text"
               value={executable}
-              onChange={(e) => {
-                setExecutable(sanitizeFilePath(e.target.value));
-              }}
-              placeholder={
-                isUpdate
-                  ? executable
-                  : "C:\\Program Files\\Elden Ring\\EldenRing.exe"
-              }
+              onChange={(e) => setExecutable(sanitizeFilePath(e.target.value))}
+              placeholder={isUpdate ? executable : "C:\\Program Files\\Elden Ring\\EldenRing.exe"}
             />
             <br />
+
             <label>Save Directory:</label>
             <input
               type="text"
               value={saveDirectory}
-              onChange={(e) => {
-                setSaveDirectory(sanitizeFilePath(e.target.value));
-              }}
-              placeholder={
-                isUpdate ? saveDirectory : "C:\\Program Files\\Elden Ring"
-              }
+              onChange={(e) => setSaveDirectory(sanitizeFilePath(e.target.value))}
+              placeholder={isUpdate ? saveDirectory : "C:\\Program Files\\Elden Ring"}
             />
             <br />
+
             <label>Backup Time:</label>
             <input
               type="time"
@@ -217,6 +170,7 @@ const UpdateDatabase = () => {
               placeholder="06:00"
             />
             <br />
+
             <label>Banlist:</label>
             <input
               type="text"
@@ -225,102 +179,69 @@ const UpdateDatabase = () => {
               placeholder={isUpdate ? banlist : "255.255.255.255"}
             />
             <br />
-            <div>
-              <p>Required Ports: </p>
-              <ul>
-                <li>
-                  <label>TCP Inbound:</label>
-                  <input
-                    type="text"
-                    value={ports.tcpinbound}
-                    onChange={(e) =>
-                      setPorts({
-                        ...ports,
-                        tcpinbound: sanitizePorts(e.target.value),
-                      })
-                    }
-                    placeholder={isUpdate ? ports.tcpinbound : "8221, 27115"}
-                  />
-                </li>
-                <li>
-                  <label>TCP Outbound:</label>
-                  <input
-                    type="text"
-                    value={ports.tcpoutbound}
-                    onChange={(e) =>
-                      setPorts({
-                        ...ports,
-                        tcpoutbound: sanitizePorts(e.target.value),
-                      })
-                    }
-                    placeholder={isUpdate ? ports.tcpoutbound : "8221, 27115"}
-                  />
-                </li>
-                <li>
-                  <label>UDP Inbound:</label>
-                  <input
-                    type="text"
-                    value={ports.udpinbound}
-                    onChange={(e) =>
-                      setPorts({
-                        ...ports,
-                        udpinbound: sanitizePorts(e.target.value),
-                      })
-                    }
-                    placeholder={isUpdate ? ports.udpinbound : "8221, 27115"}
-                  />
-                </li>
-                <li>
-                  <label>UDP Outbound:</label>
-                  <input
-                    type="text"
-                    value={ports.udpoutbound}
-                    onChange={(e) =>
-                      setPorts({
-                        ...ports,
-                        udpoutbound: sanitizePorts(e.target.value),
-                      })
-                    }
-                    placeholder={isUpdate ? ports.udpoutbound : "8221, 27115"}
-                  />
-                </li>
-              </ul>
-            </div>
-            {errors.requiredFieldsError ? (
-              <p className="error">{errors.requiredFieldsError}</p>
-            ) : null}
-            {errors.pathError ? (
-              <p className="error">{errors.pathError}</p>
-            ) : null}
-            {errors.banlistError ? (
-              <p className="error">{errors.banlistError}</p>
-            ) : null}
-            {errors.portError ? (
-              <p className="error">{errors.portError}</p>
-            ) : null}
+
+            <p>Required Ports: </p>
+            <ul>
+
+              <li>
+                <label>TCP Inbound:</label>
+                <input
+                  type="text"
+                  value={ports.tcpinbound}
+                  onChange={(e) => setPorts({ ...ports, tcpinbound: sanitizePorts(e.target.value) })}
+                  placeholder={isUpdate ? ports.tcpinbound : "8221, 27115"}
+                />
+              </li>
+
+              <li>
+                <label>TCP Outbound:</label>
+                <input
+                  type="text"
+                  value={ports.tcpoutbound}
+                  onChange={(e) => setPorts({ ...ports, tcpoutbound: sanitizePorts(e.target.value) })}
+                  placeholder={isUpdate ? ports.tcpoutbound : "8221, 27115"}
+                />
+              </li>
+
+              <li>
+                <label>UDP Inbound:</label>
+                <input
+                  type="text"
+                  value={ports.udpinbound}
+                  onChange={(e) => setPorts({ ...ports, udpinbound: sanitizePorts(e.target.value) })}
+                  placeholder={isUpdate ? ports.udpinbound : "8221, 27115"}
+                />
+              </li>
+
+              <li>
+                <label>UDP Outbound:</label>
+                <input
+                  type="text"
+                  value={ports.udpoutbound}
+                  onChange={(e) => setPorts({ ...ports, udpoutbound: sanitizePorts(e.target.value) })}
+                  placeholder={isUpdate ? ports.udpoutbound : "8221, 27115"}
+                />
+              </li>
+            </ul>
+
+            {/* List all errors */}
+            { Object.keys(errors).map((error) => <p key={error} className="error">{errors[error]}</p>) }
+
             <div className="button-container">
               <div className="submit-cancel-container">
-                <button type="submit" className="submit-button">
-                  {isUpdate ? "Update" : "Create"}
-                </button>
-                <button
-                  className="cancel-button"
-                  onClick={(e) => {
+                <button type="submit" className="submit-button">{ isUpdate ? "Update" : "Create" }</button>
+                <button className="cancel-button" onClick={(e) => {
                     e.preventDefault();
                     navigate("/");
-                  }}
-                >
+                }}>
                   Cancel
                 </button>
               </div>
               {isUpdate ? (
-                <button
-                  className="delete-button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    deleteServer();
-                  }}
-                >
+                <button className="delete-button" onClick={(e) => {
+                  e.preventDefault();
+                  deleteServer();
+                }}>
                   Delete
                 </button>
               ) : null}
