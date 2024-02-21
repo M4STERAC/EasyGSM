@@ -7,10 +7,12 @@ import ServerInfoItem from "../components/ServerInfoItem";
 import "../css/General.css";
 import "../css/MainPage.css";
 
+//Root page of the app. Loads server list and server info components
 const MainPage = () => {
   const navigate = useNavigate();
   const [state, setState] = useContext(StoreContext);
 
+  //Updates selectedServer when a server is clicked
   const handleServerClick = (server) => {
     setState((prevState) => ({
       ...prevState,
