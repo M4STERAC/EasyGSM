@@ -10,7 +10,7 @@ const storage = new Store();
  * @param {number} width
  * @param {number} height
  */
-export function getWindowSettings() {
+function getWindowSettings() {
   const defaultBounds = { width: 800, height: 600 };
   const savedBounds = storage.get("windowBounds");
   if (savedBounds) return savedBounds;
@@ -27,7 +27,7 @@ export function getWindowSettings() {
  * @property {number} bounds.height - The window height.
  * @returns {void}
  */
-export function saveBounds(bounds) {
+function saveBounds(bounds) {
   try {
     const newBounds = { width: bounds.width, height: bounds.height };
     storage.set("windowBounds", newBounds);
@@ -36,3 +36,8 @@ export function saveBounds(bounds) {
   }
   return;
 }
+
+module.exports = {
+  getWindowSettings,
+  saveBounds
+};
