@@ -7,7 +7,7 @@
     "email": "mrmanka0307@gmail.com"
   },
   "license": "LICENSE.md",
-  "main": "./out/src/ui/main.js",
+  "main": "./out/src/frontend/main.js",
   "scripts": {
     "test": "jest",
     "build": "npm run webpack && electron-builder",
@@ -33,9 +33,19 @@
     "linux": {
       "target": [
         "deb"
-      ]
+      ],
+      "icon": "src/frontend/images/EasyGSMLogoIcon.png",
+      "packageCategory": "Utility",
+      "desktop": {
+        "Name": "EasyGSM",
+        "Icon": "src/frontend/images/EasyGSMLogoIcon.png",
+        "Terminal": "false",
+        "Type": "Application",
+        "Categories": "Utility"
+      },
+      "maintainer": "Matthew Manka"
     },
-    "icon": "src/ui/images/EasyGSMLogo.png",
+    "icon": "src/frontend/images/EasyGSMLogoIcon.png",
     "files": [
       "out/**/*"
     ],
@@ -45,11 +55,11 @@
       "perMachine": false,
       "allowElevation": false,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "src/ui/images/EasyGSMLogo.ico",
-      "installerHeader": "src/ui/images/EasyGSMLogo.bmp",
-      "installerSidebar": "src/ui/images/EasyGSMLogo.bmp",
-      "uninstallerIcon": "src/ui/images/EasyGSMLogo.ico",
-      "uninstallerSidebar": "src/ui/images/EasyGSMLogo.bmp",
+      "installerIcon": "src/frontend/images/EasyGSMLogo.ico",
+      "installerHeader": "src/frontend/images/EasyGSMLogo.bmp",
+      "installerSidebar": "src/frontend/images/EasyGSMLogo.bmp",
+      "uninstallerIcon": "src/frontend/images/EasyGSMLogo.ico",
+      "uninstallerSidebar": "src/frontend/images/EasyGSMLogo.bmp",
       "deleteAppDataOnUninstall": true
     }
   },
