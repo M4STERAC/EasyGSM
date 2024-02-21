@@ -42,7 +42,6 @@ export const offboardServer = (server: Server, deletePorts: boolean): OnOffboard
   window.electron.invoke("delete-schedule", {
     source: saveDirectory,
     game: game,
-    time: backuptime,
   })
   .then(() => (result.schedule = true))
   .catch((error: string) => result.schedule = error);

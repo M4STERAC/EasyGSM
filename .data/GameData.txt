@@ -1,6 +1,0 @@
-[PathToGameSaves]
-PalServer:%USERPROFILE%\AppData\Local\Pal\Saved\SaveGames\
-PalServer:C:\Program Files (x86)\Steam\steamapps\common\PalServer\Pal\Saved\SaveGames\
-
-[DestinationPaths]
-PalServer:%USERPROFILE%\Documents\EasyGSM\PalServer\

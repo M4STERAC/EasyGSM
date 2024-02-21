@@ -8,7 +8,7 @@ require("dotenv").config();
 module.exports = {
   devtool: "source-map",
   target: "electron-main",
-  entry: "./src/frontend/index.js",
+  entry: "./src/frontend/index.tsx",
   module: {
     rules: [
       {
@@ -58,9 +58,8 @@ module.exports = {
       patterns: [
         { from: "src/backend/*.bat", to: "../../" },
         { from: "src/frontend/main.js", to: "./"},
-        { from: "src/frontend/preload.js", to: "./"},
-        { from: "src/frontend/settings.js", to: "./"},
-        { from: ".data/db.json", to: "../../.data/"}
+        { from: "src/frontend/preload.ts", to: "./"},
+        { from: "src/frontend/settings.ts", to: "./"}
       ],
     }),
   ],
