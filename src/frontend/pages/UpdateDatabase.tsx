@@ -10,6 +10,7 @@ import {
   sanitizePorts,
   sanitizeIpAddress,
 } from "../utils/dataValidation";
+import { Error } from "../utils/types";
 import {
   onboardServer,
   offboardServer,
@@ -32,7 +33,7 @@ const UpdateDatabase = () => {
   const [banlist, setBanlist] = useState(isUpdate ? state.selectedServer.banlist : "");
   const [ports, setPorts] = useState(isUpdate ? state.selectedServer.ports : "");
   const [backuptime, setBackupTime] = useState("06:00");
-  const [errors, setErrors] = useState({ banlistError: "", portError: "", pathError: "", requiredFieldsError: "" });
+  const [errors, setErrors] = useState({ banlistError: "", portError: "", pathError: "", requiredFieldsError: "" } as Error);
 
 
   //Whenever an error is created, log it to the console
@@ -43,7 +44,7 @@ const UpdateDatabase = () => {
 
 
   //When the user submits the form, validate the data and save it to the database
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     let postFail = false;
 
@@ -56,7 +57,7 @@ const UpdateDatabase = () => {
 
     //If any of the fields are invalid, set the errors and return
     if (requiredFieldsValidated !== true || portsValidated !== true || banlistValidated !== true || executableValidated !== true || saveDirectoryValidated !== true) {
-      setErrors((prevState) => ({ 
+      setErrors((prevState: any) => ({ 
         ...prevState, 
         requiredFieldsError: requiredFieldsValidated !== true ? requiredFieldsValidated : "",
         banlistError: banlistValidated !== true ? banlistValidated : "",
@@ -83,17 +84,17 @@ const UpdateDatabase = () => {
       lastrestart: await createUTCDate(),
       backuptime,
     })
-    .then((data) => {
-      setState((prevState) => ({ ...prevState, serverList: data }));
+    .then((data: Server[]) => {
+      setState((prevState: any) => ({ ...prevState, serverList: data }));
       console.debug("Onboard Result: ", onboardServer({
         game,
         ports,
         backuptime,
         saveDirectory,
-      }));
+      } as Server));
     })
     .then(() => navigate("/"))
-    .catch((error) => console.error(error));
+    .catch((error: any) => console.error(error));
   };
 
   const deleteServer = () => {
@@ -102,21 +103,21 @@ const UpdateDatabase = () => {
       checkboxLabel: "Would you like to delete the open ports used for this server?",
       checkboxChecked: false,
     })
-    .then((response) => {
+    .then((response: DialogBoxRespone) => {
       if (response.response !== 0) return;
       //Delete the server and/or the ports
       window.electron.invoke("delete-data", { id })
-      .then((data) => {
-        setState((prevState) => ({ ...prevState, serverList: data }))
+      .then((data: Server[]) => {
+        setState((prevState: any) => ({ ...prevState, serverList: data }))
         console.debug("Offboard Result: ", offboardServer(
-          { game, ports, backuptime, saveDirectory },
+          { game, ports, backuptime, saveDirectory } as Server,
           response.checkboxChecked
         ));
       })
       .then(() => navigate("/"))
-      .catch((error) => console.error('Delete Server Error: ', error));
+      .catch((error: any) => console.error('Delete Server Error: ', error));
     })
-    .catch((error) => console.error('Dialog Box Error: ', error));
+    .catch((error: any) => console.error('Dialog Box Error: ', error));
   };
 
   return (
@@ -225,7 +226,7 @@ const UpdateDatabase = () => {
             </ul>
 
             {/* List all errors */}
-            { Object.keys(errors).map((error) => <p key={error} className="error">{errors[error]}</p>) }
+            { Object.keys(errors).map((error) => <p key={error} className="error">{ error }</p>) }
 
             <div className="button-container">
               <div className="submit-cancel-container">

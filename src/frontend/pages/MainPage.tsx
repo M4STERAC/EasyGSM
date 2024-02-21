@@ -13,8 +13,8 @@ const MainPage = () => {
   const [state, setState] = useContext(StoreContext);
 
   //Updates selectedServer when a server is clicked
-  const handleServerClick = (server) => {
-    setState((prevState) => ({
+  const handleServerClick = (server: Server) => {
+    setState((prevState: any) => ({
       ...prevState,
       selectedServer: server,
     }));
@@ -27,12 +27,11 @@ const MainPage = () => {
         {/* Shows list of servers */}
         <Card>
           <h2 className="card-title">SERVER LIST</h2>
-          {state.serverList && state.serverList.map((server, index) => (
+          {state.serverList && state.serverList.map((server: Server, index: number) => (
               <ServerListItem
                 onClick={() => handleServerClick(server)}
                 key={index}
                 server={server}
-                selectedServer={state.selectedServer}
               />
           ))}
           <button className="add-server" onClick={() => navigate("/add-server")}>+</button>

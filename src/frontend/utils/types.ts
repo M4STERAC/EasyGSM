@@ -25,3 +25,10 @@ export interface ScheduledJobs {
     source: string;
     scheduledJob: cron.ScheduledTask;
 }
+
+export interface Error {
+    banlistError: string;
+    portError: string;
+    pathError: string;
+    requiredFieldsError: string;
+}

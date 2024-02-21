@@ -38,6 +38,11 @@ interface DialogBoxOptions {
     noLink: boolean;
 }
 
+interface DialogBoxRespone {
+    response: number;
+    checkboxChecked: boolean;
+}
+
 interface Schedule {
     source: string;
     game: string;
