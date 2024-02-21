@@ -3,7 +3,7 @@
  * Handles the main Electron process, IPC communication, database operations, server management, and backup scheduling.
  * @module main
  */
-const { saveBounds, getWindowSettings } = require("./settings.js");
+const { saveBounds, getWindowSettings } = require("./settings.ts");
 const { app, BrowserWindow } = require("electron");
 const { ipcMain, dialog } = require("electron");
 const store = require("electron-store");

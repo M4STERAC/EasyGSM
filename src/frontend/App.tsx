@@ -6,13 +6,13 @@ import UpdateDatabase from "./pages/UpdateDatabase";
 import Footer from "./components/Footer";
 import "./css/General.css";
 import * as Sentry from "@sentry/react";
-import { BrowserTracing } from "@sentry/browser";
+import { Integrations } from "@sentry/tracing";
 import { StoreProvider } from "./Store";
 
 //Sentry setup for error tracking
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
-  integrations: [new BrowserTracing()],
+  integrations: [new Integrations.BrowserTracing()],
   tracesSampleRate: 1.0,
 });
 
