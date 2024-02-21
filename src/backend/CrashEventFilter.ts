@@ -6,7 +6,7 @@ export async function FilterEvents(game: string) {
   let path = `C:\\temp\\EasyGSM\\${game}-CrashLog.txt`;
   let logs: string;
   let logJSON: any[];
-  let attempt = 0;
+  let attempt: number = 0;
 
   while (true) {
     try {
@@ -14,14 +14,14 @@ export async function FilterEvents(game: string) {
       logs = logsBuffer.toString("utf-8");
       logJSON = await parseLogToJSON(logs);
       break;
-    } catch (err) {
+    } catch (err: any) {
       if (attempt > 3) throw err;
       else attempt++;
     }
   }
   if (logs && logJSON.length === 0) throw `Failed to parse logs into JSON`;
   const regex: RegExp = new RegExp(game, "gi");
-  const ErrorLogs = logJSON.filter((log) => { return regex.test(log.P1) });
+  const ErrorLogs: any[] = logJSON.filter((log) => { return regex.test(log.P1) });
   fs.writeFileSync(
     `${os.homedir()}\\Documents\\EasyGSM\\${game}\\logs\\error\\${game}-ErrorLogs.json`,
     JSON.stringify(ErrorLogs)

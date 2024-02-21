@@ -1,13 +1,13 @@
-export async function parseLogToJSON(logData: any) {
+export async function parseLogToJSON(logData: any): Promise<any> {
     const events: object[] = [];
-    const eventLines: string[] = logData.split('\n\n').map(event => event.trim());
+    const eventLines: string[] = logData.split('\n\n').map((event: string) => event.trim());
 
     eventLines.forEach(event => {
         const lines: string[] = event.split('\n').map(line => line.trim());
-        const eventData: object = {};
+        const eventData: any = {};
         let currentKey: string = "";
 
-        lines.forEach(line => {
+        lines.forEach((line: string) => {
             if (line.includes(':')) {
                 const [key, value] = line.split(':').map(part => part.trim());
                 if (value) {
