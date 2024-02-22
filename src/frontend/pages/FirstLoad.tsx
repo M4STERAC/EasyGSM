@@ -1,32 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { GetData } from '../utils/types';
+import React, { useState, useEffect, useContext } from 'react';
+import { StoreContext } from "../Store";
+import { useNavigate } from "react-router-dom";
+import Card from '../components/Card';
+import '../css/ButtonStyles.css';
+import "../css/Forms.css";
 
 const WelcomePage = () => {
-    const [accepted, setAccepted] = useState(false);
 
-    useEffect(() => {
-        window.electron.invoke('get-data', { storageName: "firstLaunchStatus", defaultValue: undefined } as GetData).then((status: boolean) => {
-            if (status) setAccepted(true);
-        }).catch((err: Error) => console.error(err));
-    }, []);
+    console.log("FirstLoad.tsx");
 
-    const handleAccept = () => {
-        // Perform the necessary actions when the user accepts
-        // such as installing SteamCMD
-        setAccepted(true);
+    const navigate = useNavigate();
+    const [state, setState] = useContext(StoreContext);
+    const [steamcmdPath, setSteamcmdPath] = useState('');
+
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        setState((prevState: any) => ({ ...prevState, firstLaunchStatus: false, steamcmdPath }));
+        window.electron.invoke("save-data", { storageName: "firstLaunchStatus", data: false });
+        window.electron.invoke("save-data", { storageName: "steamcmd", data: steamcmdPath }).then(() => navigate("/"));
+    };
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSteamcmdPath(event.target.value);
     };
 
     return (
-        <div>
+        <Card>
             <h1>Welcome to EasyGSM!</h1>
-            <p>EasyGSM is a tool used to make downloading, commissioning, managing, and decommissioning easy and automated.</p>
-            {!accepted && (
-                <div>
-                    <p>By clicking Accept, you allow this software to install SteamCMD for its purpose in downloading and updating Steam supported servers.</p>
-                    <button onClick={handleAccept}>Accept</button>
+            <p>EasyGSM is a tool used to make downloading, commissioning, managing, and decommissioning easy and automated.</p> 
+            <br />
+            <p>We highly recommend installing SteamCMD and putting the path to steamcmd.exe after install in the textbox below</p>
+            <p>This allows EasyGSM to automatically install updates to your servers and/or download new servers!</p>
+            <br />
+            <form onSubmit={handleSubmit} className='form'>
+                <label>Path to installed steamcmd.exe</label> <br />
+                <input type="text" id="steamcmd" name="steamcmd" placeholder="path/to/steamcmd.exe" value={steamcmdPath} onChange={handleInputChange} /> {/* Modify this line */}
+                <div className='button-container'>
+                    <button className='submit-button' type="submit">Accept</button>
                 </div>
-            )}
-        </div>
+            </form>
+        </Card>
     );
 };
 
