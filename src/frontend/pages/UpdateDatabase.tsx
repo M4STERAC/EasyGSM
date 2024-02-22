@@ -19,6 +19,8 @@ import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../components/Card";
 import "../css/UpdateDatabase.css";
+import "../css/ButtonStyles.css";
+import "../css/Forms.css";
 
 const UpdateDatabase = () => {
   const navigate = useNavigate();
@@ -70,7 +72,7 @@ const UpdateDatabase = () => {
 
     if (postFail) return;
     //Post the database
-    window.electron.invoke("save-data", {
+    window.electron.invoke("save-server", {
       id,
       game,
       name,
@@ -126,7 +128,7 @@ const UpdateDatabase = () => {
       : (
         <div>
           <h2 className="card-title">{ isUpdate ? "Update " : "Create " }Server</h2>
-          <form onSubmit={handleSubmit} className="server-form">
+          <form onSubmit={handleSubmit} className="form">
             <label>Game:</label>
             <input
               type="text"
