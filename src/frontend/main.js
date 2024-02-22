@@ -4,8 +4,7 @@
  * @module main
  */
 const { saveBounds, getWindowSettings } = require("./settings.js");
-const { app, BrowserWindow } = require("electron");
-const { ipcMain, dialog } = require("electron");
+const { ipcMain, dialog, app, BrowserWindow } = require("electron");
 const store = require("electron-store");
 const os = require("os");
 const { spawn } = require("child_process");
@@ -24,7 +23,6 @@ const storage = new store();
 //Global variables
 let children = [];
 let scheduledJobs = [];
-const maxRetries = 50;
 
 
 /**
@@ -47,13 +45,16 @@ ipcMain.handle("get-data", (event, { storageName, defaultValue }) => {
 /**
  * Handles the "save-data" IPC message to save the server data to electron store (the database) and return the updated server data to the renderer.
  * @param {Object} data - The server data object to save to the database.
- * @
  * @returns {Promise} A promise that resolves with the updated server data from the database.
  */
-ipcMain.handle("save-data", (event, data) => {
+ipcMain.handle("save-server", (event, data) => {
   return new Promise((resolve, reject) => {
     try {
-      const database = storage.get("database");
+      let database = storage.get("database");
+      if (!database || !database.Servers || database.Servers.length === 0) {
+        database = { Servers: [] };
+        storage.set("database", database);
+      }
       const index = database.Servers.findIndex((server) => server.id === data.id);
       if (index === -1 && database && database.Servers) database.Servers.push(data);
       else database.Servers[index] = data;
@@ -67,11 +68,27 @@ ipcMain.handle("save-data", (event, data) => {
 
 
 /**
+ * Handles the "save-data" IPC message to save misc data to electron store (the database) and return a message.
+ * @returns {string} A message indicating the success or error of the data save operation.
+ */
+ipcMain.handle("save-data", (event, { storageName, data }) => {
+  return new Promise((resolve, reject) => {
+    try {
+      storage.set(storageName, data);
+      resolve("Success");
+    } catch (error) {
+      reject(error);
+    }
+  });
+});
+
+
+/**
  * Handles the "delete-data" IPC message to delete the server data from electron store (the database) and return the updated server list to the renderer.
  * @param {Object} data - The server data object to delete from the database.
  * @returns {Promise} A promise that resolves with the updated server list from the database.
  */
-ipcMain.handle("delete-data", (event, data) => {
+ipcMain.handle("delete-server", (event, data) => {
   return new Promise((resolve, reject) => {
     try {
       let database = storage.get("database");
