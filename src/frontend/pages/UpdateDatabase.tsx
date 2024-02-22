@@ -108,7 +108,7 @@ const UpdateDatabase = () => {
     .then((response: DialogBoxRespone) => {
       if (response.response !== 0) return;
       //Delete the server and/or the ports
-      window.electron.invoke("delete-data", { id })
+      window.electron.invoke("delete-server", { id })
       .then((data: Server[]) => {
         setState((prevState: any) => ({ ...prevState, serverList: data }))
         console.debug("Offboard Result: ", offboardServer(
