@@ -32,3 +32,8 @@ export interface Error {
     pathError: string;
     requiredFieldsError: string;
 }
+
+export interface GetData {
+    storageName: string;
+    defaultValue: any;
+}
