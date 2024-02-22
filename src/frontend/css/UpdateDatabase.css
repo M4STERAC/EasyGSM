@@ -1,22 +1,7 @@
-.server-form {
-  color: #c9d1d9;
-}
-.server-form input {
-  color: inherit;
-  background-color: #0d1117;
-  margin-bottom: 10px;
-  margin-left: 10px;
-}
-
 .error {
   margin-top: 10px;
   margin-left: 10px;
   color: #cb2431;
-}
-
-.button-container {
-  display: flex;
-  justify-content: space-between;
 }
 
 .submit-cancel-container {
@@ -31,8 +16,4 @@
 .submit-button:active {
   background-color: #2a8f47;
   border-color: rgba(27, 31, 35, 0.35);
-}
-
-input::placeholder {
-  color: #696969;
 }

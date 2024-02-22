@@ -1,0 +1,17 @@
+.form {
+    color: #c9d1d9;
+}
+
+.form label {
+    margin-right: 10px;
+}
+
+.form input {
+    color: inherit;
+    background-color: #0d1117;
+    margin-bottom: 10px;
+}
+
+.form input::placeholder {
+    color: #696969;
+}
