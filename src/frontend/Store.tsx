@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { GetData } from "./utils/types";
 
 //Create context for context API
 export const StoreContext: React.Context<any> = createContext({} as any);
@@ -9,28 +10,30 @@ export const StoreProvider = ({ children }: any) => {
     serverList: [],
     selectedServer: null,
     runningJobs: [],
+    firstLaunchStatus: true,
   });
 
   //Get data from database and create backup schedules
   useEffect(() => {
-    window.electron.invoke("get-data").then((servers: Server[]) => {
-      setState((prevState: any) => ({ ...prevState, serverList: servers }));
+    window.electron.invoke('get-data', { storageName: "firstLaunchStatus", defaultValue: true } as GetData).then((firstLaunchStatus: boolean) => {
+      setState((prevState: any) => ({ ...prevState, firstLaunchStatus }));
+    }).catch((err: Error) => console.error(err));
+
+    window.electron.invoke('get-data', { storageName: "steamcmd", defaultValue: "path/to/steamcmd" } as GetData).then((steamcmdPath: boolean) => {
+      setState((prevState: any) => ({ ...prevState, steamcmdPath }));
+    }).catch((err: Error) => console.error(err));
+
+    window.electron.invoke("get-data", { storageName: "database", defaultValue: { Server: [] } } as GetData).then(({ Servers }: { Servers: Server[] }) => {
+      setState((prevState: any) => ({ ...prevState, serverList: Servers }));
       const schedulesToCreate: Schedule[] = [];
-      servers.forEach((server) => {
-        if (!schedulesToCreate.includes({
-            source: server.saveDirectory,
-            game: server.game,
-            time: server.backuptime,
-          })
-        ) schedulesToCreate.push({
-          source: server.saveDirectory,
-          game: server.game,
-          time: server.backuptime,
-        });
+      if (!Servers) return;
+      Servers.forEach((server: Server) => {
+        if (!schedulesToCreate.includes({ source: server.saveDirectory, game: server.game, time: server.backuptime })) { 
+          schedulesToCreate.push({ source: server.saveDirectory, game: server.game, time: server.backuptime });
+        }
       });
-      schedulesToCreate.forEach((schedule) => {
-        window.electron.invoke("create-schedule", schedule)
-          .catch((error: any) => console.error("Create Schedule Error: ", error));
+      schedulesToCreate.forEach((schedule: any) => {
+        window.electron.invoke("create-schedule", schedule).catch((error: any) => console.error("Create Schedule Error: ", error));
       });
     }).catch((error: any) => console.error("Get Database Error: ", error));
   }, []);
