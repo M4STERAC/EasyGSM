@@ -31,15 +31,12 @@ const maxRetries = 50;
  * Handles the "get-data" IPC message to retrieve the server data from electron store (the database), save it to electron store for persistence, and return it to the renderer.
  * @returns {Promise} A promise that resolves with the server data from the database.
  */
-ipcMain.handle("get-data", (event) => {
+ipcMain.handle("get-data", (event, { storageName, defaultValue }) => {
   return new Promise((resolve, reject) => {
     try {
-      let database = storage.get("database");
-      if (!database) {
-        database = { Servers: [] };
-        storage.set("database", database);
-      }
-      resolve(database.Servers);
+      let data = storage.get(storageName);
+      if (!data && defaultValue) storage.set(storageName, defaultValue);
+      resolve(data ? data : defaultValue);
     } catch (error) { 
       reject(error); 
     }
@@ -237,7 +234,7 @@ ipcMain.handle("dialog-box", (event, options) => {
       buttons: ["Yes", "No"],
       message: "Are you sure you want to continue?",
       detail: "This action cannot be undone.",
-      defaultId: 2,
+      defaultId: 1,
     };
     dialog.showMessageBox({...defaultOptions, ...options})
       .then((response) => { resolve(response) })
