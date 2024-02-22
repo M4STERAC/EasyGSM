@@ -1,7 +1,7 @@
 {
   "name": "easygsm",
   "version": "2.1.0",
-  "description": "A simple application to manage all of your game servers",
+  "description": "EasyGSM is a tool used to make downloading, commissioning, managing, and decommissioning easy and automated",
   "author": {
     "name": "Matthew Manka",
     "email": "mrmanka0307@gmail.com"
