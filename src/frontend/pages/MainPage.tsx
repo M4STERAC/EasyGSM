@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../Store";
 import Card from "../components/Card";
@@ -11,6 +11,12 @@ import "../css/MainPage.css";
 const MainPage = () => {
   const navigate = useNavigate();
   const [state, setState] = useContext(StoreContext);
+
+  useEffect(() => {
+    console.log("MainPage.tsx");
+    console.log("FirstLaunchStatus: ", state.firstLaunchStatus);
+    if (state.firstLaunchStatus) navigate("/first-launch");
+  }, []);
 
   //Updates selectedServer when a server is clicked
   const handleServerClick = (server: Server) => {

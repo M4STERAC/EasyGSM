@@ -1,7 +1,7 @@
 {
   "name": "easygsm",
   "version": "2.0.1",
-  "description": "A simple application to manage all of your game servers",
+  "description": "EasyGSM is a tool used to make downloading, commissioning, managing, and decommissioning game servers easy and automated.",
   "author": {
     "name": "Matthew Manka",
     "email": "mrmanka0307@gmail.com"
@@ -20,6 +20,9 @@
   "build": {
     "appId": "com.mrmanka.easygsm",
     "productName": "EasyGSM",
+    "extraResources": [
+      "external-dependencies/**/*"
+    ],
     "directories": {
       "output": "build"
     },
@@ -91,7 +94,7 @@
   },
   "dependencies": {
     "@sentry/browser": "^7.99.0",
-    "@sentry/react": "^7.99.0",
+    "@sentry/react": "^7.102.0",
     "@sentry/tracing": "^7.99.0",
     "@types/react": "^18.2.51",
     "@types/react-dom": "^18.2.18",
