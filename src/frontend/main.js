@@ -14,6 +14,7 @@ const fs = require("fs");
 const sudo = require("sudo-prompt");
 const cron = require("node-cron");
 const archiver = require("archiver");
+const log = require('electron-log/main');
 
 
 //Initialize electron store
@@ -113,18 +114,26 @@ ipcMain.handle("start-server", (event, server) => {
   return new Promise((resolve) => {
     const startChildProcess = () => {
       child = spawn(server.executable, { detached: true });
+      log.info(`Started server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} }`);
       children.push({ pid: child.pid, game: server.game, name: server.name });
 
       child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
       child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
 
       child.on("close", () => {
-        if (children.pop() === 'STOP') return;
+        if (children.pop() === 'STOP') {
+          log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } closed!`);
+          return;
+        } else log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } crashed!`);
         startChildProcess();
       });
 
       child.on("error", () => {
-        if (children.pop() === 'STOP') return;
+        
+        if (children.pop() === 'STOP') {
+          log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } closed!`);
+          return;
+        } else log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } crashed!`);
         startChildProcess();
       });
     };
@@ -149,6 +158,7 @@ ipcMain.handle("stop-server", (event, server) => {
       if (err) reject(err);
       else children.splice(children.indexOf(child), 1);
     });
+    log.info(`Stopped server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} }`);
     resolve(`Server stopped for ${child.pid} ${child.game} - ${child.name}`);
   });
 });
@@ -168,10 +178,20 @@ ipcMain.handle("execute-script", (event, script) => {
 
     //Privilege Escalation: If the renderer process has more permissions than it needs, 
     //an attacker who compromises the render process might be able to perform unauthroized actions
+    log.info(`Executing script: ${CompleteScript}`);
     sudo.exec(CompleteScript, options, (error, stdout, stderr) => {
-      if (error) reject(`error: ${error}`);
-      else if (stderr) reject(`stderr: ${stderr}`);
-      else resolve(`stdout: ${stdout}`);
+      if (error) {
+        log.error(`Error executing script: ${error}`);
+        reject(`error: ${error}`);
+      }
+      else if (stderr) {
+        log.error(`Error executing script: ${stderr}`);
+        reject(`stderr: ${stderr}`);
+      }
+      else {
+        log.info(`${name} Script: ${stdout}`);
+        resolve(`stdout: ${stdout}`);
+      }
     });
   });
 });
@@ -204,6 +224,7 @@ ipcMain.handle("create-schedule", (event, { source, game, time }) => {
     });
     scheduledJob.start();
     scheduledJobs.push({ source, scheduledJob });
+    log.info(`Created backup schedule for ${game}`);
     resolve(`Successfuly created backup schedule for ${game}`);
   });
 });
@@ -224,7 +245,8 @@ ipcMain.handle("delete-schedule", (event, { source, game, time }) => {
     if (!scheduledJob) reject("No backup schedule found for " + game + ". Nothing to delete");
     scheduledJob.stop();
     scheduledJobs.splice(index, 1);
-    resolve("Deleted backup schedule for " + game);
+    log.info(`Deleted backup schedule for ${game}`);
+    resolve(`Deleted backup schedule for ${game}`);
   });
 });
 
@@ -289,7 +311,8 @@ function createWindow() {
   window.on("resized", () => saveBounds(window.getBounds()));
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(createWindow).then(() => log.info("EasyGSM Opened"));
 app.on("window-all-closed", function () {
+  log.info("EasyGSM Closed\n");
   if (process.platform !== "darwin") app.quit();
 });
