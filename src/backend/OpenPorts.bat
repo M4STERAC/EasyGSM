@@ -19,4 +19,3 @@ powershell -Command "if ('%inboundUDPPorts%' -ne 'NA') { if (Get-NetFirewallRule
 powershell -Command "if ('%outboundUDPPorts%' -ne 'NA') { if (Get-NetFirewallRule -DisplayName '%RULE_NAME4%' -ErrorAction SilentlyContinue) { Write-Host 'The rule %RULE_NAME4% already exists.' } else { New-NetFirewallRule -DisplayName '%RULE_NAME4%' -Direction Inbound -LocalPort %outboundUDPPorts% -Protocol UDP -Action Allow } }"
 
 echo Required ports are open. Feel free to close this window and start the server.
-pause
