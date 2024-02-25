@@ -117,34 +117,34 @@ ipcMain.handle("start-server", (event, server) => {
   return new Promise((resolve) => {
     const startChildProcess = () => {
       child = spawn(server.executable, { detached: true });
-      log.info(`Started server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} }`);
-      children.push({ pid: child.pid, game: server.game, name: server.name });
-      console.log('SERVERS IN CHILDREN ON START: ', children);
-
+      log.info(`Started server with PID: ${child.pid}`);
+      
       child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
       child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
-
+      
       child.on("close", () => {
         if (children.pop() === 'STOP') {
-          log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } closed!`);
+          log.error(`Server with PID: ${child.pid} closed!`);
           return;
-        } else log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } crashed!`);
+        } else log.error(`Server with PID: ${child.pid} crashed!`);
         console.log('SERVERS IN CHILDREN ON CLOSE: ', children);
         startChildProcess();
       });
-
+      
       child.on("error", () => {
         if (children.pop() === 'STOP') {
-          log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } closed!`);
+          log.error(`Server with PID: ${child.pid} closed!`);
           return;
-        } else log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } crashed!`);
+        } else log.error(`Server with PID: ${child.pid} crashed!`);
         console.log('SERVERS IN CHILDREN ON ERROR: ', children);
         startChildProcess();
       });
     };
-
+    
     startChildProcess();
-    resolve(`Successfully started the server for ${server.game} - ${server.name}`);
+    children.push({ pid: child.pid });
+    console.log('SERVERS IN CHILDREN ON START: ', children);
+    resolve(child.pid);
   });
 });
 
@@ -157,14 +157,15 @@ ipcMain.handle("start-server", (event, server) => {
 ipcMain.handle("stop-server", (event, server) => {
   return new Promise((resolve, reject) => {
     console.log("SERVERS IN CHILDREN ON STOP", children);
+    console.log('SERVER TO STOP: ', server.pid);
     children.push('STOP');
-    let child = children.find((child) => child.name === server.name && child.game === server.game);
+    let child = children.find((child) => child.pid == server.pid);
     if (!child) reject("Server not found");
     treeKill(child.pid, "SIGTERM", (err) => {
       if (err) reject(err);
       else children.splice(children.indexOf(child), 1);
     });
-    log.info(`Stopped server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} }`);
+    log.info(`Stopped server with PID: ${child.pid}`);
     resolve(`Server stopped for ${child.pid} ${child.game} - ${child.name}`);
   });
 });
