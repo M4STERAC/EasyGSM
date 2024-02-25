@@ -1,6 +1,7 @@
 interface Window {
     electron: {
         invoke: (channel: string, data?: any) => any;
+        on: (channel: string, func: (...args: any[]) => void) => void;
     };
 }
 
