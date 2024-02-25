@@ -14,6 +14,7 @@ const fs = require("fs");
 const sudo = require("sudo-prompt");
 const cron = require("node-cron");
 const archiver = require("archiver");
+const log = require('electron-log/main');
 
 
 //Initialize electron store
@@ -59,6 +60,7 @@ ipcMain.handle("save-server", (event, data) => {
       if (index === -1 && database && database.Servers) database.Servers.push(data);
       else database.Servers[index] = data;
       storage.set("database", database);
+      log.info(`Server { ID: ${database.id} Game: ${database.game} Name: ${database.name} } has been created/updated`);
       resolve(database.Servers);
     } catch (error) {
       reject(error);
@@ -96,8 +98,10 @@ ipcMain.handle("delete-server", (event, data) => {
       const index = database.Servers.findIndex((server) => server.id === data.id);
       database.Servers.splice(index, 1);
       storage.set("database", database);
+      log.info(`Server { ID: ${data.id} } has been deleted`);
       resolve(database.Servers);
     } catch (error) {
+      log.error(`Delete Server Error: ${error}`);
       reject(error);
     }
   });
@@ -113,18 +117,26 @@ ipcMain.handle("start-server", (event, server) => {
   return new Promise((resolve) => {
     const startChildProcess = () => {
       child = spawn(server.executable, { detached: true });
+      log.info(`Started server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} }`);
       children.push({ pid: child.pid, game: server.game, name: server.name });
 
       child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
       child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
 
       child.on("close", () => {
-        if (children.pop() === 'STOP') return;
+        if (children.pop() === 'STOP') {
+          log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } closed!`);
+          return;
+        } else log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } crashed!`);
         startChildProcess();
       });
 
       child.on("error", () => {
-        if (children.pop() === 'STOP') return;
+        
+        if (children.pop() === 'STOP') {
+          log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } closed!`);
+          return;
+        } else log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } crashed!`);
         startChildProcess();
       });
     };
@@ -149,6 +161,7 @@ ipcMain.handle("stop-server", (event, server) => {
       if (err) reject(err);
       else children.splice(children.indexOf(child), 1);
     });
+    log.info(`Stopped server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} }`);
     resolve(`Server stopped for ${child.pid} ${child.game} - ${child.name}`);
   });
 });
@@ -168,10 +181,20 @@ ipcMain.handle("execute-script", (event, script) => {
 
     //Privilege Escalation: If the renderer process has more permissions than it needs, 
     //an attacker who compromises the render process might be able to perform unauthroized actions
+    log.info(`Executing script: ${CompleteScript}`);
     sudo.exec(CompleteScript, options, (error, stdout, stderr) => {
-      if (error) reject(`error: ${error}`);
-      else if (stderr) reject(`stderr: ${stderr}`);
-      else resolve(`stdout: ${stdout}`);
+      if (error) {
+        log.error(`Error executing script: ${error}`);
+        reject(`error: ${error}`);
+      }
+      else if (stderr) {
+        log.error(`Error executing script: ${stderr}`);
+        reject(`stderr: ${stderr}`);
+      }
+      else {
+        log.info(`${name} Script: ${stdout}`);
+        resolve(`stdout: ${stdout}`);
+      }
     });
   });
 });
@@ -204,6 +227,7 @@ ipcMain.handle("create-schedule", (event, { source, game, time }) => {
     });
     scheduledJob.start();
     scheduledJobs.push({ source, scheduledJob });
+    log.info(`Created backup schedule for ${game}`);
     resolve(`Successfuly created backup schedule for ${game}`);
   });
 });
@@ -217,14 +241,15 @@ ipcMain.handle("create-schedule", (event, { source, game, time }) => {
  * @property {string} time - The time to schedule the backup.
  * @returns {Promise} A promise that resolves with a message indicating the success or failure of the backup schedule deletion.
  */
-ipcMain.handle("delete-schedule", (event, { source, game, time }) => {
+ipcMain.handle("delete-schedule", (event, { source, game }) => {
   return new Promise((resolve, reject) => {
     const index = scheduledJobs.findIndex((job) => job.source === source);
     const scheduledJob = scheduledJobs[index] ? scheduledJobs[index].scheduledJob : null;
     if (!scheduledJob) reject("No backup schedule found for " + game + ". Nothing to delete");
     scheduledJob.stop();
     scheduledJobs.splice(index, 1);
-    resolve("Deleted backup schedule for " + game);
+    log.info(`Deleted backup schedule for ${game}`);
+    resolve(`Deleted backup schedule for ${game}`);
   });
 });
 
@@ -255,7 +280,10 @@ ipcMain.handle("dialog-box", (event, options) => {
     };
     dialog.showMessageBox({...defaultOptions, ...options})
       .then((response) => { resolve(response) })
-      .catch((error) => reject(error));
+      .catch((error) => {
+        log.error(`Dialog Box Error: ${error}`);
+        reject(error);
+      });
   });
 });
 
@@ -289,7 +317,8 @@ function createWindow() {
   window.on("resized", () => saveBounds(window.getBounds()));
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(createWindow).then(() => log.info("EasyGSM Opened"));
 app.on("window-all-closed", function () {
+  log.info("EasyGSM Closed\n");
   if (process.platform !== "darwin") app.quit();
 });

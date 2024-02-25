@@ -20,7 +20,7 @@ export const onboardServer = (server: Server): OnOffboardServerResult => {
   if (!ports) return result;
   window.electron.invoke("execute-script", {
       name: "OpenPorts.bat",
-      args: `${game} ${ports.tcpinbound ? ports.tcpinbound + " " : "NA"}${ports.tcpoutbound ? ports.tcpoutbound + " " : "NA"}${ports.udpinbound ? ports.udpinbound + " " : "NA"}${ports.udpoutbound ? ports.udpoutbound : "NA"}`,
+      args: `${game} ${ports.tcpinbound ? ports.tcpinbound + " " : "NA "}${ports.tcpoutbound ? ports.tcpoutbound + " " : "NA "}${ports.udpinbound ? ports.udpinbound + " " : "NA "}${ports.udpoutbound ? ports.udpoutbound : "NA "}`,
   })
   .then(() => (result.ports = true))
   .catch((error: string) => result.ports = error);

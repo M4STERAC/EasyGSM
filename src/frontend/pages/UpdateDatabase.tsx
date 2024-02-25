@@ -78,7 +78,7 @@ const UpdateDatabase = () => {
       name,
       executable,
       uptime: 0,
-      status: "Down",
+      status: "Down", //Status needs to be removed from the database
       saveDirectory,
       banlist,
       players: 0,

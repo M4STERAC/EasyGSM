@@ -3,12 +3,11 @@ import { StoreContext } from "../Store";
 import { useNavigate } from "react-router-dom";
 import { sanitizeFilePath, validateFilePath } from '../utils/dataValidation';
 import Card from '../components/Card';
+import log from 'electron-log/renderer';
 import '../css/ButtonStyles.css';
 import "../css/Forms.css";
 
 const WelcomePage = () => {
-
-    console.log("FirstLoad.tsx");
 
     const navigate = useNavigate();
     const [state, setState] = useContext(StoreContext);
@@ -19,6 +18,7 @@ const WelcomePage = () => {
         console.log("steamcmdPath: ", steamcmdPath);
         window.electron.invoke("save-data", { storageName: "firstLaunchStatus", data: false });
         setState((prevState: any) => ({ ...prevState, firstLaunchStatus: false, steamcmdPath: (steamcmdPath !== "" ? steamcmdPath : state.steamcmdPath)}));
+        log.info("First launch complete.  Saving SteamCMD path: ", steamcmdPath !== "" ? steamcmdPath : state.steamcmdPath);
         window.electron.invoke("save-data", { storageName: "steamcmd", data: steamcmdPath !== "" ? steamcmdPath : state.steamcmdPath }).then(() => navigate("/"));
     };
 

@@ -13,8 +13,6 @@ const MainPage = () => {
   const [state, setState] = useContext(StoreContext);
 
   useEffect(() => {
-    console.log("MainPage.tsx");
-    console.log("FirstLaunchStatus: ", state.firstLaunchStatus);
     if (state.firstLaunchStatus) navigate("/first-launch");
   }, []);
 

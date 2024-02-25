@@ -28,3 +28,9 @@ Found in package.json
 
 ### Additional Notes
 User hosting the server must be logged on for backups to be created
+
+By default, it writes logs to the following locations:
+
+on Linux: ~/.config/{app name}/logs/main.log
+on macOS: ~/Library/Logs/{app name}/main.log
+on Windows: %USERPROFILE%\AppData\Roaming\easygsm\logs\main.log
