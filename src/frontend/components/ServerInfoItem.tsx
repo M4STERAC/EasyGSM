@@ -49,7 +49,6 @@ const ServerInfoItem = ({ selectedServer }: { selectedServer: Server }) => {
   return (
     <div>
       
-      <p>Id: {selectedServer.id}</p>
       <p>{selectedServer.game} - {selectedServer.name}</p>
       <p>Uptime: {selectedServer.uptime}</p>
       <p>Backup Scheduled: {selectedServer.backuptime}</p>
