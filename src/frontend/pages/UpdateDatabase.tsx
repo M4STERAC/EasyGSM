@@ -77,17 +77,20 @@ const UpdateDatabase = () => {
       game,
       name,
       executable,
-      uptime: 0,
-      status: "Down", //Status needs to be removed from the database
       saveDirectory,
       banlist,
-      players: 0,
       ports,
-      lastrestart: await createUTCDate(),
       backuptime,
     })
-    .then((data: Server[]) => {
-      setState((prevState: any) => ({ ...prevState, serverList: data }));
+    .then((data: Server) => {
+      setState((prevState: any) => {
+        const serverList = prevState.serverList;
+        const index = serverList.findIndex((server: Server) => server.id === data.id);
+        data.status = "Down";
+        if (index === -1) serverList.push(data);
+        else serverList[index] = data;
+        return { ...prevState, serverList, selectedServer: null };
+      });
       console.debug("Onboard Result: ", onboardServer({
         game,
         ports,
@@ -109,8 +112,13 @@ const UpdateDatabase = () => {
       if (response.response !== 0) return;
       //Delete the server and/or the ports
       window.electron.invoke("delete-server", { id })
-      .then((data: Server[]) => {
-        setState((prevState: any) => ({ ...prevState, serverList: data }))
+      .then(() => {
+        setState((prevState: any) => {
+          const serverList = prevState.serverList;
+          const index = serverList.findIndex((server: Server) => server.id === id);
+          if (index !== -1) serverList.splice(index, 1);
+          return { ...prevState, serverList, selectedServer: null };
+        })
         console.debug("Offboard Result: ", offboardServer(
           { game, ports, backuptime, saveDirectory } as Server,
           response.checkboxChecked
