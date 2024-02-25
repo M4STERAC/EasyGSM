@@ -119,6 +119,7 @@ ipcMain.handle("start-server", (event, server) => {
       child = spawn(server.executable, { detached: true });
       log.info(`Started server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} }`);
       children.push({ pid: child.pid, game: server.game, name: server.name });
+      console.log('SERVERS IN CHILDREN ON START: ', children);
 
       child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
       child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
@@ -128,15 +129,16 @@ ipcMain.handle("start-server", (event, server) => {
           log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } closed!`);
           return;
         } else log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } crashed!`);
+        console.log('SERVERS IN CHILDREN ON CLOSE: ', children);
         startChildProcess();
       });
 
       child.on("error", () => {
-        
         if (children.pop() === 'STOP') {
           log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } closed!`);
           return;
         } else log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } crashed!`);
+        console.log('SERVERS IN CHILDREN ON ERROR: ', children);
         startChildProcess();
       });
     };
@@ -154,8 +156,9 @@ ipcMain.handle("start-server", (event, server) => {
  */
 ipcMain.handle("stop-server", (event, server) => {
   return new Promise((resolve, reject) => {
+    console.log("SERVERS IN CHILDREN ON STOP", children);
     children.push('STOP');
-    let child = children.find((child) => child.name === server.name && server.game === server.game);
+    let child = children.find((child) => child.name === server.name && child.game === server.game);
     if (!child) reject("Server not found");
     treeKill(child.pid, "SIGTERM", (err) => {
       if (err) reject(err);
