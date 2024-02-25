@@ -118,6 +118,8 @@ ipcMain.handle("start-server", (event, server) => {
     const startChildProcess = () => {
       child = spawn(server.executable, { detached: true });
       log.info(`Started server with PID: ${child.pid}`);
+
+      event.sender.send('child-pid', child.pid);
       
       child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
       child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
