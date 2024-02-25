@@ -60,6 +60,7 @@ ipcMain.handle("save-server", (event, data) => {
       if (index === -1 && database && database.Servers) database.Servers.push(data);
       else database.Servers[index] = data;
       storage.set("database", database);
+      log.info(`Server { ID: ${database.id} Game: ${database.game} Name: ${database.name} } has been created/updated`);
       resolve(database.Servers);
     } catch (error) {
       reject(error);
@@ -97,8 +98,10 @@ ipcMain.handle("delete-server", (event, data) => {
       const index = database.Servers.findIndex((server) => server.id === data.id);
       database.Servers.splice(index, 1);
       storage.set("database", database);
+      log.info(`Server { ID: ${data.id} } has been deleted`);
       resolve(database.Servers);
     } catch (error) {
+      log.error(`Delete Server Error: ${error}`);
       reject(error);
     }
   });
@@ -238,7 +241,7 @@ ipcMain.handle("create-schedule", (event, { source, game, time }) => {
  * @property {string} time - The time to schedule the backup.
  * @returns {Promise} A promise that resolves with a message indicating the success or failure of the backup schedule deletion.
  */
-ipcMain.handle("delete-schedule", (event, { source, game, time }) => {
+ipcMain.handle("delete-schedule", (event, { source, game }) => {
   return new Promise((resolve, reject) => {
     const index = scheduledJobs.findIndex((job) => job.source === source);
     const scheduledJob = scheduledJobs[index] ? scheduledJobs[index].scheduledJob : null;
@@ -277,7 +280,10 @@ ipcMain.handle("dialog-box", (event, options) => {
     };
     dialog.showMessageBox({...defaultOptions, ...options})
       .then((response) => { resolve(response) })
-      .catch((error) => reject(error));
+      .catch((error) => {
+        log.error(`Dialog Box Error: ${error}`);
+        reject(error);
+      });
   });
 });
 

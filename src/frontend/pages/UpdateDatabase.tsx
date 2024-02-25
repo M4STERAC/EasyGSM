@@ -17,7 +17,6 @@ import {
 } from "../utils/onboard-offboard-server";
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
-import log from 'electron-log/renderer';
 import Card from "../components/Card";
 import "../css/UpdateDatabase.css";
 import "../css/ButtonStyles.css";
@@ -79,7 +78,7 @@ const UpdateDatabase = () => {
       name,
       executable,
       uptime: 0,
-      status: "Down",
+      status: "Down", //Status needs to be removed from the database
       saveDirectory,
       banlist,
       players: 0,
@@ -88,7 +87,6 @@ const UpdateDatabase = () => {
       backuptime,
     })
     .then((data: Server[]) => {
-      log.info(`Server { ID: ${id} Game: ${game} Name: ${name} } has been ${isUpdate ? "updated" : "created"}`);
       setState((prevState: any) => ({ ...prevState, serverList: data }));
       console.debug("Onboard Result: ", onboardServer({
         game,
@@ -96,7 +94,6 @@ const UpdateDatabase = () => {
         backuptime,
         saveDirectory,
       } as Server));
-      log.info(`Server { ID: ${id} Game: ${game} Name: ${name} } has been onboarded`);
     })
     .then(() => navigate("/"))
     .catch((error: any) => console.error(error));
@@ -110,28 +107,19 @@ const UpdateDatabase = () => {
     })
     .then((response: DialogBoxRespone) => {
       if (response.response !== 0) return;
-      log.info(`Server Delete Dialog Box Response: ${response.response} Checkbox Status: ${response.checkboxChecked}`);
       //Delete the server and/or the ports
       window.electron.invoke("delete-server", { id })
       .then((data: Server[]) => {
-        log.info(`Server { ID: ${id} Game: ${game} Name: ${name} } has been deleted`);
         setState((prevState: any) => ({ ...prevState, serverList: data }))
         console.debug("Offboard Result: ", offboardServer(
           { game, ports, backuptime, saveDirectory } as Server,
           response.checkboxChecked
         ));
-        log.info(`Server { ID: ${id} Game: ${game} Name: ${name} } has been offboarded`);
       })
       .then(() => navigate("/"))
-      .catch((error: any) => {
-        log.error(`Delete Server Error: ${error}`);
-        console.error('Delete Server Error: ', error);
-      });
+      .catch((error: any) => console.error('Delete Server Error: ', error));
     })
-    .catch((error: any) => {
-      log.error(`Dialog Box Error: ${error}`);
-      console.error('Dialog Box Error: ', error);
-    });
+    .catch((error: any) => console.error('Dialog Box Error: ', error));
   };
 
   return (
