@@ -61,7 +61,7 @@ ipcMain.handle("save-server", (event, data) => {
       else database.Servers[index] = data;
       storage.set("database", database);
       log.info(`Server { ID: ${database.id} Game: ${database.game} Name: ${database.name} } has been created/updated`);
-      resolve(database.Servers);
+      resolve(data);
     } catch (error) {
       reject(error);
     }
@@ -99,7 +99,7 @@ ipcMain.handle("delete-server", (event, data) => {
       database.Servers.splice(index, 1);
       storage.set("database", database);
       log.info(`Server { ID: ${data.id} } has been deleted`);
-      resolve(database.Servers);
+      resolve(`Server { ID: ${data.id} } has been deleted`);
     } catch (error) {
       log.error(`Delete Server Error: ${error}`);
       reject(error);
