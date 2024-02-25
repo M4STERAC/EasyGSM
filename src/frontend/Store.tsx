@@ -24,14 +24,16 @@ export const StoreProvider = ({ children }: any) => {
     }).catch((err: Error) => console.error(err));
 
     window.electron.invoke("get-data", { storageName: "database", defaultValue: { Server: [] } } as GetData).then(({ Servers }: { Servers: Server[] }) => {
-      setState((prevState: any) => ({ ...prevState, serverList: Servers }));
       const schedulesToCreate: Schedule[] = [];
       if (!Servers) return;
       Servers.forEach((server: Server) => {
+        server.status = "Down";
+        server.players = 0;
         if (!schedulesToCreate.includes({ source: server.saveDirectory, game: server.game, time: server.backuptime })) { 
           schedulesToCreate.push({ source: server.saveDirectory, game: server.game, time: server.backuptime });
         }
       });
+      setState((prevState: any) => ({ ...prevState, serverList: Servers }));
       schedulesToCreate.forEach((schedule: any) => {
         window.electron.invoke("create-schedule", schedule).catch((error: any) => console.error("Create Schedule Error: ", error));
       });
