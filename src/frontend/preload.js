@@ -1,7 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-// Expose protected methods that allow the renderer process to use the ipcRenderer without exposing the entire object
-contextBridge.exposeInMainWorld('electron', 
-    { invoke: (channel, data) => ipcRenderer.invoke(channel, data) },
-    { on: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func(...args)) },
-);
+contextBridge.exposeInMainWorld('electron', {
+    invoke: (channel, data) => ipcRenderer.invoke(channel, data),
+    getPid: (callback) => ipcRenderer.on('get-pid', (_event, value) => callback(value)),
+  });

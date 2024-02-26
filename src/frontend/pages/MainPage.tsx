@@ -18,31 +18,41 @@ const MainPage = () => {
     if (state.firstLaunchStatus) navigate("/first-launch");
   }, []);
 
+
   //Updates selectedServer when a server is clicked
   const handleServerClick = (server: Server) => {
-    setState((prevState: any) => ({
-      ...prevState,
-      selectedServer: server,
-    }));
+    setState((prevState: any) => ({ ...prevState, selectedServer: server }));
   };
+
+
+  window.electron.getPid((pid: number) => {
+    console.log("Received PID: ", pid);
+    setState((prevState: any) => {
+      if (prevState.selectedServer) {
+        const serverIndex = prevState.serverList.findIndex((server: Server) => {
+          return server.id === prevState.selectedServer.id
+        });
+        const newServerList = [...prevState.serverList];
+        newServerList[serverIndex] = { ...newServerList[serverIndex], pid, status: "Running" };
+        return { ...prevState, serverList: newServerList, selectedServer: { ...prevState.selectedServer, pid, status: "Running"}};
+      } else {
+        return prevState;
+      }
+    });
+  });
 
 
   //Function executed when the START button is clicked
   const handleStartButtonClick = () => {
-    window.electron.invoke("start-server", state.selectedServer).then((pid: any) => {
-      setState((prevState: any) => {
-        const serverIndex = prevState.serverList.findIndex((server: Server) => server.id === state.selectedServer.id);
-        const newServerList = [...prevState.serverList];
-        newServerList[serverIndex] = { ...newServerList[serverIndex], status: "Running", pid };
-        return { ...prevState, serverList: newServerList, selectedServer: { ...prevState.selectedServer, status: "Running", pid }};
-      });
-    }).catch((error: any) => console.error(error));
+    window.electron.invoke("start-server", state.selectedServer).catch((error: any) => console.error(error));
   };
 
 
   //Function executed when the STOP button is clicked
   const handleStopButtonClick = () => {
+    console.log("PID: ", state.selectedServer.pid);
     window.electron.invoke("stop-server", state.selectedServer).then(() => {
+      console.log("Send stop request with PID: ", state.selectedServer.pid);
       setState((prevState: any) => {
         const serverIndex = prevState.serverList.findIndex((server: Server) => server.id === state.selectedServer.id);
         const newServerList = [...prevState.serverList];

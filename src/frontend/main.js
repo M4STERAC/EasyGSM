@@ -26,6 +26,57 @@ let children = [];
 let scheduledJobs = [];
 
 
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//Electron Settings
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+let window;
+
+function createWindow() {
+  const bounds = getWindowSettings();
+  window = new BrowserWindow({
+    width: bounds.width,
+    height: bounds.height,
+    minWidth: 800,
+    minHeight: 550,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      worldSafeExecuteJavaScript: true,
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
+  });
+  //Loads the index.html file into the window. index.html will load React
+  window.loadFile(path.join(__dirname, "index.html"));
+
+  //When the window is resized, save the bounds to electron store for persistence
+  window.on("resized", () => saveBounds(window.getBounds()));
+}
+
+app.whenReady().then(createWindow).then(() => log.info("EasyGSM Opened"));
+app.on("window-all-closed", function () {
+  log.info("EasyGSM Closed\n");
+  if (process.platform !== "darwin") app.quit();
+});
+
+
+
+
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//IPC Handlers
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
 /**
  * Handles the "get-data" IPC message to retrieve the server data from electron store (the database), save it to electron store for persistence, and return it to the renderer.
  * @returns {Promise} A promise that resolves with the server data from the database.
@@ -119,7 +170,7 @@ ipcMain.handle("start-server", (event, server) => {
       child = spawn(server.executable, { detached: true });
       log.info(`Started server with PID: ${child.pid}`);
 
-      event.sender.send('child-pid', child.pid);
+      window.webContents.send('get-pid', child.pid);
       
       child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
       child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
@@ -291,40 +342,4 @@ ipcMain.handle("dialog-box", (event, options) => {
         reject(error);
       });
   });
-});
-
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-//Electron Settings
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-function createWindow() {
-  const bounds = getWindowSettings();
-  const window = new BrowserWindow({
-    width: bounds.width,
-    height: bounds.height,
-    minWidth: 800,
-    minHeight: 550,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      worldSafeExecuteJavaScript: true,
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-  });
-
-  //Loads the index.html file into the window. index.html will load React
-  window.loadFile(path.join(__dirname, "index.html"));
-
-  //When the window is resized, save the bounds to electron store for persistence
-  window.on("resized", () => saveBounds(window.getBounds()));
-}
-
-app.whenReady().then(createWindow).then(() => log.info("EasyGSM Opened"));
-app.on("window-all-closed", function () {
-  log.info("EasyGSM Closed\n");
-  if (process.platform !== "darwin") app.quit();
 });
