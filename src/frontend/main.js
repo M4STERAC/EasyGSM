@@ -42,11 +42,13 @@ function createWindow() {
     height: bounds.height,
     minWidth: 800,
     minHeight: 550,
+    frame: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       worldSafeExecuteJavaScript: true,
       contextIsolation: true,
       nodeIntegration: false,
+      enableRemoteModule: true,
     },
   });
   //Loads the index.html file into the window. index.html will load React
