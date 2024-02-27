@@ -1,8 +1,6 @@
 interface Window {
     electron: {
         invoke: (channel: string, data?: any) => any;
-        getPid: (pid: any) => number;
-        removeListener: (channel: string, func: (...args: any[]) => void) => void;
     };
 }
 
