@@ -168,7 +168,7 @@ ipcMain.handle("start-server", (event, server) => {
   return new Promise((resolve) => {
     let closedServerId;
     const startChildProcess = (firstSpawn = true) => {
-      child = spawn(server.executable, { detached: false });
+      let child = spawn(server.executable, { detached: false });
       if (firstSpawn) child.id = server.id; 
       else child.id = closedServerId;
       children.push(child);
@@ -181,10 +181,7 @@ ipcMain.handle("start-server", (event, server) => {
         closedServerId = child.id;
         console.log(`Closed Server ID: ${closedServerId}`);
         
-        if (children[(children.length - 1)] === 'STOP') {
-          children.pop();
-          return;
-        } else {
+        if (children[(children.length - 1)] !== 'STOP') {
           const index = children.findIndex(el => el.id == child.id);
           if (index > -1) {
             children.splice(index, 1);
@@ -193,15 +190,19 @@ ipcMain.handle("start-server", (event, server) => {
             console.log('No child to remove on restart');
           }
         }
-        startChildProcess(false);
+        
+        if (children[(children.length - 1)] !== 'STOP') {
+          startChildProcess(false);
+        } else {
+          children.pop();
+        }
       });
       
       child.on("error", () => {
         closedServerId = child.id;
-        if (children[(children.length - 1)] === 'STOP') {
-          children.pop();
-          return;
-        } else {
+        console.log(`Closed Server ID: ${closedServerId}`);
+        
+        if (children[(children.length - 1)] !== 'STOP') {
           const index = children.findIndex(el => el.id == child.id);
           if (index !== -1) {
             children.splice(index, 1);
@@ -210,11 +211,17 @@ ipcMain.handle("start-server", (event, server) => {
             console.log('No child to remove on restart');
           }
         }
-        startChildProcess(false);
+        
+        if (children[(children.length - 1)] !== 'STOP') {
+          startChildProcess(false);
+        } else {
+          children.pop();
+        }
       });
     };
 
     startChildProcess();
+    console.log('Resolved');
     resolve();
   });
 });
@@ -232,7 +239,7 @@ ipcMain.handle("stop-server", (event, server) => {
     let child = children.find((child) => child.id == server.id);
     if (!child) reject("Server not found");
     console.log('CHILD TO STOP: ', child);
-    console.log('CHILDREN BEFORE KILL: ', children);
+    console.log('CHILDREN IDs: ', children.map(child => {return { id: child.id, pid: child.pid }}));
     treeKill(child.pid, "SIGTERM", (err) => {
       if (err) {
         log.error(`Failed to kill child process: ${err}`);
