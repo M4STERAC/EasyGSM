@@ -34,11 +34,10 @@ let scheduledJobs = [];
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-let window;
 
 function createWindow() {
   const bounds = getWindowSettings();
-  window = new BrowserWindow({
+  const window = new BrowserWindow({
     width: bounds.width,
     height: bounds.height,
     minWidth: 800,
@@ -56,6 +55,7 @@ function createWindow() {
   //When the window is resized, save the bounds to electron store for persistence
   window.on("resized", () => saveBounds(window.getBounds()));
 }
+
 
 app.whenReady().then(createWindow).then(() => log.info("EasyGSM Opened"));
 app.on("window-all-closed", function () {
@@ -166,38 +166,56 @@ ipcMain.handle("delete-server", (event, data) => {
  */
 ipcMain.handle("start-server", (event, server) => {
   return new Promise((resolve) => {
-    const startChildProcess = () => {
-      child = spawn(server.executable, { detached: true });
-      log.info(`Started server with PID: ${child.pid}`);
-
-      window.webContents.send('get-pid', child.pid);
+    let closedServerId;
+    const startChildProcess = (firstSpawn = true) => {
+      child = spawn(server.executable, { detached: false });
+      if (firstSpawn) child.id = server.id; 
+      else child.id = closedServerId;
+      children.push(child);
+      console.log('CHILDREN IDs: ', children.map(child => {return { id: child.id, pid: child.pid }}));
       
       child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
       child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
       
       child.on("close", () => {
-        if (children.pop() === 'STOP') {
-          log.error(`Server with PID: ${child.pid} closed!`);
+        closedServerId = child.id;
+        console.log(`Closed Server ID: ${closedServerId}`);
+        
+        if (children[(children.length - 1)] === 'STOP') {
+          children.pop();
           return;
-        } else log.error(`Server with PID: ${child.pid} crashed!`);
-        console.log('SERVERS IN CHILDREN ON CLOSE: ', children);
-        startChildProcess();
+        } else {
+          const index = children.findIndex(el => el.id == child.id);
+          if (index > -1) {
+            children.splice(index, 1);
+            console.log('Removed child');
+          } else {
+            console.log('No child to remove on restart');
+          }
+        }
+        startChildProcess(false);
       });
       
       child.on("error", () => {
-        if (children.pop() === 'STOP') {
-          log.error(`Server with PID: ${child.pid} closed!`);
+        closedServerId = child.id;
+        if (children[(children.length - 1)] === 'STOP') {
+          children.pop();
           return;
-        } else log.error(`Server with PID: ${child.pid} crashed!`);
-        console.log('SERVERS IN CHILDREN ON ERROR: ', children);
-        startChildProcess();
+        } else {
+          const index = children.findIndex(el => el.id == child.id);
+          if (index !== -1) {
+            children.splice(index, 1);
+            console.log('Removed child');
+          } else {
+            console.log('No child to remove on restart');
+          }
+        }
+        startChildProcess(false);
       });
     };
-    
+
     startChildProcess();
-    children.push({ pid: child.pid });
-    console.log('SERVERS IN CHILDREN ON START: ', children);
-    resolve(child.pid);
+    resolve();
   });
 });
 
@@ -209,17 +227,22 @@ ipcMain.handle("start-server", (event, server) => {
  */
 ipcMain.handle("stop-server", (event, server) => {
   return new Promise((resolve, reject) => {
-    console.log("SERVERS IN CHILDREN ON STOP", children);
-    console.log('SERVER TO STOP: ', server.pid);
+    console.log('SERVER TO STOP: ', server.id);
     children.push('STOP');
-    let child = children.find((child) => child.pid == server.pid);
+    let child = children.find((child) => child.id == server.id);
     if (!child) reject("Server not found");
+    console.log('CHILD TO STOP: ', child);
+    console.log('CHILDREN BEFORE KILL: ', children);
     treeKill(child.pid, "SIGTERM", (err) => {
-      if (err) reject(err);
+      if (err) {
+        log.error(`Failed to kill child process: ${err}`);
+        children.pop();
+        reject('Failed to stop server. Please close the program manually.');
+      }
       else children.splice(children.indexOf(child), 1);
     });
-    log.info(`Stopped server with PID: ${child.pid}`);
-    resolve(`Server stopped for ${child.pid} ${child.game} - ${child.name}`);
+    log.info(`Stopped server with PID: ${child.pid} and ${child.id}`);
+    resolve(`Stopped server with PID: ${child.pid} and ${child.id}`);
   });
 });
 
