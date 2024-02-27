@@ -17,6 +17,7 @@ interface Server {
     ports: Ports;
     uptime: number;
     players: number;
+    pid: number | string;
 }
 
 interface Ports {

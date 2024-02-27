@@ -26,6 +26,57 @@ let children = [];
 let scheduledJobs = [];
 
 
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//Electron Settings
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+function createWindow() {
+  const bounds = getWindowSettings();
+  const window = new BrowserWindow({
+    width: bounds.width,
+    height: bounds.height,
+    minWidth: 800,
+    minHeight: 550,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      worldSafeExecuteJavaScript: true,
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
+  });
+  //Loads the index.html file into the window. index.html will load React
+  window.loadFile(path.join(__dirname, "index.html"));
+
+  //When the window is resized, save the bounds to electron store for persistence
+  window.on("resized", () => saveBounds(window.getBounds()));
+}
+
+
+app.whenReady().then(createWindow).then(() => log.info("EasyGSM Opened"));
+app.on("window-all-closed", function () {
+  log.info("EasyGSM Closed\n");
+  if (process.platform !== "darwin") app.quit();
+});
+
+
+
+
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//IPC Handlers
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
 /**
  * Handles the "get-data" IPC message to retrieve the server data from electron store (the database), save it to electron store for persistence, and return it to the renderer.
  * @returns {Promise} A promise that resolves with the server data from the database.
@@ -115,34 +166,63 @@ ipcMain.handle("delete-server", (event, data) => {
  */
 ipcMain.handle("start-server", (event, server) => {
   return new Promise((resolve) => {
-    const startChildProcess = () => {
-      child = spawn(server.executable, { detached: true });
-      log.info(`Started server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} }`);
-      children.push({ pid: child.pid, game: server.game, name: server.name });
-
+    let closedServerId;
+    const startChildProcess = (firstSpawn = true) => {
+      let child = spawn(server.executable, { detached: false });
+      if (firstSpawn) child.id = server.id; 
+      else child.id = closedServerId;
+      children.push(child);
+      console.log('CHILDREN IDs: ', children.map(child => {return { id: child.id, pid: child.pid }}));
+      
       child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
       child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
-
+      
       child.on("close", () => {
-        if (children.pop() === 'STOP') {
-          log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } closed!`);
-          return;
-        } else log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } crashed!`);
-        startChildProcess();
-      });
-
-      child.on("error", () => {
+        closedServerId = child.id;
+        console.log(`Closed Server ID: ${closedServerId}`);
         
-        if (children.pop() === 'STOP') {
-          log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } closed!`);
-          return;
-        } else log.error(`Server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} } crashed!`);
-        startChildProcess();
+        if (children[(children.length - 1)] !== 'STOP') {
+          const index = children.findIndex(el => el.id == child.id);
+          if (index > -1) {
+            children.splice(index, 1);
+            console.log('Removed child');
+          } else {
+            console.log('No child to remove on restart');
+          }
+        }
+        
+        if (children[(children.length - 1)] !== 'STOP') {
+          startChildProcess(false);
+        } else {
+          children.pop();
+        }
+      });
+      
+      child.on("error", () => {
+        closedServerId = child.id;
+        console.log(`Closed Server ID: ${closedServerId}`);
+        
+        if (children[(children.length - 1)] !== 'STOP') {
+          const index = children.findIndex(el => el.id == child.id);
+          if (index !== -1) {
+            children.splice(index, 1);
+            console.log('Removed child');
+          } else {
+            console.log('No child to remove on restart');
+          }
+        }
+        
+        if (children[(children.length - 1)] !== 'STOP') {
+          startChildProcess(false);
+        } else {
+          children.pop();
+        }
       });
     };
 
     startChildProcess();
-    resolve(`Successfully started the server for ${server.game} - ${server.name}`);
+    console.log('Resolved');
+    resolve();
   });
 });
 
@@ -154,15 +234,22 @@ ipcMain.handle("start-server", (event, server) => {
  */
 ipcMain.handle("stop-server", (event, server) => {
   return new Promise((resolve, reject) => {
+    console.log('SERVER TO STOP: ', server.id);
     children.push('STOP');
-    let child = children.find((child) => child.name === server.name && server.game === server.game);
+    let child = children.find((child) => child.id == server.id);
     if (!child) reject("Server not found");
+    console.log('CHILD TO STOP: ', child);
+    console.log('CHILDREN IDs: ', children.map(child => {return { id: child.id, pid: child.pid }}));
     treeKill(child.pid, "SIGTERM", (err) => {
-      if (err) reject(err);
+      if (err) {
+        log.error(`Failed to kill child process: ${err}`);
+        children.pop();
+        reject('Failed to stop server. Please close the program manually.');
+      }
       else children.splice(children.indexOf(child), 1);
     });
-    log.info(`Stopped server { ID: ${server.id}, Game: ${server.game}, Name: ${server.name}, PID: ${child.pid} }`);
-    resolve(`Server stopped for ${child.pid} ${child.game} - ${child.name}`);
+    log.info(`Stopped server with PID: ${child.pid} and ${child.id}`);
+    resolve(`Stopped server with PID: ${child.pid} and ${child.id}`);
   });
 });
 
@@ -285,40 +372,4 @@ ipcMain.handle("dialog-box", (event, options) => {
         reject(error);
       });
   });
-});
-
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-//Electron Settings
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-function createWindow() {
-  const bounds = getWindowSettings();
-  const window = new BrowserWindow({
-    width: bounds.width,
-    height: bounds.height,
-    minWidth: 800,
-    minHeight: 550,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      worldSafeExecuteJavaScript: true,
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-  });
-
-  //Loads the index.html file into the window. index.html will load React
-  window.loadFile(path.join(__dirname, "index.html"));
-
-  //When the window is resized, save the bounds to electron store for persistence
-  window.on("resized", () => saveBounds(window.getBounds()));
-}
-
-app.whenReady().then(createWindow).then(() => log.info("EasyGSM Opened"));
-app.on("window-all-closed", function () {
-  log.info("EasyGSM Closed\n");
-  if (process.platform !== "darwin") app.quit();
 });
