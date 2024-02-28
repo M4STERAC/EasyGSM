@@ -6,17 +6,20 @@
     <link rel="icon" href="./images/EasyGSMLogo.png">
     <link rel="stylesheet" href="./css/Frame.css">
   </head>
-  <body style="background-color: #0d1117; color: #fff;">
+  <body>
     <!--
       Information loaded when React isn't loaded
     -->
-    <div class="titlebar">
-      <div class="titlebar-button">
-        <button class="close">&#10005;</button>
-        <button class="maximize">&#10063;</button>
-        <button class="minimize">&#9472;</button>
+    <nav class="titlebar">
+      <div>
+        <span class="nav-link" id="menu">&#x2630;</span>
       </div>
-    </div>
+      <div class="window-interaction">
+        <span class="nav-link" id="minimize">&#x2014;</span>
+        <span class="nav-link" id="maximize">&#9633;</span>
+        <span class="nav-link" id="close">&#10006;</span>
+      </div>
+    </nav>
     <div id="root">
       <div style="border: 1px solid #30363d;
       padding: 0.5em 1.5em;
@@ -31,5 +34,6 @@
       Mounts React to the electron application
     -->
     <script src="./bundle.js"></script>
+    <script src="./frame.js" defer type="module"></script>
   </body>
 </html>
