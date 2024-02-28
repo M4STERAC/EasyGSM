@@ -1,7 +1,5 @@
 interface Window {
-    electron: {
-        invoke: (channel: string, data?: any) => any;
-    };
+    electron: any;
 }
 
 interface Server {
