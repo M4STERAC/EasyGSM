@@ -1,0 +1,77 @@
+* {
+    background-color: #0d1117; 
+    color: #fff;
+}
+
+html, body {
+    margin: 0 0.5em;;
+    padding: 0;
+}
+
+.titlebar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent;
+    color: white;
+    height: 40px;
+    -webkit-app-region: drag;
+    margin-bottom: 0.5em;
+}
+
+.window-interaction {
+    display: flex;
+    background-color: transparent;
+    color: white;
+    padding: 0px 5px;
+}
+
+.menu {
+    background-color: transparent;
+    color: white;
+}
+
+.nav-link {
+    background-color: transparent;
+    height: 100%;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    padding: 15px;
+    -webkit-app-region: no-drag;
+}
+
+#close,
+#minimize,
+#maximize {
+  color: #fff;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  top: 0;
+}
+
+#close {
+    right: 10px;
+}
+
+#close:hover {
+  color: lightcoral;
+}
+
+#minimize {
+    right: 50px;
+}
+
+#minimize:hover {
+    color: yellow;
+}
+
+#maximize {
+    right: 90px;
+}
+
+#maximize:hover {
+    color: lightgreen;
+}

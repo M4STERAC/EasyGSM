@@ -42,11 +42,13 @@ function createWindow() {
     height: bounds.height,
     minWidth: 800,
     minHeight: 550,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       worldSafeExecuteJavaScript: true,
       contextIsolation: true,
       nodeIntegration: false,
+      enableRemoteModule: true,
     },
   });
   //Loads the index.html file into the window. index.html will load React
@@ -372,4 +374,20 @@ ipcMain.handle("dialog-box", (event, options) => {
         reject(error);
       });
   });
+});
+
+ipcMain.on("app/close", (event, message) => {
+  app.quit();
+  log.info("EasyGSM Closed");
+});
+
+ipcMain.on("app/minimize", (event, message) => {
+  const window = BrowserWindow.getFocusedWindow();
+  window.minimize();
+});
+
+ipcMain.on("app/maximize", (event, message) => {
+  const window = BrowserWindow.getFocusedWindow();
+  if (window.isMaximized()) window.unmaximize();
+  else window.maximize();
 });

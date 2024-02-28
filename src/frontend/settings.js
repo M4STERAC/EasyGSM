@@ -1,5 +1,6 @@
 const Store = require('electron-store');
 
+
 //Initialize electron store
 const storage = new Store();
 
@@ -36,6 +37,7 @@ function saveBounds(bounds) {
   }
   return;
 }
+
 
 module.exports = {
   getWindowSettings,
