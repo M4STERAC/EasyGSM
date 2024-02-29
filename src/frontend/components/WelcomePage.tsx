@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { StoreContext } from "../Store";
 import { useNavigate } from "react-router-dom";
 import { sanitizeFilePath, validateFilePath } from '../utils/dataValidation';
-import Card from './Card';
+import ConfirmationDialog from './ConfirmationDialog';
 import '../css/ButtonStyles.css';
 import "../css/Forms.css";
 
@@ -27,8 +27,7 @@ const WelcomePage = () => {
     }
 
     return (
-        <Card>
-            <h1>Welcome to EasyGSM!</h1>
+        <ConfirmationDialog title="Welcome!" width="md" buttons={[{text: 'Let\'s do it!'}]}>
             <p>EasyGSM is a tool used to make downloading, commissioning, managing, and decommissioning easy and automated.</p> 
             <br />
             <p>We highly recommend installing SteamCMD and putting the path to steamcmd.exe after install in the textbox below</p>
@@ -37,11 +36,8 @@ const WelcomePage = () => {
             <form onSubmit={handleSubmit} className='form'>
                 <label>Path to installed steamcmd.exe</label> <br />
                 <input type="text" id="steamcmd" name="steamcmd" placeholder={state.steamcmdPath ?? "path/to/steamcmd.exe"} value={steamcmdPath} onChange={handleInputChange} /> {/* Modify this line */}
-                <div className='button-container'>
-                    <button className='submit-button' type="submit">Accept</button>
-                </div>
             </form>
-        </Card>
+        </ConfirmationDialog>
     );
 };
 
