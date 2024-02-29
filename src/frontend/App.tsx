@@ -6,61 +6,19 @@ import NotFound from "./pages/NotFound";
 import UpdateDatabase from "./components/UpdateDatabase";
 import Footer from "./components/Footer";
 import License from "./components/License";
+import Box from "@mui/material/Box";
 import { Integrations } from "@sentry/tracing";
 import { StoreProvider } from "./Store";
 import * as Sentry from "@sentry/react";
-import "./css/Main.css";
+import darkTheme from "./utils/themes";
 import './css/Scrollbar.css';
 
 //MUI Items
-import { Theme, ThemeProvider, createTheme } from '@mui/material/styles';
+import { Theme, ThemeProvider } from '@mui/material/styles';
 
 
-const customTheme: Theme = createTheme({ palette: {
-  mode: 'dark', 
-  primary: {
-    light: '#757ce8',
-    main: '#3f50b5',
-    dark: '#002884',
-    contrastText: '#fff',
-  },
-  secondary: {
-    light: '#ff7961',
-    main: '#f44336',
-    dark: '#ba000d',
-    contrastText: '#000',
-  },
-  text: {
-    primary: '#fff',
-    secondary: '#000',
-  },
-  error: {
-    main: '#f44336',
-  },
-  warning: {
-    main: '#ff9800',
-  },
-  info: {
-    main: '#2196f3',
-  },
-  success: {
-    main: '#4caf50',
-  },
-  background: {
-    default: '#121212',
-    paper: '#424242',
-  },
-  action: {
-    active: '#fff',
-    hover: '#616161',
-    selected: '#757575',
-    disabled: '#616161',
-    disabledBackground: '#424242',
-    focus: '#fff',
-    hoverOpacity: 0.08,
-    disabledOpacity: 0.38,
-  }
-}});
+
+const selectedTheme: Theme = darkTheme;
 
 
 //Sentry setup for error tracking
@@ -70,14 +28,24 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
+
 //React Router setup
 const App = () => {
   return (
     <StoreProvider>
       <Router>
-        <ThemeProvider theme={customTheme}>
+        <ThemeProvider theme={selectedTheme}>
           <Titlebar />
-          <div className="body">
+          <Box sx={{
+            marginTop: '40px', 
+            paddingTop: '1.5em',
+            paddingLeft: '1.5em',
+            paddingRight: '1.5em',
+            height: 'calc(100vh - 40px)',
+            overflowY: 'auto',
+            bottom: '0',
+            backgroundColor: selectedTheme.palette.background.default,
+          }}>
             <Routes>
               <Route path="/" element={<MainPage />} />
               <Route path="/add-server" element={<UpdateDatabase />} />
@@ -86,11 +54,12 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
-          </div>
+          </Box>
         </ThemeProvider>
       </Router>
     </StoreProvider>
   );
 };
+
 
 export default App;
