@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { StoreContext } from "../Store";
 import { useNavigate } from "react-router-dom";
 import { sanitizeFilePath, validateFilePath } from '../utils/dataValidation';
-import Card from '../components/Card';
+import Card from './Card';
 import '../css/ButtonStyles.css';
 import "../css/Forms.css";
 
