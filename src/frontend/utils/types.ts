@@ -1,4 +1,5 @@
 import cron from "node-cron";
+import { ReactNode } from "react";
 
 export interface OnOffboardServerResult {
     ports: boolean | string;
@@ -43,4 +44,14 @@ export interface MenuListItem {
     link: string;
     icon: JSX.Element;
     tooltip?: JSX.Element;
+}
+
+export interface PopUpBoxSize {
+    width: number;
+    height: number;
+}
+
+export interface PopUpBoxProps {
+    size: PopUpBoxSize;
+    children: ReactNode;
 }
