@@ -1,10 +1,15 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../Store";
-import Card from "../components/Card";
+import FirstLoad from "../components/FirstLoad";
+// import Card from "../components/Card";
 import ServerListItem from "../components/ServerListItem";
 import ServerInfoItem from "../components/ServerInfoItem";
 import { CSSTransition } from "react-transition-group";
+
+//MUI Items
+import Card from '@mui/material/Card';
+
 import "../css/General.css";
 import "../css/MainPage.css";
 
@@ -12,11 +17,6 @@ import "../css/MainPage.css";
 const MainPage = () => {
   const navigate = useNavigate();
   const [state, setState] = useContext(StoreContext);
-
-
-  useEffect(() => {
-    if (state.firstLaunchStatus) navigate("/first-launch");
-  }, []);
 
 
   //Updates selectedServer when a server is clicked
