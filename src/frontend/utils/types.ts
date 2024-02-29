@@ -37,3 +37,10 @@ export interface GetData {
     storageName: string;
     defaultValue: any;
 }
+
+export interface MenuListItem {
+    text: string;
+    link: string;
+    icon: JSX.Element;
+    tooltip?: JSX.Element;
+}
