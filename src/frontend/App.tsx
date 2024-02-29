@@ -6,10 +6,11 @@ import NotFound from "./pages/NotFound";
 import UpdateDatabase from "./pages/UpdateDatabase";
 import Footer from "./components/Footer";
 import License from "./pages/License";
-import "./css/Main.css";
-import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import { StoreProvider } from "./Store";
+import * as Sentry from "@sentry/react";
+import "./css/Main.css";
+import './css/Scrollbar.css';
 
 //MUI Items
 import { Theme, ThemeProvider, createTheme } from '@mui/material/styles';
