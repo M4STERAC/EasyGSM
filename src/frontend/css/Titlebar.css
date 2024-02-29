@@ -1,14 +1,18 @@
 .titlebar {
     display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
     align-items: center;
     justify-content: space-between;
     background-color: black;
     color: white;
     cursor: pointer;
     -webkit-app-region: drag;
-    margin-bottom: 1.5em;
     height: 40px;
     font-size: small;
+    z-index: 10;
 }
 
 .titlebar > div {
@@ -16,8 +20,17 @@
     align-items: center;
 }
 
+.menu, 
+.titlebar-frame-interaction {
+    -webkit-app-region: no-drag;
+}
+
 .title {
     justify-content: center;
+}
+
+.menu {
+    margin-right: 85px;
 }
 
 .box {
@@ -29,15 +42,7 @@
 .box:hover {
     background-color: darkslategray;
 }
-.menu, 
-.titlebar-frame-interaction {
-    -webkit-app-region: no-drag;
-}
 
 #close:hover {
     background-color: red;
-}
-
-.menu {
-    margin-right: 85px;
 }
