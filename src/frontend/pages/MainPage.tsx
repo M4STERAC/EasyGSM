@@ -10,7 +10,6 @@ import { CSSTransition } from "react-transition-group";
 //MUI Items
 // import Card from '@mui/material/Card';
 
-import "../css/General.css";
 import "../css/MainPage.css";
 
 //Root page of the app. Loads server list and server info components
