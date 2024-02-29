@@ -17,12 +17,26 @@ import {
 } from "../utils/onboard-offboard-server";
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
-import Card from "./Card";
+import Card from "./MainCard";
 import "../css/UpdateDatabase.css";
 import "../css/ButtonStyles.css";
 import "../css/Forms.css";
 
-const UpdateDatabase = () => {
+//MUI Items
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+import Backdrop from '@mui/material/Backdrop';
+import Divider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
+import { TransitionProps } from '@mui/material/transitions';
+import Alert from '@mui/material/Alert';
+import TextField from "@mui/material/TextField";
+
+const UpdateDatabase = (props: any) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isUpdate = location.pathname === "/edit-server";
@@ -36,6 +50,21 @@ const UpdateDatabase = () => {
   const [ports, setPorts] = useState(isUpdate ? state.selectedServer.ports : "");
   const [backuptime, setBackupTime] = useState("06:00");
   const [errors, setErrors] = useState({ banlistError: "", portError: "", pathError: "", requiredFieldsError: "" } as Error);
+  const [isOpen, setOpen] = useState(true);
+
+
+  const theme = useTheme();
+  // const { width, title, buttons, children } = props;
+
+
+  const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+      children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+  ) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
 
   //Whenever an error is created, log it to the console
@@ -130,137 +159,100 @@ const UpdateDatabase = () => {
     .catch((error: any) => console.error('Dialog Box Error: ', error));
   };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
-    <Card>
-      {isUpdate && !state.selectedServer ? (<p className="error">Failed to get Server Configuration. Please try again later.</p>) 
-      : (
-        <div>
-          <h2 className="card-title">{ isUpdate ? "Update " : "Create " }Server</h2>
-          <form onSubmit={handleSubmit} className="form">
-            <label>Game:</label>
-            <input
-              type="text"
-              value={game}
-              onChange={(e) => setGame(sanitizeAlphanumeric(e.target.value))}
-              placeholder={isUpdate ? game : "Elden Ring"}
-            />
-            <br />
+    <Backdrop sx={{ color: '#fff', zIndex: theme.zIndex.drawer + 1}}open={isOpen}>
+      <Dialog
+        open={isOpen}
+        TransitionComponent={Transition}
+        aria-describedby="alert-dialog-slide-description"
+        onClose={handleClose}
+        maxWidth='lg'
+        color={theme.palette.background.default}
+      >
+        <DialogTitle variant='h4' sx={{
+          backgroundColor: theme.palette.background.default,
+          color: theme.palette.common.white,
+          alignContent: 'center'
+        }}>{isUpdate ? 'Update' : 'Create'} Server</DialogTitle>
 
-            <label>Name:</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(sanitizeAlphanumeric(e.target.value))}
-              placeholder={isUpdate ? name : "Elden Ring Server"}
-            />
-            <br />
+        <Divider />
 
-            <label>Path to Game Executable:</label>
-            <input
-              type="text"
-              value={executable}
-              onChange={(e) => setExecutable(sanitizeFilePath(e.target.value))}
-              placeholder={isUpdate ? executable : "C:\\Program Files\\Elden Ring\\EldenRing.exe"}
-            />
-            <br />
+        <DialogContent sx={{
+          backgroundColor: theme.palette.background.default,
+          color: theme.palette.common.white,
+        }}>
+          {isUpdate && !state.selectedServer ? (<p className="error">Failed to get Server Configuration. Please try again later.</p>) : (
 
-            <label>Save Directory:</label>
-            <input
-              type="text"
-              value={saveDirectory}
-              onChange={(e) => setSaveDirectory(sanitizeFilePath(e.target.value))}
-              placeholder={isUpdate ? saveDirectory : "C:\\Program Files\\Elden Ring"}
-            />
-            <br />
+            //Form goes here
+            <form>
+              {errors.requiredFieldsError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
+              <TextField id="outlined-basic" label="Game" variant="outlined" />
 
-            <label>Backup Time:</label>
-            <input
-              type="time"
-              value={backuptime}
-              onChange={(e) => setBackupTime(e.target.value)}
-              placeholder="06:00"
-            />
-            <br />
+              {errors.requiredFieldsError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
+              <TextField id="outlined-basic" label="Name" variant="outlined" />
 
-            <label>Banlist:</label>
-            <input
-              type="text"
-              value={banlist}
-              onChange={(e) => setBanlist(sanitizeIpAddress(e.target.value))}
-              placeholder={isUpdate ? banlist : "255.255.255.255"}
-            />
-            <br />
+              {errors.requiredFieldsError || errors.pathError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
+              <TextField id="outlined-basic" label="Path to Executable" variant="outlined" />
 
-            <p>Required Ports: </p>
-            <ul>
+              {errors.requiredFieldsError || errors.pathError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
+              <TextField id="outlined-basic" label="Path to Save Directory" variant="outlined" />
 
-              <li>
-                <label>TCP Inbound:</label>
-                <input
-                  type="text"
-                  value={ports.tcpinbound}
-                  onChange={(e) => setPorts({ ...ports, tcpinbound: sanitizePorts(e.target.value) })}
-                  placeholder={isUpdate ? ports.tcpinbound : "8221, 27115"}
-                />
-              </li>
+              {errors.banlistError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
+              <TextField id="outlined-basic" label="Banlist" variant="outlined" />
 
-              <li>
-                <label>TCP Outbound:</label>
-                <input
-                  type="text"
-                  value={ports.tcpoutbound}
-                  onChange={(e) => setPorts({ ...ports, tcpoutbound: sanitizePorts(e.target.value) })}
-                  placeholder={isUpdate ? ports.tcpoutbound : "8221, 27115"}
-                />
-              </li>
+              <p>Required Ports:</p>
 
-              <li>
-                <label>UDP Inbound:</label>
-                <input
-                  type="text"
-                  value={ports.udpinbound}
-                  onChange={(e) => setPorts({ ...ports, udpinbound: sanitizePorts(e.target.value) })}
-                  placeholder={isUpdate ? ports.udpinbound : "8221, 27115"}
-                />
-              </li>
+              {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
+              <TextField id="outlined-basic" label="TCP Inbound" variant="outlined" />
 
-              <li>
-                <label>UDP Outbound:</label>
-                <input
-                  type="text"
-                  value={ports.udpoutbound}
-                  onChange={(e) => setPorts({ ...ports, udpoutbound: sanitizePorts(e.target.value) })}
-                  placeholder={isUpdate ? ports.udpoutbound : "8221, 27115"}
-                />
-              </li>
-            </ul>
+              {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
+              <TextField id="outlined-basic" label="TCP Outbound" variant="outlined" />
 
-            {/* List all errors */}
-            { Object.values(errors).map((error) => <p key={error} className="error">{ error }</p>) }
+              {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
+              <TextField id="outlined-basic" label="UDP Inbound" variant="outlined" />
 
-            <div className="button-container">
-              <div className="submit-cancel-container">
-                <button type="submit" className="submit-button">{ isUpdate ? "Update" : "Create" }</button>
-                <button className="cancel-button" onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/");
-                }}>
-                  Cancel
-                </button>
+              {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
+              <TextField id="outlined-basic" label="UDP Outbound" variant="outlined" />
+
+              <div className="button-container">
+                <div className="submit-cancel-container">
+                  <Button variant="contained" onClick={handleSubmit}>Save</Button>
+                  <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+                </div>
+                {isUpdate ? <Button variant="outlined" onClick={deleteServer}>Delete</Button> : null}
               </div>
-              {isUpdate ? (
-                <button className="delete-button" onClick={(e) => {
-                  e.preventDefault();
-                  deleteServer();
-                }}>
-                  Delete
-                </button>
-              ) : null}
-            </div>
-          </form>
-        </div>
-      )}
-    </Card>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+    </Backdrop>
   );
 };
 
