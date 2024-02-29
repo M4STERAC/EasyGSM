@@ -21,17 +21,18 @@ import PolicyIcon from '@mui/icons-material/Policy';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import CodeIcon from '@mui/icons-material/Code';
+import License from './License';
 
 
 const topItems: MenuListItem[] = [
-    { text: 'Report Issue', link: 'https://github.com/M4STERAC/EasyGSM/issues/new', icon: <BugReportIcon />},
-    { text: 'Contact', link: '', icon: <MailIcon />},
-    { text: 'License', link: '', icon: <PolicyIcon />},
+    { text: 'Report Issue', open: 'https://github.com/M4STERAC/EasyGSM/issues/new', icon: <BugReportIcon />},
+    { text: 'Contact', open: '', icon: <MailIcon />},
+    { text: 'License', open: <License />, icon: <PolicyIcon />},
 ];
 const bottomItems: MenuListItem[] = [
-    { text: 'View Source Code', link: 'https://github.com/M4STERAC/EasyGSM', icon: <CodeIcon />},
-    { text: 'Contribute', link: '', icon: <GitHubIcon />},
-    { text: 'Donate', link: '', icon: <AttachMoneyIcon />}
+    { text: 'View Source Code', open: 'https://github.com/M4STERAC/EasyGSM', icon: <CodeIcon />},
+    { text: 'Contribute', open: '', icon: <GitHubIcon />},
+    { text: 'Donate', open: '', icon: <AttachMoneyIcon />}
 ];
 
 
