@@ -5,9 +5,11 @@
     background-color: transparent;
     color: white;
     cursor: pointer;
+    -webkit-app-region: drag;
 }
 
 .toolbar > div {
+    -webkit-app-region: no-drag;
     display: flex;
     align-items: center;
 }
