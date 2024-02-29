@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import Card from './Card';
-import '../css/Card.css';
+import ConfirmationDialog from './ConfirmationDialog';
 
 const License = () => {
     const [licenseText, setLicenseText] = useState('');
@@ -22,9 +21,9 @@ const License = () => {
     }, []);
 
     return (
-        <Card>
+        <ConfirmationDialog title='License Agreement' buttons={[{ text: 'Accept' }]}>
             <p>{licenseText ?? navigate('*')}</p>
-        </Card>
+        </ConfirmationDialog>
     );
 };
 
