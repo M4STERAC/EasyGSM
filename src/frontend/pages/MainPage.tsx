@@ -1,21 +1,22 @@
 import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../Store";
-import FirstLoad from "../components/FirstLoad";
-import Card from "../components/Card";
+import WelcomePage from "../components/WelcomePage";
+import MainCard from "../components/MainCard";
 import ServerListItem from "../components/ServerListItem";
 import ServerInfoItem from "../components/ServerInfoItem";
-import { CSSTransition } from "react-transition-group";
+import Button from '@mui/material/Button';
 
 //MUI Items
-// import Card from '@mui/material/Card';
+import { useTheme } from '@mui/material/styles';
 
 import "../css/MainPage.css";
+import Grid from "@mui/material/Grid";
+import UpdateDatabase from "../components/UpdateDatabase";
 
 //Root page of the app. Loads server list and server info components
 const MainPage = () => {
-  const navigate = useNavigate();
   const [state, setState] = useContext(StoreContext);
+  const theme = useTheme();
 
 
   //Updates selectedServer when a server is clicked
@@ -56,41 +57,41 @@ const MainPage = () => {
     }).catch((error: any) => console.error(error));
   };
 
+  const handleAddServerClick = () => {
+    setState((prevState: any) => ({ ...prevState, addServerDialogOpen: true }));
+  };
+
   return (
-    <div className="general-style">
-      <div className="content">
+    <Grid container>
+      {state.firstLaunch ? <WelcomePage /> : null}
+      {state.addServerDialogOpen ? <UpdateDatabase /> : null}
+        <MainCard>
+          <h2 className='card-title'>Resource Levels</h2>
+        </MainCard>
+      <Grid item xs={12}>
 
-        {/* Shows list of servers */}
-        <Card>
-          <h2 className="card-title">SERVER LIST</h2>
+      </Grid>
+      <Grid item xs={12} m={6}>
+        <MainCard>
+          <h2 className='card-title'>Server List</h2>
           {state.serverList && state.serverList.map((server: Server, index: number) => (
-              <ServerListItem onClick={() => handleServerClick(server)} key={index} server={server}/>
+            <ServerListItem onClick={() => handleServerClick(server)} key={index} server={server}/>
           ))}
-          <button className="add-server" onClick={() => navigate("/add-server")}>+</button>
-        </Card>
+          <Button onClick={handleAddServerClick}>Add Server</Button>
+        </MainCard>
+      </Grid>
 
-        {/* Shows data for selected server */}
-        <Card>
-          <h2 className="card-title">SERVER INFO</h2>
-            {state.selectedServer ? (<ServerInfoItem selectedServer={state.selectedServer} />) : (<p>Select a server</p>)}
+      <Grid item xs={12} m={6}>
+        <MainCard>
+          <h2 className='card-title'>Server Info</h2>
           {state.selectedServer ? (
-            <div className="button-container">
-              <CSSTransition in={state.selectedServer.status === "Down"} timeout={300} classNames="start-button" unmountOnExit>
-                <button className="start-button" onClick={() => handleStartButtonClick()}>
-                  Start
-                </button>
-              </CSSTransition>
-
-              <CSSTransition in={state.selectedServer.status !== "Down"} timeout={300} classNames="stop-button" unmountOnExit>
-                <button className="stop-button" onClick={() => handleStopButtonClick()}>
-                  Stop
-                </button>
-              </CSSTransition>
-            </div>
-          ) : null}
-        </Card>
-      </div>
-    </div>
+          <ServerInfoItem selectedServer={state.selectedServer} />) : (<p>Select a server</p>)}
+          {state.selectedServer ? (
+            state.selectedServer.status === "Down" ? <Button onClick={handleStartButtonClick}>Start</Button> : <Button onClick={handleStopButtonClick}>Stop</Button>
+          ) : (null)}
+        </MainCard>
+      </Grid>
+    </Grid>
   );
 };
 
