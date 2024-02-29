@@ -1,22 +1,21 @@
 import React from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import Toolbar from './components/Toolbar';
+import Titlebar from './components/Titlebar';
 import MainPage from "./pages/MainPage";
 import NotFound from "./pages/NotFound";
 import UpdateDatabase from "./pages/UpdateDatabase";
 import Footer from "./components/Footer";
 import License from "./pages/License";
-import "./css/General.css";
+import "./css/Main.css";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import { StoreProvider } from "./Store";
 
 //MUI Items
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+import { Theme, ThemeProvider, createTheme } from '@mui/material/styles';
 
 
-const customTheme = createTheme({ palette: {
+const customTheme: Theme = createTheme({ palette: {
   mode: 'dark', 
   primary: {
     light: '#757ce8',
@@ -76,15 +75,17 @@ const App = () => {
     <StoreProvider>
       <Router>
         <ThemeProvider theme={customTheme}>
-          <Toolbar />
-          <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/add-server" element={<UpdateDatabase />} />
-            <Route path="/edit-server" element={<UpdateDatabase />} />
-            <Route path="/license" element={<License />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Footer />
+          <Titlebar />
+          <div className="body">
+            <Routes>
+              <Route path="/" element={<MainPage />} />
+              <Route path="/add-server" element={<UpdateDatabase />} />
+              <Route path="/edit-server" element={<UpdateDatabase />} />
+              <Route path="/license" element={<License />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Footer />
+          </div>
         </ThemeProvider>
       </Router>
     </StoreProvider>
