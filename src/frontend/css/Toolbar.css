@@ -1,15 +1,43 @@
-.toolbar {
+.titlebar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: transparent;
+    background-color: black;
     color: white;
     cursor: pointer;
     -webkit-app-region: drag;
+    margin-bottom: 1.5em;
+    height: 40px;
+    font-size: small;
 }
 
-.toolbar > div {
-    -webkit-app-region: no-drag;
+.titlebar > div {
     display: flex;
     align-items: center;
+}
+
+.title {
+    justify-content: center;
+}
+
+.box {
+    background-color: transparent;
+    height: 40px;
+    padding: 10px 10px 0px 10px;
+}
+
+.box:hover {
+    background-color: darkslategray;
+}
+.menu, 
+.titlebar-frame-interaction {
+    -webkit-app-region: no-drag;
+}
+
+#close:hover {
+    background-color: red;
+}
+
+.menu {
+    margin-right: 85px;
 }
