@@ -40,7 +40,7 @@ function createWindow() {
   const window = new BrowserWindow({
     width: bounds.width,
     height: bounds.height,
-    minWidth: 800,
+    minWidth: 1000,
     minHeight: 550,
     frame: false,
     webPreferences: {
