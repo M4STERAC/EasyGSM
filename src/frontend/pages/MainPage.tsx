@@ -2,13 +2,13 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../Store";
 import FirstLoad from "../components/FirstLoad";
-// import Card from "../components/Card";
+import Card from "../components/Card";
 import ServerListItem from "../components/ServerListItem";
 import ServerInfoItem from "../components/ServerInfoItem";
 import { CSSTransition } from "react-transition-group";
 
 //MUI Items
-import Card from '@mui/material/Card';
+// import Card from '@mui/material/Card';
 
 import "../css/General.css";
 import "../css/MainPage.css";
