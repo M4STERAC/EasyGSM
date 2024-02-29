@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import Card from '../components/Card';
+import Card from './Card';
 import '../css/Card.css';
 
 const License = () => {

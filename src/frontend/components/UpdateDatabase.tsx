@@ -17,7 +17,7 @@ import {
 } from "../utils/onboard-offboard-server";
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
-import Card from "../components/Card";
+import Card from "./Card";
 import "../css/UpdateDatabase.css";
 import "../css/ButtonStyles.css";
 import "../css/Forms.css";
