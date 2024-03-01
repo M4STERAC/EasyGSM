@@ -25,13 +25,16 @@ import License from './License';
 
 
 const topItems: MenuListItem[] = [
-    { text: 'Report Issue', open: 'https://github.com/M4STERAC/EasyGSM/issues/new', icon: <BugReportIcon />},
-    { text: 'Contact', open: '', icon: <MailIcon />},
+    { text: 'Home', open: '', icon: <MailIcon />},
+    { text: 'About', open: '', icon: <MailIcon />},
     { text: 'License', open: <License />, icon: <PolicyIcon />},
+    { text: 'Settings', open: '', icon: <MailIcon />}
+    { text: 'Report Issue', open: 'https://github.com/M4STERAC/EasyGSM/issues/new', icon: <BugReportIcon />},
 ];
 const bottomItems: MenuListItem[] = [
     { text: 'View Source Code', open: 'https://github.com/M4STERAC/EasyGSM', icon: <CodeIcon />},
     { text: 'Contribute', open: '', icon: <GitHubIcon />},
+    { text: 'Contact', open: '', icon: <MailIcon />},
     { text: 'Donate', open: '', icon: <AttachMoneyIcon />}
 ];
 
