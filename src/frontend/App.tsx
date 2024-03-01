@@ -38,7 +38,7 @@ const App = () => {
           <Titlebar />
           <Box sx={{
             marginTop: '40px', 
-            paddingTop: '1.5em',
+            paddingTop: { xs: '-20px', lg: '-10px'},
             paddingLeft: '1.5em',
             paddingRight: '1.5em',
             height: 'calc(100vh - 40px)',
