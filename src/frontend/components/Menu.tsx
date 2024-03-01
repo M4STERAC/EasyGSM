@@ -28,7 +28,7 @@ const topItems: MenuListItem[] = [
     { text: 'Home', open: '', icon: <MailIcon />},
     { text: 'About', open: '', icon: <MailIcon />},
     { text: 'License', open: <License />, icon: <PolicyIcon />},
-    { text: 'Settings', open: '', icon: <MailIcon />}
+    { text: 'Settings', open: '', icon: <MailIcon />},
     { text: 'Report Issue', open: 'https://github.com/M4STERAC/EasyGSM/issues/new', icon: <BugReportIcon />},
 ];
 const bottomItems: MenuListItem[] = [
