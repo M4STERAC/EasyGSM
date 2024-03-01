@@ -12,7 +12,7 @@
     -webkit-app-region: drag;
     height: 40px;
     font-size: small;
-    z-index: 10;
+    z-index: 1600;
     width: 100%;
 }
 
