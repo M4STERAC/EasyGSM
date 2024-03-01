@@ -7,6 +7,7 @@ import UpdateDatabase from "./components/UpdateDatabase";
 import Footer from "./components/Footer";
 import License from "./components/License";
 import Box from "@mui/material/Box";
+import Menu from './components/Menu';
 import { Integrations } from "@sentry/tracing";
 import { StoreProvider } from "./Store";
 import * as Sentry from "@sentry/react";
@@ -46,6 +47,7 @@ const App = () => {
             bottom: '0',
             backgroundColor: selectedTheme.palette.background.default,
           }}>
+            <Menu />
             <Routes>
               <Route path="/" element={<MainPage />} />
               <Route path="/add-server" element={<UpdateDatabase />} />
