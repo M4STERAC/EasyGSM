@@ -57,37 +57,47 @@ const MainPage = () => {
     }).catch((error: any) => console.error(error));
   };
 
-  const handleAddServerClick = () => {
-    setState((prevState: any) => ({ ...prevState, addServerDialogOpen: true }));
+  const handleAddServerClick = ({ isUpdate }: any) => {
+    setState((prevState: any) => ({ ...prevState, addServerDialogOpen: true, isUpdate: isUpdate }));
   };
 
   return (
-    <Grid container>
-      {state.firstLaunch ? <WelcomePage /> : null}
-      {state.addServerDialogOpen ? <UpdateDatabase /> : null}
+    <Grid container rowSpacing={6} columnSpacing={4} style={{
+      padding: 0,
+      marginTop: '2em'
+    }}>
+      {/* {state.firstLaunch ? <WelcomePage /> : null} */}
+      <WelcomePage />
+      {state.addServerDialogOpen ? <UpdateDatabase isUpdate={state.isUpdate} /> : null}
+
+      <Grid item xs={12}>
         <MainCard>
           <h2 className='card-title'>Resource Levels</h2>
         </MainCard>
-      <Grid item xs={12}>
-
       </Grid>
-      <Grid item xs={12} m={6}>
+
+      <Grid item xs={12} md={6}>
         <MainCard>
           <h2 className='card-title'>Server List</h2>
           {state.serverList && state.serverList.map((server: Server, index: number) => (
             <ServerListItem onClick={() => handleServerClick(server)} key={index} server={server}/>
           ))}
-          <Button onClick={handleAddServerClick}>Add Server</Button>
+          <Button onClick={() => handleAddServerClick({ isUpdate: false })}>Add Server</Button>
         </MainCard>
       </Grid>
 
-      <Grid item xs={12} m={6}>
+      <Grid item xs={12} md={6}>
         <MainCard>
           <h2 className='card-title'>Server Info</h2>
           {state.selectedServer ? (
           <ServerInfoItem selectedServer={state.selectedServer} />) : (<p>Select a server</p>)}
           {state.selectedServer ? (
-            state.selectedServer.status === "Down" ? <Button onClick={handleStartButtonClick}>Start</Button> : <Button onClick={handleStopButtonClick}>Stop</Button>
+            state.selectedServer.status === "Down" ? (
+              <div>
+                <Button onClick={handleStartButtonClick}>Start</Button>
+                <Button onClick={() => handleAddServerClick({ isUpdate: true })}>Edit</Button>
+              </div>
+            ) : <Button onClick={handleStopButtonClick}>Stop</Button>
           ) : (null)}
         </MainCard>
       </Grid>
