@@ -11,7 +11,7 @@ import "../css/Menu.css";
 //MUI Items
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
 
 
 //MUI Icons
@@ -38,26 +38,23 @@ const bottomItems: MenuListItem[] = [
 
 const Menu = () => {
     const [state, setState] = useContext(StoreContext);
-    const [open, setOpen] = useState(false);
+    const theme = useTheme();
 
-    const toggleDrawer = (newOpen: boolean) => () => {
-        setOpen(newOpen);
-    };
 
     return (
-        <Box sx={{ width: 250 }} role="presentation">
-            <Drawer open={open} onClose={toggleDrawer(false)}>
-            {topItems.map((item, index) => (
-                <MenuItem key={index} item={item} />
-            ))}
+        <Drawer anchor="left" open={state.menuOpen} onClose={() => setState((prevState: any) => ({ ...prevState, menuOpen: false }))} sx={{
+            backgroundColor: theme.palette.background.default,
+        }}>
+        {topItems.map((item, index) => (
+            <MenuItem key={index} item={item} onClick={() => setState((prevState: any) => ({ ...prevState, menuOpen: false }))}/>
+        ))}
 
-            <Divider />
+        <Divider />
 
-            {bottomItems.map((item, index) => (
-                <MenuItem key={index} item={item} />
-            ))}
-            </Drawer>
-        </Box>
+        {bottomItems.map((item, index) => (
+            <MenuItem key={index} item={item} />
+        ))}
+        </Drawer>
     );
 };
 
