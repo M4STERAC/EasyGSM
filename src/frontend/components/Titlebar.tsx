@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import "../css/Titlebar.css";
+import { StoreContext } from "../Store";
 
 
 import Box from '@mui/material/Box';
@@ -14,6 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 
 const Titlebar = () => {
+    const [state, setState] = useContext(StoreContext);
     const [isMaximized, setIsMaximized] = useState(false);
 
     const handleMaximize = () => {
@@ -25,7 +27,9 @@ const Titlebar = () => {
 
     const handleClose = () => window.electron.close();
 
-    const handleMenu = () => {};
+    const handleMenu = () => {
+        setState((prevState: any) => ({ ...prevState, menuOpen: !prevState.menuOpen }));
+    };
 
     return (
         <div className="titlebar">
