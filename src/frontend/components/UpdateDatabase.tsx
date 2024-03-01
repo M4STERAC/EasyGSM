@@ -37,9 +37,8 @@ import Alert from '@mui/material/Alert';
 import TextField from "@mui/material/TextField";
 
 const UpdateDatabase = (props: any) => {
+  const { isUpdate } = props;
   const navigate = useNavigate();
-  const location = useLocation();
-  const isUpdate = location.pathname === "/edit-server";
   const [state, setState] = useContext(StoreContext);
   const [id] = useState(isUpdate ? state.selectedServer.id : generateId(10));
   const [game, setGame] = useState(isUpdate ? state.selectedServer.game : "");
@@ -127,7 +126,6 @@ const UpdateDatabase = (props: any) => {
         saveDirectory,
       } as Server));
     })
-    .then(() => navigate("/"))
     .catch((error: any) => console.error(error));
   };
 
@@ -153,43 +151,20 @@ const UpdateDatabase = (props: any) => {
           response.checkboxChecked
         ));
       })
-      .then(() => navigate("/"))
       .catch((error: any) => console.error('Delete Server Error: ', error));
     })
     .catch((error: any) => console.error('Dialog Box Error: ', error));
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleClose = (__: React.SyntheticEvent, __1?: string) => {
+    setState((prevState: any) => ({ ...prevState, addServerDialogOpen: false }));
   };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return (
-    <Backdrop sx={{ color: '#fff', zIndex: theme.zIndex.drawer + 1}}open={isOpen}>
+    <Backdrop sx={{ color: '#fff', zIndex: theme.zIndex.drawer + 1}}open={state.addServerDialogOpen}>
       <Dialog
-        open={isOpen}
+        open={state.addServerDialogOpen}
         TransitionComponent={Transition}
         aria-describedby="alert-dialog-slide-description"
         onClose={handleClose}
