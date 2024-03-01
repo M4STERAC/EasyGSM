@@ -4,14 +4,14 @@ import WelcomePage from "../components/WelcomePage";
 import MainCard from "../components/MainCard";
 import ServerListItem from "../components/ServerListItem";
 import ServerInfoItem from "../components/ServerInfoItem";
-import Button from '@mui/material/Button';
+import UpdateDatabase from "../components/UpdateDatabase";
+import "../css/MainPage.css";
 
 //MUI Items
+import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
-
-import "../css/MainPage.css";
 import Grid from "@mui/material/Grid";
-import UpdateDatabase from "../components/UpdateDatabase";
+
 
 //Root page of the app. Loads server list and server info components
 const MainPage = () => {
@@ -66,8 +66,7 @@ const MainPage = () => {
       padding: 0,
       marginTop: '2em'
     }}>
-      {/* {state.firstLaunch ? <WelcomePage /> : null} */}
-      <WelcomePage />
+      {state.firstLaunch ? <WelcomePage /> : null}
       {state.addServerDialogOpen ? <UpdateDatabase isUpdate={state.isUpdate} /> : null}
 
       <Grid item xs={12}>
