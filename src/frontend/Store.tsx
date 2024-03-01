@@ -11,6 +11,7 @@ export const StoreProvider = ({ children }: any) => {
     selectedServer: null,
     runningJobs: [],
     firstLaunchStatus: true,
+    menuOpen: false
   });
 
   //Get data from database and create backup schedules
