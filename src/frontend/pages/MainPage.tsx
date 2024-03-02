@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { StoreContext } from "../Store";
 import WelcomePage from "../components/WelcomePage";
-import MainCard from "../components/MainCard";
+import Card from '@mui/material/Card';
 import ServerListItem from "../components/ServerListItem";
 import ServerInfoItem from "../components/ServerInfoItem";
 import UpdateDatabase from "../components/UpdateDatabase";
@@ -17,6 +17,8 @@ import Grid from "@mui/material/Grid";
 const MainPage = () => {
   const [state, setState] = useContext(StoreContext);
   const theme = useTheme();
+  const ServerCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.common.white, overflowY: 'auto', height: '375px', width: '400px', padding: '1em'};
+  const HardwareResourceCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.common.white, height: '200px', width: { xs: '400px', md: 'calc(100vh - 40px)' }, padding: '1em'};
 
 
   //Updates selectedServer when a server is clicked
@@ -63,6 +65,8 @@ const MainPage = () => {
 
   return (
     <Grid container rowSpacing={6} columnSpacing={4} style={{
+      justifyContent: 'center',
+      alignItems: 'center',
       padding: 0,
       marginTop: '2em'
     }}>
@@ -70,23 +74,23 @@ const MainPage = () => {
       {state.addServerDialogOpen ? <UpdateDatabase isUpdate={state.isUpdate} /> : null}
 
       <Grid item xs={12}>
-        <MainCard>
+        <Card sx={HardwareResourceCardStyles}>
           <h2 className='card-title'>Resource Levels</h2>
-        </MainCard>
+        </Card>
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <MainCard>
+        <Card sx={ServerCardStyles}>
           <h2 className='card-title'>Server List</h2>
           {state.serverList && state.serverList.map((server: Server, index: number) => (
             <ServerListItem onClick={() => handleServerClick(server)} key={index} server={server}/>
           ))}
           <Button onClick={() => handleAddServerClick({ isUpdate: false })}>Add Server</Button>
-        </MainCard>
+        </Card>
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <MainCard>
+        <Card sx={{...ServerCardStyles, overflowY: 'hidden'}}>
           <h2 className='card-title'>Server Info</h2>
           {state.selectedServer ? (
           <ServerInfoItem selectedServer={state.selectedServer} />) : (<p>Select a server</p>)}
@@ -98,7 +102,7 @@ const MainPage = () => {
               </div>
             ) : <Button onClick={handleStopButtonClick}>Stop</Button>
           ) : (null)}
-        </MainCard>
+        </Card>
       </Grid>
     </Grid>
   );
