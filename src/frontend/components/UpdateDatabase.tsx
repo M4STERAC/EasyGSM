@@ -17,7 +17,6 @@ import {
 } from "../utils/onboard-offboard-server";
 import { StoreContext } from "../Store";
 import { useNavigate, useLocation } from "react-router-dom";
-import Card from "./MainCard";
 import "../css/UpdateDatabase.css";
 import "../css/ButtonStyles.css";
 import "../css/Forms.css";
@@ -25,7 +24,6 @@ import "../css/Forms.css";
 //MUI Items
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
