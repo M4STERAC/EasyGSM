@@ -3,7 +3,9 @@ import "../css/Titlebar.css";
 import { StoreContext } from "../Store";
 
 
+//MUI Items
 import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
 
 
 //MUI Icons
@@ -34,21 +36,29 @@ const Titlebar = () => {
     return (
         <div className="titlebar">
             <div className="menu">
-                <Box onClick={handleMenu} className="box">
-                    <MenuIcon />
-                </Box>
+                <Tooltip title='Menu' enterDelay={2000} arrow>
+                    <Box onClick={handleMenu} className="box">
+                        <MenuIcon />
+                    </Box>
+                </Tooltip>
             </div>
             <div className="title">EasyGSM</div>
             <div className='titlebar-frame-interaction'>
-                <Box onClick={handleMinimize} className="box">
-                    <MinimizeIcon />
-                </Box>
-                <Box onClick={handleMaximize} className="box">
-                    {isMaximized ? <FullscreenExitIcon /> : <FullscreenIcon />}
-                </Box>
-                <Box onClick={handleClose} className="box" id="close">
-                    <CloseIcon />
-                </Box>
+                <Tooltip title='Minimize' enterDelay={2000} arrow>
+                    <Box onClick={handleMinimize} className="box">
+                        <MinimizeIcon />
+                    </Box>
+                </Tooltip>
+                <Tooltip title='Maximize' enterDelay={2000} arrow>
+                    <Box onClick={handleMaximize} className="box">
+                        {isMaximized ? <FullscreenExitIcon /> : <FullscreenIcon />}
+                    </Box>
+                </Tooltip>  
+                <Tooltip title='Close' enterDelay={2000} arrow>
+                    <Box onClick={handleClose} className="box" id="close">
+                        <CloseIcon />
+                    </Box>
+                </Tooltip>
             </div>
         </div>
     );
