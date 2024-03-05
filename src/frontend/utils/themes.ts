@@ -7,7 +7,7 @@ export const darkTheme: Theme = createTheme({ palette: {
       paper: '#f9f9f9',
     },
     text: {
-      primary: '#000',
+      primary: '#fff',
     },
 }});
 
