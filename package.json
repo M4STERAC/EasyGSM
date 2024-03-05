@@ -7,7 +7,7 @@
     "email": "mrmanka0307@gmail.com"
   },
   "license": "LICENSE.md",
-  "main": "./out/src/frontend/main.js",
+  "main": "./out/src/frontend/.js/main.js",
   "scripts": {
     "test": "jest",
     "build": "npm run webpack && electron-builder",
