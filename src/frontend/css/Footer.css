@@ -1,13 +1,9 @@
 .footer {
+  margin-top: 1em;
   clear: both;
   padding: 1.5em;
   flex-shrink: 0;
   text-align: center;
   bottom: 0;
-}
-
-.footer img {
-  width: 75px;
-  height: 75px;
-  border-radius: 50%;
+  color: #fff;
 }
