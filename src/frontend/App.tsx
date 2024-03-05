@@ -3,9 +3,7 @@ import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Titlebar from './components/Titlebar';
 import MainPage from "./pages/MainPage";
 import NotFound from "./pages/NotFound";
-import UpdateDatabase from "./components/UpdateDatabase";
 import Footer from "./components/Footer";
-import License from "./components/License";
 import Box from "@mui/material/Box";
 import Menu from './components/Menu';
 import { Integrations } from "@sentry/tracing";
@@ -50,9 +48,6 @@ const App = () => {
             <Menu />
             <Routes>
               <Route path="/" element={<MainPage />} />
-              <Route path="/add-server" element={<UpdateDatabase />} />
-              <Route path="/edit-server" element={<UpdateDatabase />} />
-              <Route path="/license" element={<License />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
