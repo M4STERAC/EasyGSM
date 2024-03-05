@@ -33,6 +33,7 @@ import { useTheme } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
 import Alert from '@mui/material/Alert';
 import TextField from "@mui/material/TextField";
+import Tooltip from '@mui/material/Tooltip';
 
 const UpdateDatabase = (props: any) => {
   const { isUpdate } = props;
@@ -224,10 +225,17 @@ const UpdateDatabase = (props: any) => {
 
               <div className="button-container">
                 <div className="submit-cancel-container">
-                  <Button variant="contained" onClick={handleSubmit}>Save</Button>
-                  <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+                  <Tooltip title='Saves server configuration' enterDelay={4000} arrow>
+                    <Button variant="contained" onClick={handleSubmit}>Save</Button>
+                  </Tooltip>
+                  <Tooltip title='Closes form' enterDelay={4000} arrow>
+                    <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+                  </Tooltip>
                 </div>
-                {isUpdate ? <Button variant="outlined" onClick={deleteServer}>Delete</Button> : null}
+                {isUpdate ? 
+                  <Tooltip title='Deletes selected server configuration' enterDelay={4000} arrow>
+                    <Button variant="outlined" onClick={deleteServer}>Delete</Button>
+                  </Tooltip> : null}
               </div>
             </form>
           )}
