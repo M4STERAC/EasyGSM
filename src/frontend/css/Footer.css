@@ -1,12 +1,9 @@
 .footer {
+  margin-top: 1em;
   clear: both;
-  padding: 3em;
+  padding: 1.5em;
   flex-shrink: 0;
   text-align: center;
-}
-
-.footer img {
-  width: 75px;
-  height: 75px;
-  border-radius: 50%;
+  bottom: 0;
+  color: #fff;
 }

@@ -1,66 +1,25 @@
 import React from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import Toolbar from './components/Toolbar';
+import Titlebar from './components/Titlebar';
 import MainPage from "./pages/MainPage";
 import NotFound from "./pages/NotFound";
-import UpdateDatabase from "./pages/UpdateDatabase";
+import UpdateDatabase from "./components/UpdateDatabase";
 import Footer from "./components/Footer";
-import License from "./pages/License";
-import "./css/General.css";
-import * as Sentry from "@sentry/react";
+import License from "./components/License";
+import Box from "@mui/material/Box";
+import Menu from './components/Menu';
 import { Integrations } from "@sentry/tracing";
 import { StoreProvider } from "./Store";
+import * as Sentry from "@sentry/react";
+import darkTheme from "./utils/themes";
+import './css/Scrollbar.css';
 
 //MUI Items
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+import { Theme, ThemeProvider } from '@mui/material/styles';
 
 
-const customTheme = createTheme({ palette: {
-  mode: 'dark', 
-  primary: {
-    light: '#757ce8',
-    main: '#3f50b5',
-    dark: '#002884',
-    contrastText: '#fff',
-  },
-  secondary: {
-    light: '#ff7961',
-    main: '#f44336',
-    dark: '#ba000d',
-    contrastText: '#000',
-  },
-  text: {
-    primary: '#fff',
-    secondary: '#000',
-  },
-  error: {
-    main: '#f44336',
-  },
-  warning: {
-    main: '#ff9800',
-  },
-  info: {
-    main: '#2196f3',
-  },
-  success: {
-    main: '#4caf50',
-  },
-  background: {
-    default: '#121212',
-    paper: '#424242',
-  },
-  action: {
-    active: '#fff',
-    hover: '#616161',
-    selected: '#757575',
-    disabled: '#616161',
-    disabledBackground: '#424242',
-    focus: '#fff',
-    hoverOpacity: 0.08,
-    disabledOpacity: 0.38,
-  }
-}});
+
+const selectedTheme: Theme = darkTheme;
 
 
 //Sentry setup for error tracking
@@ -70,25 +29,39 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
+
 //React Router setup
 const App = () => {
   return (
     <StoreProvider>
       <Router>
-        <ThemeProvider theme={customTheme}>
-          <Toolbar />
-          <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/add-server" element={<UpdateDatabase />} />
-            <Route path="/edit-server" element={<UpdateDatabase />} />
-            <Route path="/license" element={<License />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Footer />
+        <ThemeProvider theme={selectedTheme}>
+          <Titlebar />
+          <Box sx={{
+            marginTop: '40px', 
+            paddingTop: { xs: '-20px', lg: '-10px'},
+            paddingLeft: '1.5em',
+            paddingRight: '1.5em',
+            height: 'calc(100vh - 40px)',
+            overflowY: 'auto',
+            bottom: '0',
+            backgroundColor: selectedTheme.palette.background.default,
+          }}>
+            <Menu />
+            <Routes>
+              <Route path="/" element={<MainPage />} />
+              <Route path="/add-server" element={<UpdateDatabase />} />
+              <Route path="/edit-server" element={<UpdateDatabase />} />
+              <Route path="/license" element={<License />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Footer />
+          </Box>
         </ThemeProvider>
       </Router>
     </StoreProvider>
   );
 };
+
 
 export default App;

@@ -1,0 +1,49 @@
+.titlebar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    align-items: center;
+    justify-content: space-between;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    -webkit-app-region: drag;
+    height: 40px;
+    font-size: small;
+    z-index: 1600;
+    width: 100%;
+}
+
+.titlebar > div {
+    display: flex;
+    align-items: center;
+}
+
+.menu, 
+.titlebar-frame-interaction {
+    -webkit-app-region: no-drag;
+}
+
+.title {
+    justify-content: center;
+}
+
+.menu {
+    margin-right: 70px;
+}
+
+.box {
+    background-color: transparent;
+    height: 40px;
+    padding: 10px 10px 0px 10px;
+}
+
+.box:hover {
+    background-color: #21262d;
+}
+
+#close:hover {
+    background-color: red;
+}

@@ -1,4 +1,6 @@
 import cron from "node-cron";
+import { ReactNode } from "react";
+import { Theme } from "@mui/material/styles";
 
 export interface OnOffboardServerResult {
     ports: boolean | string;
@@ -40,7 +42,33 @@ export interface GetData {
 
 export interface MenuListItem {
     text: string;
-    link: string;
+    open: string | ReactNode;
     icon: JSX.Element;
     tooltip?: JSX.Element;
+}
+
+export interface ConfirmationDialogButtons {
+    text: string;
+    func?: () => boolean;
+}
+
+export interface FormDialogButtons {
+    text: string;
+    func?: () => boolean;
+}
+
+export interface ConfirmationDialogProps {
+    title: string;
+    buttons: ConfirmationDialogButtons[];
+    width?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | false;
+    children?: ReactNode;
+}
+
+export interface MainCardProps {
+    children: ReactNode;
+}
+
+export interface FormDialogProps {
+    children: ReactNode;
+    buttons: FormDialogButtons[];
 }
