@@ -38,14 +38,21 @@ const UpdateDatabase = (props: any) => {
   const { isUpdate } = props;
   const navigate = useNavigate();
   const [state, setState] = useContext(StoreContext);
-  const [id] = useState(isUpdate ? state.selectedServer.id : generateId(10));
-  const [game, setGame] = useState(isUpdate ? state.selectedServer.game : "");
-  const [name, setName] = useState(isUpdate ? state.selectedServer.name : "");
-  const [executable, setExecutable] = useState(isUpdate ? state.selectedServer.executable : "");
-  const [saveDirectory, setSaveDirectory] = useState(isUpdate ? state.selectedServer.saveDirectory : "");
-  const [banlist, setBanlist] = useState(isUpdate ? state.selectedServer.banlist : "");
-  const [ports, setPorts] = useState(isUpdate ? state.selectedServer.ports : "");
-  const [backuptime, setBackupTime] = useState("06:00");
+  let updateServer = isUpdate ? state.selectedServer : {
+    id: generateId(10),
+    game: "",
+    name: "",
+    executable: "",
+    saveDirectory: "",
+    banlist: "",
+    ports: {
+      tcpinbound: "",
+      tcpoutbound: "",
+      udpinbound: "",
+      udpoutbound: "",
+    },
+    backuptime: "06:00",
+  }
   const [errors, setErrors] = useState({ banlistError: "", portError: "", pathError: "", requiredFieldsError: "" } as Error);
   const [isOpen, setOpen] = useState(true);
 
@@ -75,11 +82,11 @@ const UpdateDatabase = (props: any) => {
     let postFail = false;
 
     //Validate all input fields
-    const requiredFieldsValidated = validateRequiredFieldsFilled(game, name, executable, saveDirectory);
-    const banlistValidated = validateIpAddress(banlist);
-    const portsValidated = validatePort(ports);
-    const executableValidated = validateFilePath(executable);
-    const saveDirectoryValidated = validateFilePath(saveDirectory);
+    const requiredFieldsValidated = validateRequiredFieldsFilled(updateServer.game, updateServer.name, updateServer.executable, updateServer.saveDirectory);
+    const banlistValidated = validateIpAddress(updateServer.banlist);
+    const portsValidated = validatePort(updateServer.ports);
+    const executableValidated = validateFilePath(updateServer.executable);
+    const saveDirectoryValidated = validateFilePath(updateServer.saveDirectory);
 
     //If any of the fields are invalid, set the errors and return
     if (requiredFieldsValidated !== true || portsValidated !== true || banlistValidated !== true || executableValidated !== true || saveDirectoryValidated !== true) {
@@ -97,14 +104,14 @@ const UpdateDatabase = (props: any) => {
     if (postFail) return;
     //Post the database
     window.electron.invoke("save-server", {
-      id,
-      game,
-      name,
-      executable,
-      saveDirectory,
-      banlist,
-      ports,
-      backuptime,
+      id: updateServer.id,
+      game: updateServer.game,
+      name: updateServer.name,
+      executable: updateServer.executable,
+      saveDirectory: updateServer.saveDirectory,
+      banlist: updateServer.banlist,
+      ports: updateServer.ports,
+      backuptime: updateServer.backuptime,
     })
     .then((data: Server) => {
       setState((prevState: any) => {
@@ -116,16 +123,18 @@ const UpdateDatabase = (props: any) => {
         return { ...prevState, serverList, selectedServer: null };
       });
       console.debug("Onboard Result: ", onboardServer({
-        game,
-        ports,
-        backuptime,
-        saveDirectory,
+        game: updateServer.game,
+        ports: updateServer.ports,
+        backuptime: updateServer.backuptime,
+        saveDirectory: updateServer.saveDirectory,
       } as Server));
+      handleClose(e, "Save");
     })
     .catch((error: any) => console.error(error));
   };
 
-  const deleteServer = () => {
+  const deleteServer = (e: any) => {
+    e.preventDefault();
     //Ask the user if they're sure they want to delete the server and/or the ports
     window.electron.invoke("dialog-box", {
       checkboxLabel: "Would you like to delete the open ports used for this server?",
@@ -134,18 +143,19 @@ const UpdateDatabase = (props: any) => {
     .then((response: DialogBoxRespone) => {
       if (response.response !== 0) return;
       //Delete the server and/or the ports
-      window.electron.invoke("delete-server", { id })
+      window.electron.invoke("delete-server", { id: updateServer.id })
       .then(() => {
         setState((prevState: any) => {
           const serverList = prevState.serverList;
-          const index = serverList.findIndex((server: Server) => server.id === id);
+          const index = serverList.findIndex((server: Server) => server.id === updateServer.id);
           if (index !== -1) serverList.splice(index, 1);
           return { ...prevState, serverList, selectedServer: null };
         })
         console.debug("Offboard Result: ", offboardServer(
-          { game, ports, backuptime, saveDirectory } as Server,
+          { game: updateServer.game, ports: updateServer.ports, backuptime: updateServer.backuptime, saveDirectory: updateServer.saveDirectory } as Server,
           response.checkboxChecked
         ));
+        handleClose(e, "Delete");
       })
       .catch((error: any) => console.error('Delete Server Error: ', error));
     })
@@ -184,33 +194,33 @@ const UpdateDatabase = (props: any) => {
             //Form goes here
             <form>
               {errors.requiredFieldsError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="Game" variant="outlined" />
+              <TextField id="outlined-basic" label="Game" variant="outlined" placeholder={updateServer.game} onChange={(e) => updateServer.game = (sanitizeAlphanumeric(e.target.value))} />
 
               {errors.requiredFieldsError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="Name" variant="outlined" />
+              <TextField id="outlined-basic" label="Name" variant="outlined" placeholder={updateServer.name} onChange={(e) => updateServer.name = (sanitizeAlphanumeric(e.target.value))} />
 
               {errors.requiredFieldsError || errors.pathError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="Path to Executable" variant="outlined" />
+              <TextField id="outlined-basic" label="Path to Executable" variant="outlined" placeholder={updateServer.executable} onChange={(e) => updateServer.executable = (sanitizeFilePath(e.target.value))} />
 
               {errors.requiredFieldsError || errors.pathError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="Path to Save Directory" variant="outlined" />
+              <TextField id="outlined-basic" label="Path to Save Directory" variant="outlined" placeholder={updateServer.saveDirectory} onChange={(e) => updateServer.saveDirectory = (sanitizeFilePath(e.target.value))} />
 
               {errors.banlistError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="Banlist" variant="outlined" />
+              <TextField id="outlined-basic" label="Banlist" variant="outlined" placeholder={updateServer.banlist} onChange={(e) => updateServer.banlist = (sanitizeIpAddress(e.target.value))} />
 
               <p>Required Ports:</p>
 
               {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="TCP Inbound" variant="outlined" />
+              <TextField id="outlined-basic" label="TCP Inbound" variant="outlined" placeholder={updateServer.ports.tcpinbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, tcpinbound: sanitizePorts(e.target.value) })} />
 
               {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="TCP Outbound" variant="outlined" />
+              <TextField id="outlined-basic" label="TCP Outbound" variant="outlined" placeholder={updateServer.ports.tcpoutbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, tcpoutbound: sanitizePorts(e.target.value) })} />
 
               {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="UDP Inbound" variant="outlined" />
+              <TextField id="outlined-basic" label="UDP Inbound" variant="outlined" placeholder={updateServer.ports.udpinbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, udpinbound: sanitizePorts(e.target.value) })} />
 
               {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="UDP Outbound" variant="outlined" />
+              <TextField id="outlined-basic" label="UDP Outbound" variant="outlined" placeholder={updateServer.ports.udpoutbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, udpoutbound: sanitizePorts(e.target.value) })} />
 
               <div className="button-container">
                 <div className="submit-cancel-container">
