@@ -51,8 +51,6 @@ const UpdateDatabase = (props: any) => {
 
 
   const theme = useTheme();
-  // const { width, title, buttons, children } = props;
-
 
   const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {

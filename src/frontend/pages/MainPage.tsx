@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { StoreContext } from "../Store";
 import WelcomePage from "../components/WelcomePage";
 import Card from '@mui/material/Card';
 import ServerListItem from "../components/ServerListItem";
 import ServerInfoItem from "../components/ServerInfoItem";
 import UpdateDatabase from "../components/UpdateDatabase";
-// import "../css/MainPage.css";
+import SnackbarMessage from "../components/SnackbarMessage";
 
 //MUI Items
 import Button from '@mui/material/Button';
@@ -15,6 +15,7 @@ import { useTheme } from '@mui/material/styles';
 //Root page of the app. Loads server list and server info components
 const MainPage = () => {
   const [state, setState] = useContext(StoreContext);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "" });
   const theme = useTheme();
   const ServerCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.common.white, overflowY: 'auto', height: '25em', width: '25em', padding: '1em'};
   const HardwareResourceCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.common.white, height: '20em', width: '64em', padding: '1em 1em 3em', margin: '4em'};
@@ -23,6 +24,12 @@ const MainPage = () => {
   //Updates selectedServer when a server is clicked
   const handleServerClick = (server: Server) => {
     setState((prevState: any) => ({ ...prevState, selectedServer: server }));
+  };
+
+
+  const handleSnackbarClose = (__: any, reason?: string) => {
+    if (reason === 'clickaway') return;
+    setSnackbar({ ...snackbar, open: false });
   };
 
 
@@ -36,6 +43,7 @@ const MainPage = () => {
           });
           const newServerList = [...prevState.serverList];
           newServerList[serverIndex] = { ...newServerList[serverIndex], status: "Running" };
+          setSnackbar({ open: true, message: `${state.selectedServer.game} - ${state.selectedServer.name} Started` })
           return { ...prevState, serverList: newServerList, selectedServer: { ...prevState.selectedServer, status: "Running"}};
         } else {
           return prevState;
@@ -53,6 +61,7 @@ const MainPage = () => {
         const serverIndex = prevState.serverList.findIndex((server: Server) => server.id === state.selectedServer.id);
         const newServerList = [...prevState.serverList];
         newServerList[serverIndex] = { ...newServerList[serverIndex], status: "Down" };
+        setSnackbar({ open: true, message: `${state.selectedServer.game} - ${state.selectedServer.name} Stopped` })
         return { ...prevState, serverList: newServerList, selectedServer: { ...prevState.selectedServer, status: "Down" }};
       });
     }).catch((error: any) => console.error(error));
@@ -61,6 +70,7 @@ const MainPage = () => {
   const handleAddServerClick = ({ isUpdate }: any) => {
     setState((prevState: any) => ({ ...prevState, addServerDialogOpen: true, isUpdate: isUpdate }));
   };
+
 
   return (
     <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -94,6 +104,7 @@ const MainPage = () => {
           ) : (null)}
         </Card>
       </div>
+      {state.serverList.length > 1 ? <SnackbarMessage message={snackbar.message} open={snackbar.open} handleClose={handleSnackbarClose} /> : null}
     </div>
   );
 };
