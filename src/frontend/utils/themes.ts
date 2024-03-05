@@ -6,6 +6,9 @@ export const darkTheme: Theme = createTheme({ palette: {
       default: '#0d1117',
       paper: '#f9f9f9',
     },
+    text: {
+      primary: '#000',
+    },
 }});
 
 export default darkTheme;

@@ -44,23 +44,22 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
         aria-describedby="alert-dialog-slide-description"
         maxWidth={width}
         disableEscapeKeyDown={true}
-        color={theme.palette.background.default}
       >
         <DialogTitle variant='h4' sx={{
           backgroundColor: theme.palette.background.default,
-          color: theme.palette.common.white,
+          color: theme.palette.text.primary,
           alignContent: 'center'
         }}>{title}</DialogTitle>
         <Divider />
         <DialogContent sx={{
           backgroundColor: theme.palette.background.default,
-          color: theme.palette.common.white,
+          color: theme.palette.text.primary,
         }}>
           <DialogContentText id="alert-dialog-slide-description">{children}</DialogContentText>
         </DialogContent>
         <DialogActions sx={{
           backgroundColor: theme.palette.background.default,
-          color: theme.palette.common.white,
+          color: theme.palette.text.primary,
         }}>
           {buttons.map((button, index) => (
             <Button key={index} onClick={handleClose}>{button.text}</Button>

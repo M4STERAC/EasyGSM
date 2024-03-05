@@ -17,8 +17,8 @@ const MainPage = () => {
   const [state, setState] = useContext(StoreContext);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
   const theme = useTheme();
-  const ServerCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.common.white, overflowY: 'auto', height: '25em', width: '25em', padding: '1em'};
-  const HardwareResourceCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.common.white, height: '20em', width: '64em', padding: '1em 1em 3em', margin: '4em'};
+  const ServerCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.text.primary, overflowY: 'auto', height: '25em', width: '25em', padding: '1em'};
+  const HardwareResourceCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.text.primary, height: '20em', width: '64em', padding: '1em 1em 3em', margin: '4em'};
 
 
   //Updates selectedServer when a server is clicked

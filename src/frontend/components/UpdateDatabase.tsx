@@ -168,7 +168,7 @@ const UpdateDatabase = (props: any) => {
 
 
   return (
-    <Backdrop sx={{ color: '#fff', zIndex: theme.zIndex.drawer + 1}}open={state.addServerDialogOpen}>
+    <Backdrop sx={{ zIndex: theme.zIndex.drawer + 1 }}open={state.addServerDialogOpen}>
       <Dialog
         open={state.addServerDialogOpen}
         TransitionComponent={Transition}
@@ -179,7 +179,7 @@ const UpdateDatabase = (props: any) => {
       >
         <DialogTitle variant='h4' sx={{
           backgroundColor: theme.palette.background.default,
-          color: theme.palette.common.white,
+          color: theme.palette.text.primary,
           alignContent: 'center'
         }}>{isUpdate ? 'Update' : 'Create'} Server</DialogTitle>
 
@@ -187,7 +187,7 @@ const UpdateDatabase = (props: any) => {
 
         <DialogContent sx={{
           backgroundColor: theme.palette.background.default,
-          color: theme.palette.common.white,
+          color: theme.palette.text.primary,
         }}>
           {isUpdate && !state.selectedServer ? (<p className="error">Failed to get Server Configuration. Please try again later.</p>) : (
 

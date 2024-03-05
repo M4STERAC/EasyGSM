@@ -32,28 +32,27 @@ import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 
 
-const topItems: MenuListItem[] = [
-    { text: 'Home', open: null, icon: <HomeIcon />},
-    { text: 'About', open: <About />, icon: <InfoIcon />},
-    { text: 'License', open: <License />, icon: <PolicyIcon />},
-    { text: 'Report Issue', open: 'https://github.com/M4STERAC/EasyGSM/issues/new', icon: <BugReportIcon />},
-    { text: 'Settings', open: <Settings />, icon: <SettingsIcon />},
-];
-const bottomItems: MenuListItem[] = [
-    { text: 'View Source Code', open: 'https://github.com/M4STERAC/EasyGSM', icon: <CodeIcon />},
-    { text: 'Contribute Code', open: 'https://github.com/M4STERAC/EasyGSM/wiki/Contribution-Guide', icon: <GitHubIcon />},
-    { text: 'Contact', open: '', icon: <MailIcon />},
-    { text: 'Donate', open: '', icon: <AttachMoneyIcon />}
-];
-
-
-
-
 const Menu = () => {
+    const theme = useTheme();
     const navigate = useNavigate();
     const [state, setState] = useContext(StoreContext);
     const [selectedComponent, setSelectedComponent] = useState(null as JSX.Element | null);
-    const theme = useTheme();
+    const DefaultMenuIconStyle = { color: theme.palette.text.primary };
+
+
+    const topItems: MenuListItem[] = [
+        { text: 'Home', open: null, icon: <HomeIcon sx={DefaultMenuIconStyle} />},
+        { text: 'About', open: <About />, icon: <InfoIcon sx={DefaultMenuIconStyle} />},
+        { text: 'License', open: <License />, icon: <PolicyIcon sx={DefaultMenuIconStyle} />},
+        { text: 'Report Issue', open: 'https://github.com/M4STERAC/EasyGSM/issues/new', icon: <BugReportIcon sx={DefaultMenuIconStyle} />},
+        { text: 'Settings', open: <Settings />, icon: <SettingsIcon sx={DefaultMenuIconStyle} />},
+    ];
+    const bottomItems: MenuListItem[] = [
+        { text: 'View Source Code', open: 'https://github.com/M4STERAC/EasyGSM', icon: <CodeIcon sx={DefaultMenuIconStyle} />},
+        { text: 'Contribute Code', open: 'https://github.com/M4STERAC/EasyGSM/wiki/Contribution-Guide', icon: <GitHubIcon sx={DefaultMenuIconStyle} />},
+        { text: 'Contact', open: '', icon: <MailIcon sx={DefaultMenuIconStyle} />},
+        { text: 'Donate', open: '', icon: <AttachMoneyIcon sx={DefaultMenuIconStyle} />}
+    ];
     
     
     const handleMenuItemClick = (item: MenuListItem) => {
