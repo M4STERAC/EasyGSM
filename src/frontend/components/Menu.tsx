@@ -12,6 +12,7 @@ import "../css/Menu.css";
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 
 
 //MUI Icons
@@ -22,18 +23,21 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import CodeIcon from '@mui/icons-material/Code';
 import License from './License';
+import SettingsIcon from '@mui/icons-material/Settings';
+import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
 
 
 const topItems: MenuListItem[] = [
-    { text: 'Home', open: '', icon: <MailIcon />},
-    { text: 'About', open: '', icon: <MailIcon />},
+    { text: 'Home', open: '', icon: <HomeIcon />},
+    { text: 'About', open: '', icon: <InfoIcon />},
     { text: 'License', open: <License />, icon: <PolicyIcon />},
-    { text: 'Settings', open: '', icon: <MailIcon />},
     { text: 'Report Issue', open: 'https://github.com/M4STERAC/EasyGSM/issues/new', icon: <BugReportIcon />},
+    { text: 'Settings', open: '', icon: <SettingsIcon />},
 ];
 const bottomItems: MenuListItem[] = [
     { text: 'View Source Code', open: 'https://github.com/M4STERAC/EasyGSM', icon: <CodeIcon />},
-    { text: 'Contribute', open: '', icon: <GitHubIcon />},
+    { text: 'Contribute Code', open: '', icon: <GitHubIcon />},
     { text: 'Contact', open: '', icon: <MailIcon />},
     { text: 'Donate', open: '', icon: <AttachMoneyIcon />}
 ];
@@ -46,17 +50,20 @@ const Menu = () => {
 
     return (
         <Drawer anchor="left" open={state.menuOpen} onClose={() => setState((prevState: any) => ({ ...prevState, menuOpen: false }))} sx={{
-            backgroundColor: theme.palette.background.default,
+            width: '15em',
+            height: '100%',
         }}>
-        {topItems.map((item, index) => (
-            <MenuItem key={index} item={item} onClick={() => setState((prevState: any) => ({ ...prevState, menuOpen: false }))}/>
-        ))}
+            <Box sx={{ marginTop: '40px', height: '100%', width: '100%', backgroundColor: theme.palette.background.default }} role="presentation">
+                {topItems.map((item, index) => (
+                    <MenuItem key={index} item={item} onClick={() => setState((prevState: any) => ({ ...prevState, menuOpen: false }))}/>
+                ))}
 
-        <Divider />
+                <Divider />
 
-        {bottomItems.map((item, index) => (
-            <MenuItem key={index} item={item} />
-        ))}
+                {bottomItems.map((item, index) => (
+                    <MenuItem key={index} item={item} />
+                ))}
+            </Box>
         </Drawer>
     );
 };
