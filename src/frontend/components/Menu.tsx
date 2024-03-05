@@ -43,9 +43,17 @@ const bottomItems: MenuListItem[] = [
 ];
 
 
+
+
 const Menu = () => {
     const [state, setState] = useContext(StoreContext);
     const theme = useTheme();
+    
+    
+    const handleMenuItemClick = (item: MenuListItem) => {
+        if (typeof item.open === 'string') window.open(item.open, '_blank');
+        setState((prevState: any) => ({ ...prevState, menuOpen: false }));
+    };
 
 
     return (
@@ -55,13 +63,13 @@ const Menu = () => {
         }}>
             <Box sx={{ marginTop: '40px', height: '100%', width: '100%', backgroundColor: theme.palette.background.default }} role="presentation">
                 {topItems.map((item, index) => (
-                    <MenuItem key={index} item={item} onClick={() => setState((prevState: any) => ({ ...prevState, menuOpen: false }))}/>
+                    <MenuItem key={index} item={item} onClick={() => handleMenuItemClick(item)}/>
                 ))}
 
                 <Divider />
 
                 {bottomItems.map((item, index) => (
-                    <MenuItem key={index} item={item} />
+                    <MenuItem key={index} item={item} onClick={() => handleMenuItemClick(item)} />
                 ))}
             </Box>
         </Drawer>
