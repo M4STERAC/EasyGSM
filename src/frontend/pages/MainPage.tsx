@@ -5,20 +5,19 @@ import Card from '@mui/material/Card';
 import ServerListItem from "../components/ServerListItem";
 import ServerInfoItem from "../components/ServerInfoItem";
 import UpdateDatabase from "../components/UpdateDatabase";
-import "../css/MainPage.css";
+// import "../css/MainPage.css";
 
 //MUI Items
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
-import Grid from "@mui/material/Grid";
 
 
 //Root page of the app. Loads server list and server info components
 const MainPage = () => {
   const [state, setState] = useContext(StoreContext);
   const theme = useTheme();
-  const ServerCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.common.white, overflowY: 'auto', height: '375px', width: '400px', padding: '1em'};
-  const HardwareResourceCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.common.white, height: '200px', width: { xs: '400px', md: 'calc(100vh - 40px)' }, padding: '1em'};
+  const ServerCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.common.white, overflowY: 'auto', height: '25em', width: '25em', padding: '1em'};
+  const HardwareResourceCardStyles = { backgroundColor: theme.palette.background.default, color: theme.palette.common.white, height: '20em', width: '64em', padding: '1em 1em 3em', margin: '4em'};
 
 
   //Updates selectedServer when a server is clicked
@@ -64,33 +63,24 @@ const MainPage = () => {
   };
 
   return (
-    <Grid container rowSpacing={6} columnSpacing={4} style={{
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 0,
-      marginTop: '2em'
-    }}>
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       {state.firstLaunch ? <WelcomePage /> : null}
       {state.addServerDialogOpen ? <UpdateDatabase isUpdate={state.isUpdate} /> : null}
-
-      <Grid item xs={12}>
-        <Card sx={HardwareResourceCardStyles}>
-          <h2 className='card-title'>Resource Levels</h2>
-        </Card>
-      </Grid>
-
-      <Grid item xs={12} md={6}>
-        <Card sx={ServerCardStyles}>
+  
+      <Card sx={HardwareResourceCardStyles}>
+        <h2 className='card-title'>Resource Levels</h2>
+      </Card>
+  
+      <div style={{display: 'flex', justifyContent: 'center'}}>
+        <Card sx={{...ServerCardStyles, marginRight: '5em'}}>
           <h2 className='card-title'>Server List</h2>
           {state.serverList && state.serverList.map((server: Server, index: number) => (
             <ServerListItem onClick={() => handleServerClick(server)} key={index} server={server}/>
           ))}
           <Button onClick={() => handleAddServerClick({ isUpdate: false })}>Add Server</Button>
         </Card>
-      </Grid>
-
-      <Grid item xs={12} md={6}>
-        <Card sx={{...ServerCardStyles, overflowY: 'hidden'}}>
+  
+        <Card sx={{...ServerCardStyles, overflowY: 'hidden', marginLeft: '5em'}}>
           <h2 className='card-title'>Server Info</h2>
           {state.selectedServer ? (
           <ServerInfoItem selectedServer={state.selectedServer} />) : (<p>Select a server</p>)}
@@ -103,8 +93,8 @@ const MainPage = () => {
             ) : <Button onClick={handleStopButtonClick}>Stop</Button>
           ) : (null)}
         </Card>
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   );
 };
 
