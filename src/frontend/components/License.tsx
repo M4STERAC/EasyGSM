@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import ConfirmationDialog from './ConfirmationDialog';
+import { useTheme } from '@mui/material/styles';
 
 const License = () => {
     const [licenseText, setLicenseText] = useState('');
     const navigate = useNavigate();
+    const theme = useTheme();
 
     useEffect(() => {
         const fetchLicenseText = async () => {
