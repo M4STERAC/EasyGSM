@@ -8,7 +8,7 @@ import Menu from './components/Menu';
 import { Integrations } from "@sentry/tracing";
 import { StoreProvider } from "./Store";
 import * as Sentry from "@sentry/react";
-import darkTheme from "./utils/themes";
+import { darkTheme, lightTheme } from "./utils/themes";
 import './css/Scrollbar.css';
 
 //MUI Items
@@ -16,7 +16,7 @@ import { Theme, ThemeProvider } from '@mui/material/styles';
 
 
 
-const selectedTheme: Theme = darkTheme;
+const selectedTheme: Theme = lightTheme;
 
 
 //Sentry setup for error tracking
