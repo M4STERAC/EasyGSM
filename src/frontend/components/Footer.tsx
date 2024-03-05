@@ -12,11 +12,6 @@ const Footer = () => (
     </div>
     <div className="footer-text">
       <p>EasyGSM is an open source software used to make automating commissioning, managing, and decommissioning game servers easy.</p>
-      <p>Developed by: <a className="link" href="https://github.com/M4STERAC">Matthew Manka</a></p>
-      <p>View source code: <a className="link" href="https://github.com/M4STERAC/EasyGSM">HERE</a></p>
-      <p>Please read the <Link className="link" to="/license">license</Link></p>
-      <p>Go back <Link className="link" to="/">Home</Link></p>
-      <p>Report an issue <a className="link" href="https://github.com/M4STERAC/EasyGSM/issues/new">HERE</a></p>
     </div>
   </div>
 );
