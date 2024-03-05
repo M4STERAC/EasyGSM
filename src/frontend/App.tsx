@@ -3,7 +3,6 @@ import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Titlebar from './components/Titlebar';
 import MainPage from "./pages/MainPage";
 import NotFound from "./pages/NotFound";
-import Footer from "./components/Footer";
 import Box from "@mui/material/Box";
 import Menu from './components/Menu';
 import { Integrations } from "@sentry/tracing";
@@ -50,7 +49,6 @@ const App = () => {
               <Route path="/" element={<MainPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-            <Footer />
           </Box>
         </ThemeProvider>
       </Router>
