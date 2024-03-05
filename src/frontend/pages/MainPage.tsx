@@ -9,6 +9,7 @@ import SnackbarMessage from "../components/SnackbarMessage";
 
 //MUI Items
 import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
 
 
@@ -87,7 +88,7 @@ const MainPage = () => {
           {state.serverList && state.serverList.map((server: Server, index: number) => (
             <ServerListItem onClick={() => handleServerClick(server)} key={index} server={server}/>
           ))}
-          <Button onClick={() => handleAddServerClick({ isUpdate: false })}>Add Server</Button>
+          <Tooltip title='Add a server configuration' enterDelay={4000} arrow><Button onClick={() => handleAddServerClick({ isUpdate: false })}>Add Server</Button></Tooltip>
         </Card>
   
         <Card sx={{...ServerCardStyles, overflowY: 'hidden', marginLeft: '5em'}}>
@@ -97,10 +98,10 @@ const MainPage = () => {
           {state.selectedServer ? (
             state.selectedServer.status === "Down" ? (
               <div>
-                <Button onClick={handleStartButtonClick}>Start</Button>
-                <Button onClick={() => handleAddServerClick({ isUpdate: true })}>Edit</Button>
+                <Tooltip title='Starts this server' enterDelay={4000} arrow><Button onClick={handleStartButtonClick}>Start</Button></Tooltip>
+                <Tooltip title="Edit this server's configuration" enterDelay={4000} arrow><Button onClick={() => handleAddServerClick({ isUpdate: true })}>Edit</Button></Tooltip>
               </div>
-            ) : <Button onClick={handleStopButtonClick}>Stop</Button>
+            ) : <Tooltip title="Stops this server" enterDelay={4000} arrow><Button onClick={handleStopButtonClick}>Stop</Button></Tooltip>
           ) : (null)}
         </Card>
       </div>

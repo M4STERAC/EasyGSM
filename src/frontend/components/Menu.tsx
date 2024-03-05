@@ -6,7 +6,6 @@ import { StoreContext } from "../Store";
 //Custom
 import MenuItem from './MenuItem';
 import Settings from './Settings';
-import MainPage from '../pages/MainPage';
 import About from './About';
 import { MenuListItem } from "../utils/types";
 import "../css/Menu.css";
