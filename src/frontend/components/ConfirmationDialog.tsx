@@ -12,6 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
 import { ConfirmationDialogProps } from '../utils/types';
 
+
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -34,7 +35,7 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   };
 
   return (
-    <Backdrop sx={{ color: '#fff', zIndex: theme.zIndex.drawer + 1}}
+    <Backdrop sx={{ zIndex: theme.zIndex.drawer + 1 }}
     open={isOpen}>
       <Dialog
         open={isOpen}
