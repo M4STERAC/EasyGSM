@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { createUTCDate, generateId } from "../utils/generalFunctions";
+import { generateId } from "../utils/generalFunctions";
 import {
   validateIpAddress,
   validatePort,
@@ -16,7 +16,6 @@ import {
   offboardServer,
 } from "../utils/onboard-offboard-server";
 import { StoreContext } from "../Store";
-import { useNavigate, useLocation } from "react-router-dom";
 import "../css/UpdateDatabase.css";
 import "../css/ButtonStyles.css";
 import "../css/Forms.css";
@@ -35,9 +34,19 @@ import Alert from '@mui/material/Alert';
 import TextField from "@mui/material/TextField";
 import Tooltip from '@mui/material/Tooltip';
 
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+
 const UpdateDatabase = (props: any) => {
   const { isUpdate } = props;
-  const navigate = useNavigate();
   const [state, setState] = useContext(StoreContext);
   let updateServer = isUpdate ? state.selectedServer : {
     id: generateId(10),
@@ -55,19 +64,7 @@ const UpdateDatabase = (props: any) => {
     backuptime: "06:00",
   }
   const [errors, setErrors] = useState({ banlistError: "", portError: "", pathError: "", requiredFieldsError: "" } as Error);
-  const [isOpen, setOpen] = useState(true);
-
-
   const theme = useTheme();
-
-  const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-      children: React.ReactElement<any, any>;
-    },
-    ref: React.Ref<unknown>,
-  ) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
 
 
   //Whenever an error is created, log it to the console
