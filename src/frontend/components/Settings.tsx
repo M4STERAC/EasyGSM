@@ -1,19 +1,18 @@
-import React, { useState, useContext } from 'react';
-import { StoreContext } from "../Store";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import ConfirmationDialog from './ConfirmationDialog';
 import { useTheme } from '@mui/material/styles';
 
-
 const Settings = () => {
-    const [state, setState] = useContext(StoreContext);
+    const navigate = useNavigate();
     const theme = useTheme();
 
 
     return (
-        <div>
+        <ConfirmationDialog title='Settings' buttons={[{ text: 'Accept' }]}>
             <p>Settings Component</p>
-        </div>
+        </ConfirmationDialog>
     );
 };
-
 
 export default Settings;
