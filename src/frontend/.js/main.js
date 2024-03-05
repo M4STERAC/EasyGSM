@@ -52,7 +52,7 @@ function createWindow() {
     },
   });
   //Loads the index.html file into the window. index.html will load React
-  window.loadFile(path.join(__dirname, "index.html"));
+  window.loadFile(path.join(__dirname, '..', "index.html"));
 
   //When the window is resized, save the bounds to electron store for persistence
   window.on("resized", () => saveBounds(window.getBounds()));

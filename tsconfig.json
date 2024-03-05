@@ -98,5 +98,5 @@
     "skipDefaultLibCheck": true,                         /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": false                                 /* Skip type checking all .d.ts files. */
   },
-  "include": ["*.d.ts", "src/**/*"],
+  "include": ["*.d.ts", "src/**/*", "src/frontend/.js/main.js", "src/frontend/.js/settings.js", "src/frontend/.js/preload.js"],
 }

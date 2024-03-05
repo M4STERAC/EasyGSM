@@ -57,9 +57,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: "src/backend/*.bat", to: "../../" },
-        { from: "src/frontend/main.js", to: "./"},
-        { from: "src/frontend/preload.js", to: "./"},
-        { from: "src/frontend/settings.js", to: "./"}
+        { from: "src/frontend/.js/", to: "./.js/"},
       ],
     }),
   ],
