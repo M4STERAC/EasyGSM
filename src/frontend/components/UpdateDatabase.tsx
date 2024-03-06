@@ -175,7 +175,7 @@ const UpdateDatabase = (props: any) => {
 
 
   return (
-    <Backdrop sx={{ zIndex: theme.zIndex.drawer + 1 }}open={state.addServerDialogOpen}>
+    <Backdrop sx={{ zIndex: theme.zIndex.drawer + 1 }} open={state.addServerDialogOpen}>
       <Dialog
         open={state.addServerDialogOpen}
         TransitionComponent={Transition}
@@ -183,6 +183,7 @@ const UpdateDatabase = (props: any) => {
         onClose={handleClose}
         maxWidth='lg'
         color={theme.palette.background.default}
+        sx={{ width: '25em', height: '25em' }}
       >
         <DialogTitle variant='h4' sx={{
           backgroundColor: theme.palette.background.default,
