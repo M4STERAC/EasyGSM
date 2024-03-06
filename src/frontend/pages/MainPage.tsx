@@ -92,25 +92,25 @@ const MainPage = () => {
             <Box sx={DefaultHardwareResourceStyles}>
               <h2>CPU</h2>
               <p>Usage: 0%</p>
-              <p>Temperature: 0°C</p>
+              <p>Temperature: 0&deg;C</p>
             </Box>
             
             <Box sx={DefaultHardwareResourceStyles}>
               <h2>Memory</h2>
               <p>Usage: 0%</p>
-              <p>Temperature: 0°C</p>
+              <p>Temperature: 0&deg;C</p>
             </Box>
 
             <Box sx={DefaultHardwareResourceStyles}>
               <h2>Storage</h2>
               <p>Usage: 0%</p>
-              <p>Temperature: 0°C</p>
+              <p>Temperature: 0&deg;C</p>
             </Box>
 
             <Box sx={{ ...DefaultHardwareResourceStyles, borderRight: '1px solid black' }}>
               <h2>Internet</h2>
               <p>Usage: 0%</p>
-              <p>Temperature: 0°C</p>
+              <p>Temperature: 0&deg;C</p>
             </Box>
           </CardContent>
         </Card>
@@ -140,7 +140,12 @@ const MainPage = () => {
                 <Tooltip title="Start this server" enterDelay={4000} arrow><Button variant="contained" onClick={handleStartButtonClick}>Start</Button></Tooltip> 
                 : <Tooltip title="Stop this server" enterDelay={4000} arrow><Button variant="contained" onClick={handleStopButtonClick}>Stop</Button></Tooltip>)
               : null}
-            {state.selectedServer ? <Tooltip title="Edit this server's configuration" enterDelay={4000} arrow><Button sx={{ marginLeft: '1em' }} variant="outlined" disabled={state.selectedServer.status === 'Down' ? false : true} onClick={() => handleAddServerClick({ isUpdate: true })}>Edit</Button></Tooltip>: null}
+            {state.selectedServer ? 
+              <Tooltip title="Edit this server's configuration" enterDelay={4000} arrow>
+                <Button sx={{ 
+                  marginLeft: '1em', color: theme.palette.secondary.main, borderColor: theme.palette.secondary.main, '&:hover': { borderColor: theme.palette.secondary.light } 
+                }} variant="outlined" disabled={state.selectedServer.status === 'Down' ? false : true} onClick={() => handleAddServerClick({ isUpdate: true })}>Edit</Button>
+              </Tooltip>: null}
           </div>
         </Card>
         
