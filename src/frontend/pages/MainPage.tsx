@@ -24,6 +24,7 @@ const MainPage = () => {
   const DefaultCardStyles: SxProps = { margin: '2em 2em 0em' };
   const DefaultCardHeaderStyles: SxProps = { backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary, height: '4em', width: '25em', top: '0', paddingLeft: '1em' };
   const DefaultCardContentStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, height: '21em', width: '25em', paddingLeft: '1em' };
+  const DefaultHardwareResourceStyles: SxProps = { borderTop: '1px solid black', borderLeft: '1px solid black', borderBottom: '1px solid black', height: '100%', width: '25%', paddingLeft: '1em' };
   const DefaultButtonWrapperStyles: any = { margin: '1em', bottom: '0' };
 
 
@@ -86,26 +87,26 @@ const MainPage = () => {
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Card sx={DefaultCardStyles}>
         <CardHeader title="Resource Levels" sx={{ ...DefaultCardHeaderStyles, width: '64em' }} />
-          <CardContent sx={{ ...DefaultCardContentStyles, width: '64em', overflowY: 'auto' }}>
-            <Box sx={{ border: '1px solid black', height: '100%', width: '25%' }}>
+          <CardContent sx={{ ...DefaultCardContentStyles, width: '64em', display: 'flex' }}>
+            <Box sx={DefaultHardwareResourceStyles}>
               <h2>CPU</h2>
               <p>Usage: 0%</p>
               <p>Temperature: 0°C</p>
             </Box>
             
-            <Box sx={{ border: '1px solid black', height: '100%', width: '25%' }}>
+            <Box sx={DefaultHardwareResourceStyles}>
               <h2>Memory</h2>
               <p>Usage: 0%</p>
               <p>Temperature: 0°C</p>
             </Box>
 
-            <Box sx={{ border: '1px solid black', height: '100%', width: '25%' }}>
+            <Box sx={DefaultHardwareResourceStyles}>
               <h2>Storage</h2>
               <p>Usage: 0%</p>
               <p>Temperature: 0°C</p>
             </Box>
 
-            <Box sx={{ border: '1px solid black', height: '100%', width: '25%' }}>
+            <Box sx={{ ...DefaultHardwareResourceStyles, borderRight: '1px solid black' }}>
               <h2>Internet</h2>
               <p>Usage: 0%</p>
               <p>Temperature: 0°C</p>
