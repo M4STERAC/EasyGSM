@@ -92,25 +92,22 @@ const MainPage = () => {
             <Box sx={DefaultHardwareResourceStyles}>
               <h2>CPU</h2>
               <p>Usage: 0%</p>
-              <p>Temperature: 0&deg;C</p>
+              <p>Temperature: 0C</p>
             </Box>
             
             <Box sx={DefaultHardwareResourceStyles}>
               <h2>Memory</h2>
               <p>Usage: 0%</p>
-              <p>Temperature: 0&deg;C</p>
             </Box>
 
             <Box sx={DefaultHardwareResourceStyles}>
               <h2>Storage</h2>
               <p>Usage: 0%</p>
-              <p>Temperature: 0&deg;C</p>
             </Box>
 
             <Box sx={{ ...DefaultHardwareResourceStyles, borderRight: '1px solid black' }}>
               <h2>Internet</h2>
-              <p>Usage: 0%</p>
-              <p>Temperature: 0&deg;C</p>
+              <p>Bandwidth: 0%</p>
             </Box>
           </CardContent>
         </Card>
