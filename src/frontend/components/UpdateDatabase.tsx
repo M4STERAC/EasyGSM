@@ -238,7 +238,10 @@ const UpdateDatabase = (props: any) => {
                     <Button variant="contained" onClick={handleSubmit}>Save</Button>
                   </Tooltip>
                   <Tooltip title='Closes form' enterDelay={4000} arrow>
-                    <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+                    <Button variant="outlined" sx={{ 
+                      marginLeft: '1em', color: theme.palette.secondary.main, borderColor: theme.palette.secondary.main, 
+                      '&:hover': { borderColor: theme.palette.secondary.light }
+                    }} onClick={handleClose}>Cancel</Button>
                   </Tooltip>
                 </div>
                 {isUpdate ? 
