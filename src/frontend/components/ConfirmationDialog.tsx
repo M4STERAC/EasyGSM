@@ -53,9 +53,8 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
         <Divider />
         <DialogContent sx={{
           backgroundColor: theme.palette.background.default,
-          color: theme.palette.text.primary,
         }}>
-          <DialogContentText id="alert-dialog-slide-description">{children}</DialogContentText>
+          <DialogContentText sx={{ color: theme.palette.text.primary }} id="alert-dialog-slide-description">{children}</DialogContentText>
         </DialogContent>
         <DialogActions sx={{
           backgroundColor: theme.palette.background.default,

@@ -49,7 +49,7 @@ const Titlebar = () => {
                         <MinimizeIcon />
                     </Box>
                 </Tooltip>
-                <Tooltip title='Maximize' enterDelay={2000} arrow>
+                <Tooltip title={isMaximized ? 'Unmaximize' : 'Maximize'} enterDelay={2000} arrow>
                     <Box onClick={handleMaximize} className="box">
                         {isMaximized ? <FullscreenExitIcon /> : <FullscreenIcon />}
                     </Box>
