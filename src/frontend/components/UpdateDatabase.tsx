@@ -11,14 +11,12 @@ import {
   sanitizeIpAddress,
 } from "../utils/dataValidation";
 import { Error } from "../utils/types";
-import {
-  onboardServer,
-  offboardServer,
-} from "../utils/onboard-offboard-server";
+import { onboardServer, offboardServer } from "../utils/onboard-offboard-server";
 import { StoreContext } from "../Store";
 import "../css/UpdateDatabase.css";
 import "../css/ButtonStyles.css";
 import "../css/Forms.css";
+
 
 //MUI Items
 import Button from '@mui/material/Button';
@@ -73,6 +71,11 @@ const UpdateDatabase = (props: any) => {
       '&.Mui-focused fieldset': { borderColor: theme.palette.primary.light },
     },
     color: theme.palette.text.primary,
+    display: 'flex',
+    flexDirection: 'column',
+    marginBottom: '1em',
+    marginRight: '10em',
+    width: '40em'
   }
 
 
@@ -181,9 +184,8 @@ const UpdateDatabase = (props: any) => {
         TransitionComponent={Transition}
         aria-describedby="alert-dialog-slide-description"
         onClose={handleClose}
-        maxWidth='lg'
+        maxWidth='xl'
         color={theme.palette.background.default}
-        sx={{ width: '25em', height: '25em' }}
       >
         <DialogTitle variant='h4' sx={{
           backgroundColor: theme.palette.background.default,
