@@ -67,7 +67,7 @@ const UpdateDatabase = (props: any) => {
     '& .MuiInputLabel-root': { color: theme.palette.primary.main },
     '& .MuiOutlinedInput-root': {
       '& fieldset': { borderColor: theme.palette.primary.main },
-      '&:hover fieldset': { borderColor: theme.palette.primary.dark },
+      '&:hover fieldset': { borderColor: theme.palette.primary.main },
       '&.Mui-focused fieldset': { borderColor: theme.palette.primary.light },
     },
     color: theme.palette.text.primary,
