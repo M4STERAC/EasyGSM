@@ -21,8 +21,8 @@ const MainPage = () => {
   const theme = useTheme();
   const DefaultCardHeaderStyles: SxProps = { backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary, alignItems: 'center', height: '20%', width: '100%', paddingLeft: '1em' };
   const DefaultCardContentStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, overflowY: 'auto', height: '80%', width: '100%', paddingLeft: '1em' };
-  const ServerCardStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, overflowY: 'auto', height: '25em', width: '25em' };
-  const HardwareResourceCardStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, height: '20em', width: '64em', margin: '4em' };
+  const ServerCardStyles: SxProps = { backgroundColor: theme.palette.secondary.main, color: theme.palette.text.primary, overflowY: 'auto', height: '25em', width: '25em' };
+  const HardwareResourceCardStyles: SxProps = { backgroundColor: theme.palette.secondary.main, color: theme.palette.text.primary, height: '20em', width: '64em', margin: '4em' };
 
 
   //Updates selectedServer when a server is clicked
@@ -77,39 +77,40 @@ const MainPage = () => {
 
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column' }}>
+    <>
       {state.firstLaunch ? <WelcomePage /> : null}
       {state.addServerDialogOpen ? <UpdateDatabase isUpdate={state.isUpdate} /> : null}
-  
-      <Card sx={HardwareResourceCardStyles}>
-        <Box sx={DefaultCardHeaderStyles}><h1>Resource Levels</h1></Box>
-        <Box sx={DefaultCardContentStyles}>
-          <Box sx={{ border: '1px solid black' }}>
-            <h2>CPU</h2>
-            <p>Usage: 0%</p>
-            <p>Temperature: 0°C</p>
-          </Box>
-          
-          <Box sx={{ border: '1px solid black' }}>
-            <h2>Memory</h2>
-            <p>Usage: 0%</p>
-            <p>Temperature: 0°C</p>
-          </Box>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Card sx={HardwareResourceCardStyles}>
+          <Box sx={DefaultCardHeaderStyles}><h1>Resource Levels</h1></Box>
+          <Box sx={{...DefaultCardContentStyles, flexDirection: 'row'}}>
+            <Box sx={{ border: '1px solid black', height: '100%', width: '25%' }}>
+              <h2>CPU</h2>
+              <p>Usage: 0%</p>
+              <p>Temperature: 0°C</p>
+            </Box>
+            
+            <Box sx={{ border: '1px solid black', height: '100%', width: '25%' }}>
+              <h2>Memory</h2>
+              <p>Usage: 0%</p>
+              <p>Temperature: 0°C</p>
+            </Box>
 
-          <Box sx={{ border: '1px solid black' }}>
-            <h2>Storage</h2>
-            <p>Usage: 0%</p>
-            <p>Temperature: 0°C</p>
-          </Box>
+            <Box sx={{ border: '1px solid black', height: '100%', width: '25%' }}>
+              <h2>Storage</h2>
+              <p>Usage: 0%</p>
+              <p>Temperature: 0°C</p>
+            </Box>
 
-          <Box sx={{ border: '1px solid black' }}>
-            <h2>Internet</h2>
-            <p>Usage: 0%</p>
-            <p>Temperature: 0°C</p>
+            <Box sx={{ border: '1px solid black', height: '100%', width: '25%' }}>
+              <h2>Internet</h2>
+              <p>Usage: 0%</p>
+              <p>Temperature: 0°C</p>
+            </Box>
           </Box>
-        </Box>
-      </Card>
-  
+        </Card>
+      </div>
+    
       <div style={{display: 'flex', justifyContent: 'center'}}>
         <Card sx={{...ServerCardStyles, marginRight: '5em'}}>
           <Box sx={DefaultCardHeaderStyles}><h1>Server List</h1></Box>
@@ -120,7 +121,7 @@ const MainPage = () => {
             <Tooltip title='Add a server configuration' enterDelay={4000} arrow><Button onClick={() => handleAddServerClick({ isUpdate: false })}>Add Server</Button></Tooltip>
           </Box>
         </Card>
-  
+    
         <Card sx={{...ServerCardStyles, overflowY: 'hidden', marginLeft: '5em'}}>
           <Box sx={DefaultCardHeaderStyles}><h1>Server Info</h1></Box>
           <Box sx={DefaultCardContentStyles}>
@@ -133,9 +134,10 @@ const MainPage = () => {
             {state.selectedServer ? <Tooltip title="Edit this server's configuration" enterDelay={4000} arrow><Button variant="outlined" disabled={state.selectedServer.status === 'Down' ? false : true} onClick={() => handleAddServerClick({ isUpdate: true })}>Edit</Button></Tooltip>: null}
           </Box>
         </Card>
+        
+        {state.serverList.length > 1 ? <SnackbarMessage message={snackbar.message} open={snackbar.open} handleClose={handleSnackbarClose} severity='info' /> : null}
       </div>
-      {state.serverList.length > 1 ? <SnackbarMessage message={snackbar.message} open={snackbar.open} handleClose={handleSnackbarClose} severity='info' /> : null}
-    </div>
+    </>
   );
 };
 
