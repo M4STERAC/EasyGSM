@@ -8,7 +8,6 @@ import MenuItem from './MenuItem';
 import Settings from './Settings';
 import About from './About';
 import { MenuListItem } from "../utils/types";
-import "../css/Menu.css";
 
 
 //MUI Items
@@ -16,6 +15,7 @@ import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import List from '@mui/material/List';
 
 
 //MUI Icons
@@ -52,8 +52,8 @@ const Menu = () => {
         { text: 'Contact', open: '', icon: <MailIcon sx={DefaultMenuIconStyle} />},
         { text: 'Donate', open: '', icon: <AttachMoneyIcon sx={DefaultMenuIconStyle} />}
     ];
-    
-    
+
+
     const handleMenuItemClick = (item: MenuListItem) => {
         if (item.text === 'Home') {
             navigate('/');
@@ -73,15 +73,17 @@ const Menu = () => {
                 height: '100%',
             }}>
                 <Box sx={{ marginTop: '40px', height: '100%', width: '100%', backgroundColor: theme.palette.background.default }} role="presentation">
-                    {topItems.map((item, index) => (
-                        <MenuItem key={index} item={item} onClick={() => handleMenuItemClick(item)}/>
-                    ))}
+                    <List>
+                        {topItems.map((item, index) => (
+                            <MenuItem key={index} item={item} onClick={() => handleMenuItemClick(item)}/>
+                        ))}
 
-                    <Divider />
+                        <Divider />
 
-                    {bottomItems.map((item, index) => (
-                        <MenuItem key={index} item={item} onClick={() => handleMenuItemClick(item)} />
-                    ))}
+                        {bottomItems.map((item, index) => (
+                            <MenuItem key={index} item={item} onClick={() => handleMenuItemClick(item)} />
+                        ))}
+                    </List>
                 </Box>
             </Drawer>
             {selectedComponent}
