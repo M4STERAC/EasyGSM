@@ -20,9 +20,9 @@ const MainPage = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
   const theme = useTheme();
   const DefaultCardHeaderStyles: SxProps = { backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary, height: '20%', width: '100%' };
-  const DefaultCardContentStyles: SxProps = { backgroundColor: theme.palette.background.default, color: theme.palette.text.primary, overflowY: 'auto', height: '80%', width: '100%' };
-  const ServerCardStyles: SxProps = { backgroundColor: theme.palette.background.default, color: theme.palette.text.primary, overflowY: 'auto', height: '25em', width: '25em', padding: '0px' };
-  const HardwareResourceCardStyles: SxProps = { backgroundColor: theme.palette.background.default, color: theme.palette.text.primary, height: '20em', width: '64em', padding: '0px', margin: '4em' };
+  const DefaultCardContentStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, overflowY: 'auto', height: '80%', width: '100%' };
+  const ServerCardStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, overflowY: 'auto', height: '25em', width: '25em', padding: '0px' };
+  const HardwareResourceCardStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, height: '20em', width: '64em', padding: '0px', margin: '4em' };
 
 
   //Updates selectedServer when a server is clicked
