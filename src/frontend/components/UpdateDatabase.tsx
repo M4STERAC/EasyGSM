@@ -46,6 +46,7 @@ const Transition = React.forwardRef(function Transition(
 
 
 const UpdateDatabase = (props: any) => {
+  const theme = useTheme();
   const { isUpdate } = props;
   const [state, setState] = useContext(StoreContext);
   let updateServer = isUpdate ? state.selectedServer : {
@@ -64,7 +65,15 @@ const UpdateDatabase = (props: any) => {
     backuptime: "06:00",
   }
   const [errors, setErrors] = useState({ banlistError: "", portError: "", pathError: "", requiredFieldsError: "" } as Error);
-  const theme = useTheme();
+  const DefaultTextFieldStyle = {
+    '& .MuiInputLabel-root': { color: theme.palette.primary.main },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': { borderColor: theme.palette.primary.main },
+      '&:hover fieldset': { borderColor: theme.palette.primary.dark },
+      '&.Mui-focused fieldset': { borderColor: theme.palette.primary.light },
+    },
+    color: theme.palette.text.primary,
+  }
 
 
   //Whenever an error is created, log it to the console
@@ -192,33 +201,33 @@ const UpdateDatabase = (props: any) => {
             //Form goes here
             <form>
               {errors.requiredFieldsError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="Game" variant="outlined" placeholder={updateServer.game} onChange={(e) => updateServer.game = (sanitizeAlphanumeric(e.target.value))} />
+              <TextField sx={DefaultTextFieldStyle} id="outlined-basic" label="Game" variant="outlined" placeholder={updateServer.game} onChange={(e) => updateServer.game = (sanitizeAlphanumeric(e.target.value))} />
 
               {errors.requiredFieldsError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="Name" variant="outlined" placeholder={updateServer.name} onChange={(e) => updateServer.name = (sanitizeAlphanumeric(e.target.value))} />
+              <TextField sx={DefaultTextFieldStyle} id="outlined-basic" label="Name" variant="outlined" placeholder={updateServer.name} onChange={(e) => updateServer.name = (sanitizeAlphanumeric(e.target.value))} />
 
               {errors.requiredFieldsError || errors.pathError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="Path to Executable" variant="outlined" placeholder={updateServer.executable} onChange={(e) => updateServer.executable = (sanitizeFilePath(e.target.value))} />
+              <TextField sx={DefaultTextFieldStyle} id="outlined-basic" label="Path to Executable" variant="outlined" placeholder={updateServer.executable} onChange={(e) => updateServer.executable = (sanitizeFilePath(e.target.value))} />
 
               {errors.requiredFieldsError || errors.pathError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="Path to Save Directory" variant="outlined" placeholder={updateServer.saveDirectory} onChange={(e) => updateServer.saveDirectory = (sanitizeFilePath(e.target.value))} />
+              <TextField sx={DefaultTextFieldStyle} id="outlined-basic" label="Path to Save Directory" variant="outlined" placeholder={updateServer.saveDirectory} onChange={(e) => updateServer.saveDirectory = (sanitizeFilePath(e.target.value))} />
 
               {errors.banlistError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="Banlist" variant="outlined" placeholder={updateServer.banlist} onChange={(e) => updateServer.banlist = (sanitizeIpAddress(e.target.value))} />
+              <TextField sx={DefaultTextFieldStyle} id="outlined-basic" label="Banlist" variant="outlined" placeholder={updateServer.banlist} onChange={(e) => updateServer.banlist = (sanitizeIpAddress(e.target.value))} />
 
               <p>Required Ports:</p>
 
               {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="TCP Inbound" variant="outlined" placeholder={updateServer.ports.tcpinbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, tcpinbound: sanitizePorts(e.target.value) })} />
+              <TextField sx={DefaultTextFieldStyle} id="outlined-basic" label="TCP Inbound" variant="outlined" placeholder={updateServer.ports.tcpinbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, tcpinbound: sanitizePorts(e.target.value) })} />
 
               {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="TCP Outbound" variant="outlined" placeholder={updateServer.ports.tcpoutbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, tcpoutbound: sanitizePorts(e.target.value) })} />
+              <TextField sx={DefaultTextFieldStyle} id="outlined-basic" label="TCP Outbound" variant="outlined" placeholder={updateServer.ports.tcpoutbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, tcpoutbound: sanitizePorts(e.target.value) })} />
 
               {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="UDP Inbound" variant="outlined" placeholder={updateServer.ports.udpinbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, udpinbound: sanitizePorts(e.target.value) })} />
+              <TextField sx={DefaultTextFieldStyle} id="outlined-basic" label="UDP Inbound" variant="outlined" placeholder={updateServer.ports.udpinbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, udpinbound: sanitizePorts(e.target.value) })} />
 
               {errors.portError ? <Alert severity="error">{errors.requiredFieldsError}</Alert> : null}
-              <TextField id="outlined-basic" label="UDP Outbound" variant="outlined" placeholder={updateServer.ports.udpoutbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, udpoutbound: sanitizePorts(e.target.value) })} />
+              <TextField sx={DefaultTextFieldStyle} id="outlined-basic" label="UDP Outbound" variant="outlined" placeholder={updateServer.ports.udpoutbound} onChange={(e) => updateServer.ports = ({ ...updateServer.ports, udpoutbound: sanitizePorts(e.target.value) })} />
 
               <div className="button-container">
                 <div className="submit-cancel-container">
