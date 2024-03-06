@@ -25,7 +25,7 @@ const MainPage = () => {
   const DefaultCardHeaderStyles: SxProps = { backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary, height: '4em', width: '25em', top: '0', paddingLeft: '1em' };
   const DefaultCardContentStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, height: '21em', width: '25em', paddingLeft: '1em' };
   const DefaultHardwareResourceStyles: SxProps = { borderTop: '1px solid black', borderLeft: '1px solid black', borderBottom: '1px solid black', height: '100%', width: '25%', paddingLeft: '1em' };
-  const DefaultButtonWrapperStyles: any = { margin: '1em', bottom: '0' };
+  const DefaultButtonWrapperStyles: any = { padding: '1em', bottom: '0', width: '100%', height: '100%', backgroundColor: theme.palette.background.paper };
 
 
 
@@ -125,7 +125,7 @@ const MainPage = () => {
             ))}
           </CardContent>
           <div style={DefaultButtonWrapperStyles}>
-            <Tooltip title='Add a server configuration' enterDelay={4000} arrow><Button onClick={() => handleAddServerClick({ isUpdate: false })}>Add Server</Button></Tooltip>
+            <Tooltip title='Add a server configuration' enterDelay={4000} arrow><Button variant='contained' onClick={() => handleAddServerClick({ isUpdate: false })}>Add Server</Button></Tooltip>
           </div>
         </Card>
     

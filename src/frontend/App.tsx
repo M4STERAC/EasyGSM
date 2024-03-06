@@ -16,7 +16,8 @@ import { Theme, ThemeProvider } from '@mui/material/styles';
 
 
 const number: number = Math.floor(Math.random() * 100) + 1;
-const selectedTheme: Theme = number % 2 === 0 ? lightTheme : darkTheme;
+// const selectedTheme: Theme = number % 2 === 0 ? lightTheme : darkTheme;
+const selectedTheme: Theme = darkTheme;
 
 
 //Sentry setup for error tracking
