@@ -19,10 +19,10 @@ const MainPage = () => {
   const [state, setState] = useContext(StoreContext);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
   const theme = useTheme();
-  const DefaultCardHeaderStyles: SxProps = { backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary, height: '20%', width: '100%' };
-  const DefaultCardContentStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, overflowY: 'auto', height: '80%', width: '100%' };
-  const ServerCardStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, overflowY: 'auto', height: '25em', width: '25em', padding: '0px' };
-  const HardwareResourceCardStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, height: '20em', width: '64em', padding: '0px', margin: '4em' };
+  const DefaultCardHeaderStyles: SxProps = { backgroundColor: theme.palette.primary.main, color: theme.palette.text.secondary, alignItems: 'center', height: '20%', width: '100%', paddingLeft: '1em' };
+  const DefaultCardContentStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, overflowY: 'auto', height: '80%', width: '100%', paddingLeft: '1em' };
+  const ServerCardStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, overflowY: 'auto', height: '25em', width: '25em' };
+  const HardwareResourceCardStyles: SxProps = { backgroundColor: theme.palette.background.paper, color: theme.palette.text.primary, height: '20em', width: '64em', margin: '4em' };
 
 
   //Updates selectedServer when a server is clicked
@@ -77,7 +77,7 @@ const MainPage = () => {
 
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+    <div style={{display: 'flex', flexDirection: 'column' }}>
       {state.firstLaunch ? <WelcomePage /> : null}
       {state.addServerDialogOpen ? <UpdateDatabase isUpdate={state.isUpdate} /> : null}
   
@@ -124,16 +124,13 @@ const MainPage = () => {
         <Card sx={{...ServerCardStyles, overflowY: 'hidden', marginLeft: '5em'}}>
           <Box sx={DefaultCardHeaderStyles}><h1>Server Info</h1></Box>
           <Box sx={DefaultCardContentStyles}>
-            {state.selectedServer ? (
-            <ServerInfoItem selectedServer={state.selectedServer} />) : (<p>Select a server</p>)}
-            {state.selectedServer ? (
-              state.selectedServer.status === "Down" ? (
-                <div>
-                  <Tooltip title='Starts this server' enterDelay={4000} arrow><Button onClick={handleStartButtonClick}>Start</Button></Tooltip>
-                  <Tooltip title="Edit this server's configuration" enterDelay={4000} arrow><Button onClick={() => handleAddServerClick({ isUpdate: true })}>Edit</Button></Tooltip>
-                </div>
-              ) : <Tooltip title="Stops this server" enterDelay={4000} arrow><Button onClick={handleStopButtonClick}>Stop</Button></Tooltip>
-            ) : (null)}
+            {state.selectedServer ? (<ServerInfoItem selectedServer={state.selectedServer} />) : (<p>Select a server</p>)}
+            {state && state.selectedServer ? 
+              (state.selectedServer.status === 'Down' ? 
+                <Tooltip title="Start this server" enterDelay={4000} arrow><Button variant="contained" onClick={handleStartButtonClick}>Start</Button></Tooltip> 
+                : <Tooltip title="Stop this server" enterDelay={4000} arrow><Button variant="contained" onClick={handleStopButtonClick}>Stop</Button></Tooltip>)
+              : null}
+            {state.selectedServer ? <Tooltip title="Edit this server's configuration" enterDelay={4000} arrow><Button variant="outlined" disabled={state.selectedServer.status === 'Down' ? false : true} onClick={() => handleAddServerClick({ isUpdate: true })}>Edit</Button></Tooltip>: null}
           </Box>
         </Card>
       </div>
