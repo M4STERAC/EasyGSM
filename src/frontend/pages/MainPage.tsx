@@ -84,6 +84,7 @@ const MainPage = () => {
     <>
       {state.firstLaunch ? <WelcomePage /> : null}
       {state.addServerDialogOpen ? <UpdateDatabase isUpdate={state.isUpdate} /> : null}
+      
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Card sx={DefaultCardStyles}>
         <CardHeader title="Resource Levels" sx={{ ...DefaultCardHeaderStyles, width: '64em' }} />
