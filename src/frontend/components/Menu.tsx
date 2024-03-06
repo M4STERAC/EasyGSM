@@ -72,7 +72,7 @@ const Menu = () => {
                 width: '15em',
                 height: '100%',
             }}>
-                <Box sx={{ marginTop: '40px', height: '100%', width: '100%', backgroundColor: theme.palette.background.default }} role="presentation">
+                <Box sx={{ marginTop: '40px', height: '100%', width: '100%', backgroundColor: theme.palette.background.paper }} role="presentation">
                     <List>
                         {topItems.map((item, index) => (
                             <MenuItem key={index} item={item} onClick={() => handleMenuItemClick(item)}/>
