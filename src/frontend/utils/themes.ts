@@ -20,6 +20,10 @@ export const lightTheme: Theme = createTheme({ palette: {
     primary: '#000',
     secondary: '#fff'
   },
+  background: {
+    default: '#e6e6e6',
+    paper: '#f9f9f9'
+  }
 }});
 
 export default darkTheme;
