@@ -391,3 +391,26 @@ ipcMain.on("app/maximize", (event, message) => {
   if (window.isMaximized()) window.unmaximize();
   else window.maximize();
 });
+
+ipcMain.on("install-dependencies", (event, message) => {
+  log.info('Received order to download dependencies');
+  const dependencies = [{ name: 'SteamCMD', uri: 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip' }];
+  const dependenciesPath = `${os.homedir()}/Documents/EasyGSM/dependencies`;
+  if (!fs.existsSync(dependenciesPath)) {
+    fs.mkdirSync(dependenciesPath, { recursive: true });
+    log.info('Dependencies directory created');
+  }
+
+  for (const dependency of dependencies) { 
+    if (fs.existsSync(`${dependenciesPath}/${dependency.name}`)) continue;
+    fs.mkdirSync(`${dependenciesPath}/${dependency.name}`, { recursive: true });
+    log.info(`Created directory for ${dependency.name}`);
+    log.info(`Downloading ${dependency}`);
+    const child = spawn("curl", ["-L", "-o", `${os.homedir()}/Documents/EasyGSM/dependencies/${dependency.name}/${dependency.name}.zip`, dependency.uri]);
+    child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
+    child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
+    child.on("close", () => {
+      log.info(`Downloaded ${dependency.name}`);
+    });
+  }
+});
