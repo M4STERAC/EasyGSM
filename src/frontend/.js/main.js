@@ -393,7 +393,6 @@ ipcMain.on("app/maximize", (event, message) => {
 });
 
 ipcMain.on("install-dependencies", (event, message) => {
-  log.info('Received order to download dependencies');
   const dependencies = [{ name: 'SteamCMD', uri: 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip' }];
   const dependenciesPath = `${os.homedir()}/Documents/EasyGSM/dependencies`;
   if (!fs.existsSync(dependenciesPath)) {
