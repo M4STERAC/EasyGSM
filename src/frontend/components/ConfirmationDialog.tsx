@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { StoreContext } from "../Store";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,7 +11,7 @@ import Backdrop from '@mui/material/Backdrop';
 import Divider from '@mui/material/Divider';
 import { useTheme } from '@mui/material/styles';
 import { TransitionProps } from '@mui/material/transitions';
-import { ConfirmationDialogProps } from '../utils/types';
+import { ConfirmationDialogButton, ConfirmationDialogProps } from '../utils/types';
 
 
 const Transition = React.forwardRef(function Transition(
@@ -60,8 +61,12 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
           backgroundColor: theme.palette.background.default,
           color: theme.palette.text.primary,
         }}>
-          {buttons.map((button, index) => (
-            <Button key={index} onClick={handleClose}>{button.text}</Button>
+          {buttons.map((button: ConfirmationDialogButton, index: number) => (
+            <Button key={index} 
+            onClick={() => { 
+              if (button.func) button.func();
+              handleClose({} as any, ''); 
+            }}>{button.text}</Button>
           ))}
         </DialogActions>
       </Dialog>

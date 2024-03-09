@@ -47,9 +47,9 @@ export interface MenuListItem {
     tooltip?: JSX.Element;
 }
 
-export interface ConfirmationDialogButtons {
+export interface ConfirmationDialogButton {
     text: string;
-    func?: () => boolean;
+    func?: () => any;
 }
 
 export interface FormDialogButtons {
@@ -59,7 +59,7 @@ export interface FormDialogButtons {
 
 export interface ConfirmationDialogProps {
     title: string;
-    buttons: ConfirmationDialogButtons[];
+    buttons: ConfirmationDialogButton[];
     width?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | false;
     children?: ReactNode;
 }
