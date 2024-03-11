@@ -15,6 +15,7 @@ const sudo = require("sudo-prompt");
 const cron = require("node-cron");
 const archiver = require("archiver");
 const log = require('electron-log/main');
+const AdmZip = require('adm-zip');
 
 
 //Initialize electron store
@@ -376,40 +377,55 @@ ipcMain.handle("dialog-box", (event, options) => {
   });
 });
 
-ipcMain.on("app/close", (event, message) => {
+ipcMain.on("app/close", () => {
   app.quit();
   log.info("EasyGSM Closed");
 });
 
-ipcMain.on("app/minimize", (event, message) => {
+ipcMain.on("app/minimize", () => {
   const window = BrowserWindow.getFocusedWindow();
   window.minimize();
 });
 
-ipcMain.on("app/maximize", (event, message) => {
+ipcMain.on("app/maximize", () => {
   const window = BrowserWindow.getFocusedWindow();
   if (window.isMaximized()) window.unmaximize();
   else window.maximize();
 });
 
-ipcMain.on("install-dependencies", (event, message) => {
+ipcMain.on("install-dependencies", () => {
   const dependencies = [{ name: 'SteamCMD', uri: 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip' }];
-  const dependenciesPath = `${os.homedir()}/Documents/EasyGSM/dependencies`;
+  const dependenciesPath = `${os.homedir()}\\Documents\\EasyGSM\\dependencies`;
   if (!fs.existsSync(dependenciesPath)) {
     fs.mkdirSync(dependenciesPath, { recursive: true });
     log.info('Dependencies directory created');
   }
 
+
+  //Download and extract dependencies
   for (const dependency of dependencies) { 
-    if (fs.existsSync(`${dependenciesPath}/${dependency.name}`)) continue;
-    fs.mkdirSync(`${dependenciesPath}/${dependency.name}`, { recursive: true });
+    if (fs.existsSync(`${dependenciesPath}\\${dependency.name}`)) continue;
+    fs.mkdirSync(`${dependenciesPath}\\${dependency.name}`, { recursive: true });
     log.info(`Created directory for ${dependency.name}`);
-    log.info(`Downloading ${dependency}`);
-    const child = spawn("curl", ["-L", "-o", `${os.homedir()}/Documents/EasyGSM/dependencies/${dependency.name}/${dependency.name}.zip`, dependency.uri]);
-    child.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
-    child.stderr.on("data", (data) => console.error(`stderr: ${data}`));
-    child.on("close", () => {
+    log.info(`Downloading ${dependency.name} from ${dependency.uri} to ${dependenciesPath}\\${dependency.name}\\${dependency.name}.zip`);
+    //Download dependency
+    const curl = spawn("curl", ["-L", "-o", `${dependenciesPath}\\${dependency.name}\\${dependency.name}.zip`, dependency.uri]);
+    curl.stdout.on("data", (data) => console.debug(`stdout: ${data}`));
+    curl.stderr.on("data", (data) => console.error(`stderr: ${data}`));
+    curl.on("close", () => {
       log.info(`Downloaded ${dependency.name}`);
+      //Extract dependency
+      const zip = new AdmZip(`${dependenciesPath}\\${dependency.name}\\${dependency.name}.zip`);
+      zip.extractAllTo(`${dependenciesPath}\\${dependency.name}\\`, true);
+      fs.unlinkSync(`${dependenciesPath}\\${dependency.name}\\${dependency.name}.zip`);
+      log.info(`Extracted ${dependency.name}`);
+      //Install dependency
+      log.info(`Installing ${dependenciesPath}\\${dependency.name}\\${dependency.name}.exe`);
+      const cmd = spawn(`${dependenciesPath}\\${dependency.name}\\${dependency.name}.exe`, [], { shell: true, detached: true });
+      console.log('pid: ', cmd.pid);
+      cmd.stdout.on('data', (data) => console.log(`stdout: ${data}`));
+      cmd.stderr.on("data", (data) => console.error(`stderr: ${data}`));
+      cmd.on("close", () => log.info(`Installed ${dependency.name}`));
     });
   }
 });

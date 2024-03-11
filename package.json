@@ -102,6 +102,7 @@
     "@sentry/tracing": "^7.103.0",
     "@types/react": "^18.2.51",
     "@types/react-dom": "^18.2.18",
+    "adm-zip": "^0.5.10",
     "archiver": "^6.0.1",
     "electron-log": "^5.1.1",
     "electron-store": "^8.1.0",
