@@ -422,7 +422,6 @@ ipcMain.on("install-dependencies", () => {
       //Install dependency
       log.info(`Installing ${dependenciesPath}\\${dependency.name}\\${dependency.name}.exe`);
       const cmd = spawn(`${dependenciesPath}\\${dependency.name}\\${dependency.name}.exe`, [], { shell: true, detached: true });
-      console.log('pid: ', cmd.pid);
       cmd.stdout.on('data', (data) => console.log(`stdout: ${data}`));
       cmd.stderr.on("data", (data) => console.error(`stderr: ${data}`));
       cmd.on("close", () => log.info(`Installed ${dependency.name}`));
